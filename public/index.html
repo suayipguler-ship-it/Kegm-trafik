@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Çanakkale VTS Planlama</title>
+
+    <!-- iOS Safari PWA Tam Ekran Başlıkları -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Planlama">
+
+    <!-- Firebase SDK (Web) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #121212; color: #fff; padding: 12px; padding-top: calc(env(safe-area-inset-top) + 12px); padding-bottom: calc(env(safe-area-inset-bottom) + 20px); }
+        
+        .card { background: #1E1E1E; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+        .label { font-size: 13px; color: #B0BEC5; margin-bottom: 4px; display: inline-block; cursor: pointer; }
+        
+        select {
+            width: 100%; height: 42px; background: #2A2A2A; color: #fff; border: 1px solid #424242;
+            border-radius: 8px; padding: 0 10px; margin-bottom: 10px; font-size: 14px; outline: none;
+        }
+
+        .btn-search {
+            width: 100%; height: 44px; background: #0D47A1; color: #fff; font-weight: bold;
+            border: none; border-radius: 8px; font-size: 15px; cursor: pointer;
+        }
+        .btn-search:active { opacity: 0.8; }
+
+        .ship-card {
+            background: #242424; border-radius: 10px; padding: 12px; margin-bottom: 8px;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .ship-header { display: flex; justify-content: space-between; align-items: center; }
+        .ship-name { font-size: 15px; font-weight: bold; color: #fff; }
+        .ship-time { font-size: 14px; font-weight: bold; color: #FFB74D; }
+        .ship-sub { font-size: 13px; color: #B0BEC5; }
+        .ship-official { font-size: 12px; color: #78909C; }
+        
+        .divider { height: 1px; background: #37474F; margin: 6px 0; }
+        .pilot-row { display: flex; justify-content: space-between; align-items: center; }
+        .pilot-info { font-size: 13px; color: #78909C; }
+        .pilot-name { font-size: 14px; font-weight: bold; color: #00E676; text-transform: uppercase; }
+        
+        .btn-pilot {
+            background: #2C2C2C; border: 1px solid #424242; color: #64B5F6; font-size: 13px;
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600;
+        }
+
+        .spinner {
+            display: none; width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.2);
+            border-radius: 50%; border-top-color: #00E676; animation: spin 1s infinite linear;
+            margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* iOS Bottom Sheet Modalleri */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75); justify-content: center; align-items: flex-end; z-index: 1000;
+        }
+        .modal-content {
+            background: #1E1E1E; width: 100%; max-height: 80%; border-radius: 16px 16px 0 0;
+            padding: 16px; overflow-y: auto; padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+        }
+        .modal-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; text-align: center; color: #fff; }
+        
+        .shift-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+        .tab-btn {
+            flex: 1; height: 38px; background: #333; color: #fff; border: none;
+            border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;
+        }
+        .tab-btn.active { background: #0D47A1; }
+
+        .modal-item {
+            padding: 13px; border-bottom: 1px solid #2C2C2C; font-size: 14px; cursor: pointer; text-align: center;
+        }
+        .modal-item.danger { color: #E57373; font-weight: bold; }
+        .modal-cancel { margin-top: 10px; background: #2A2A2A; border-radius: 8px; font-weight: bold; }
+
+        /* Telif & İmza */
+        .footer { text-align: center; font-size: 11px; color: #546E7A; margin-top: 16px; padding: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- Filtre Kartı -->
+    <div class="card">
+        <!-- 5 Kez dokunulduğunda yönetici kilidini açan etiket -->
+        <span class="label" id="secretTrigger" onclick="handleSecretTap()">Boğaz:</span>
+        <select id="spnBogaz">
+            <option value="CANAKKALE">CANAKKALE</option>
+            <option value="ISTANBUL">ISTANBUL</option>
+        </select>
+
+        <span class="label">Yön:</span>
+        <select id="spnDirection">
+            <option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
+            <option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
+        </select>
+
+        <span class="label">Hareket:</span>
+        <select id="spnMov">
+            <option value="BOĞAZDA">BOĞAZDA</option>
+            <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
+            <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
+        </select>
+
+        <button class="btn-search" onclick="handleSearchClick()">SORGULA</button>
+    </div>
+
+    <div class="spinner" id="spinner"></div>
+    <div id="shipList"></div>
+
+    <div class="footer">Developed by Kpt. Şuayip Güler • Tüm Hakları Saklıdır</div>
+
+    <!-- Kılavuz Seçim Modalı -->
+    <div class="modal" id="pilotModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalShipTitle">Kılavuz Seç</div>
+            
+            <div class="shift-tabs">
+                <button class="tab-btn active" id="btnV1" onclick="switchTab(1)">1. Vardiya</button>
+                <button class="tab-btn" id="btnV2" onclick="switchTab(2)">2. Vardiya</button>
+                <button class="tab-btn" id="btnV3" onclick="switchTab(3)">3. Vardiya</button>
+            </div>
+
+            <div id="pilotOptions"></div>
+            <div class="modal-item modal-cancel" onclick="closeModal()">Kapat</div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. FIREBASE BAĞLANTISI ---
+        const firebaseConfig = {
+            databaseURL: "https://planlama-default-rtdb.europe-west1.firebasedatabase.app"
+        };
+        try {
+            firebase.initializeApp(firebaseConfig);
+        } catch (e) {}
+        const db = firebase.database();
+        const pilotRef = db.ref("pilot_assignments");
+
+        let liveAssignments = {};
+        pilotRef.on('value', snapshot => {
+            liveAssignments = snapshot.val() || {};
+            if (lastFetchedShips.length > 0) renderShips(lastFetchedShips);
+        });
+
+        // --- 2. VARDİYA LİSTELERİ ---
+        const VARDIYA_1 = [
+            "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
+            "AHMET ENDER SEVİM", "CANER GÜRSOY", "CİHAT DEVRİM", "ÇETİNER ÖNDÜL",
+            "DENİZ YÜCEEFEGÜÇ", "ENİS OKUTAN", "GÖKHAN BAHTİYAR", "GÖKSENİN KAPLAN",
+            "GÜNAY GÜR", "HAKAN ÖZSOY", "İLKAY MARTLI", "İLKER GÜNDOĞAN",
+            "İRFAN İLKE ÖZÜARI", "MEHMET ALİ ÇAMLI", "MURAT EMRE ERDEMİR",
+            "RAHMİ ALPASLAN SOYUER", "SERDAR AKKOCA", "SERDİNÇ KOÇ", "SONER ÇAYAN",
+            "ŞERİF DOĞRUER", "ŞÜKRÜ ERBİL OĞUZHAN", "TAMER YAĞIZ", "TAMER YILDIRIM",
+            "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU"
+        ];
+
+        const VARDIYA_2 = [
+            "CEM ERİNÇİN (Baş Klv. Kpt.)", "MURAT TURAN", "ADNAN KEREM YALÇIN", "AHMET UYGUN",
+            "ALİ GÜL", "ALİ RIZA URAZ", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ",
+            "BÜLENT MEMİŞ", "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK",
+            "ERÇİN GÖNÜLCAN", "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK",
+            "GÖKHAN KARSLI", "KEREM GÜL", "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ",
+            "MERT ATAYILMAZ", "MERTOL AKOĞLAN", "SUNAY IRMAK", "ŞUAYİP GÜLER",
+            "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
+        ];
+
+        const VARDIYA_3 = [
+            "MUSTAFA ERÇETİN (Baş Klv. Kpt.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT",
+            "ALİ DURSUN ÖZDEMİR", "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ",
+            "ERHAN CEVRİOĞLU", "ERKAN ÇETİN", "GÜLTEKİN ÖZDEMİR", "GÜRCAN SOYTÜRK",
+            "HAKAN BİLGİÇ", "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ",
+            "OLCAY SÖZEN", "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK",
+            "RIZA ÇETİN", "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR",
+            "TANSEL OREL", "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN",
+            "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
+        ];
+
+        let activeShift = 1;
+        let currentShipKey = "";
+        let lastFetchedShips = [];
+
+        // --- 3. 3 GÜNLÜK GİZLİ SÜRE & YÖNETİCİ KİLİDİ ---
+        const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+        const ADMIN_PIN = "1981";
+
+        if (!localStorage.getItem("app_install_time")) {
+            localStorage.setItem("app_install_time", Date.now().toString());
+        }
+
+        function isAccessBlocked() {
+            if (localStorage.getItem("is_admin_approved") === "true") return false;
+            const installTime = parseInt(localStorage.getItem("app_install_time"), 10);
+            return (Date.now() - installTime) > THREE_DAYS_MS;
+        }
+
+        let tapCount = 0;
+        let lastTapTime = 0;
+        function handleSecretTap() {
+            const now = Date.now();
+            if (now - lastTapTime < 600) {
+                tapCount++;
+                if (tapCount >= 5) {
+                    tapCount = 0;
+                    const pin = prompt("Yetkili Girişi (Yönetici Kodu):");
+                    if (pin === ADMIN_PIN) {
+                        localStorage.setItem("is_admin_approved", "true");
+                        alert("Yönetici onayı tanımlandı. Kısıtlama kaldırıldı.");
+                    } else if (pin !== null) {
+                        alert("Hatalı kod.");
+                    }
+                }
+            } else {
+                tapCount = 1;
+            }
+            lastTapTime = now;
+        }
+
+        function handleSearchClick() {
+            if (isAccessBlocked()) {
+                alert("Yönetici Onayı Gerekmektedir. Onaya kadar erişiminiz engellenmiştir.");
+                return;
+            }
+            fetchShips();
+        }
+
+        // --- 4. VERİ ÇEKME & LİSTELEME ---
+        function sanitizeKey(str) {
+            return str.replace(/[.#$\[\]\/]/g, '_').trim();
+        }
+
+        async function fetchShips() {
+            const bogaz = document.getElementById('spnBogaz').value;
+            const yon = document.getElementById('spnDirection').value;
+            const hareket = document.getElementById('spnMov').value;
+            
+            const spinner = document.getElementById('spinner');
+            const container = document.getElementById('shipList');
+
+            spinner.style.display = 'block';
+            container.innerHTML = '';
+
+            try {
+                const res = await fetch(`/api/ships?bogaz=${encodeURIComponent(bogaz)}&yon=${encodeURIComponent(yon)}&hareket=${encodeURIComponent(hareket)}`);
+                const json = await res.json();
+                
+                if (json.success && json.data.length > 0) {
+                    lastFetchedShips = json.data;
+                    renderShips(lastFetchedShips);
+                } else {
+                    container.innerHTML = '<div style="text-align:center; color:#78909C; margin-top:20px;">Kayıt bulunamadı.</div>';
+                }
+            } catch (e) {
+                container.innerHTML = `<div style="text-align:center; color:#E57373; margin-top:20px;">Hata: ${e.message}</div>`;
+            } finally {
+                spinner.style.display = 'none';
+            }
+        }
+
+        function renderShips(ships) {
+            const container = document.getElementById('shipList');
+            container.innerHTML = '';
+
+            ships.forEach(ship => {
+                const shipKey = sanitizeKey(ship.shipName);
+                const assignedPilot = liveAssignments[shipKey] || localStorage.getItem('pilot_' + shipKey) || '';
+                const pilotText = assignedPilot 
+                    ? `<span class="pilot-name">${assignedPilot}</span>` 
+                    : 'Belirtilmedi';
+
+                const html = `
+                    <div class="ship-card">
+                        <div class="ship-header">
+                            <span class="ship-name">${ship.shipName}</span>
+                            <span class="ship-time">${ship.planTime}</span>
+                        </div>
+                        <div class="ship-sub">${ship.length} m | ${ship.shipType}</div>
+                        <div class="ship-official">KEGM Kılavuz: ${ship.pilot} | Römorkör: ${ship.tug}</div>
+                        <div class="divider"></div>
+                        <div class="pilot-row">
+                            <span class="pilot-info">Kılavuz: ${pilotText}</span>
+                            <button class="btn-pilot" onclick="openPilotModal('${shipKey}', '${ship.shipName}')">Kılavuz Ata</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // --- 5. VARDİYA SEÇİM PENCERESİ ---
+        function openPilotModal(shipKey, shipName) {
+            currentShipKey = shipKey;
+            document.getElementById('modalShipTitle').innerText = shipName + " - Kılavuz Seç";
+            switchTab(1);
+            document.getElementById('pilotModal').style.display = 'flex';
+        }
+
+        function switchTab(shiftNum) {
+            activeShift = shiftNum;
+            document.getElementById('btnV1').className = shiftNum === 1 ? 'tab-btn active' : 'tab-btn';
+            document.getElementById('btnV2').className = shiftNum === 2 ? 'tab-btn active' : 'tab-btn';
+            document.getElementById('btnV3').className = shiftNum === 3 ? 'tab-btn active' : 'tab-btn';
+
+            const list = shiftNum === 1 ? VARDIYA_1 : (shiftNum === 2 ? VARDIYA_2 : VARDIYA_3);
+            const container = document.getElementById('pilotOptions');
+            container.innerHTML = `<div class="modal-item danger" onclick="assignPilot('')">Kılavuzu Kaldır (Temizle)</div>`;
+
+            list.forEach(name => {
+                container.innerHTML += `<div class="modal-item" onclick="assignPilot('${name}')">${name}</div>`;
+            });
+        }
+
+        function assignPilot(pilotName) {
+            if (pilotName) {
+                localStorage.setItem('pilot_' + currentShipKey, pilotName);
+                pilotRef.child(currentShipKey).set(pilotName);
+            } else {
+                localStorage.removeItem('pilot_' + currentShipKey);
+                pilotRef.child(currentShipKey).remove();
+            }
+            closeModal();
+            renderShips(lastFetchedShips);
+        }
+
+        function closeModal() {
+            document.getElementById('pilotModal').style.display = 'none';
+        }
+
+        window.onload = handleSearchClick;
+    </script>
+</body>
+</html>
