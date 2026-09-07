@@ -10,63 +10,62 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Gerçek masaüstü Chrome tarayıcı başlıkları
 const BROWSER_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Sec-Ch-Ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    'Sec-Ch-Ua-Mobile': '?0',
-    'Sec-Ch-Ua-Platform': '"Windows"',
-    'Sec-Fetch-Dest': 'document',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'none',
-    'Sec-Fetch-User': '?1',
-    'Upgrade-Insecure-Requests': '1'
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8',
+    'Origin': 'https://www.kiyiemniyeti.gov.tr',
+    'Referer': 'https://www.kiyiemniyeti.gov.tr/gemi_trafigi'
 };
 
 async function handleShipRequest(req, res) {
     try {
-        const { bogaz = 'CANAKKALE', yon = 'GÜNEY-KUZEY', hareket = 'PLAN. GEÇİŞ' } = req.query;
+        let { bogaz = 'CANAKKALE', yon = 'GÜNEY-KUZEY', hareket = 'PLAN. GEÇİŞ' } = req.query;
         console.log(`[GELEN İSTEK] Boğaz: ${bogaz} | Yön: ${yon} | Hareket: ${hareket}`);
 
-        // 1. Adım: KEGM ana sayfasına gidip geçerli çerez (cookie) alıyoruz
+        // Parametreleri KEGM form formatına dönüştür
+        const cleanYon = yon.includes('GÜNEY') && yon.startsWith('G') ? 'GUNEY-KUZEY' : 
+                         yon.includes('KUZEY') && yon.startsWith('K') ? 'KUZEY-GUNEY' : yon;
+        
+        const cleanHareket = hareket.includes('PLAN') ? 'PLAN' : 'BOGAZDA';
+
         const session = axios.create({
             timeout: 25000,
             headers: BROWSER_HEADERS
         });
 
-        const initRes = await session.get('https://www.kiyiemniyeti.gov.tr/');
-        const cookies = initRes.headers['set-cookie'];
+        // 1. Ana sayfadan oturum çerezi al
+        const initRes = await session.get('https://www.kiyiemniyeti.gov.tr/gemi_trafigi');
+        const rawCookies = initRes.headers['set-cookie'];
+        const cookie = rawCookies ? rawCookies.map(c => c.split(';')[0]).join('; ') : '';
 
-        let cookieHeader = '';
-        if (cookies) {
-            cookieHeader = cookies.map(c => c.split(';')[0]).join('; ');
-        }
+        // 2. KEGM formuna hem GET hem POST ile sorgu at
+        const formData = new URLSearchParams();
+        formData.append('bogaz', bogaz);
+        formData.append('yon', cleanYon);
+        formData.append('hareket', cleanHareket);
 
-        // 2. Adım: Çerezle birlikte gemi listesi sayfasını çekiyoruz
-        const targetUrl = 'https://www.kiyiemniyeti.gov.tr/gemi_trafigi';
-        const response = await session.get(targetUrl, {
+        let response = await session.post('https://www.kiyiemniyeti.gov.tr/gemi_trafigi', formData.toString(), {
             headers: {
                 ...BROWSER_HEADERS,
-                'Referer': 'https://www.kiyiemniyeti.gov.tr/',
-                'Cookie': cookieHeader
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Cookie': cookie
             }
         });
 
-        const $ = cheerio.load(response.data);
-        const ships = [];
+        let $ = cheerio.load(response.data);
+        let ships = [];
 
-        // Tablo satırlarını ayrıştır
+        // Tabloyu tara
         $('table tr').each((_, el) => {
             const cols = $(el).find('td');
-            if (cols.length >= 6) {
+            if (cols.length >= 5) {
                 const sName = $(cols[0]).text().trim();
                 const pTime = $(cols[1]).text().trim();
                 const sLen  = $(cols[2]).text().trim();
                 const sType = $(cols[3]).text().trim();
-                const sPlt  = $(cols[4]).text().trim();
-                const sTug  = $(cols[5]).text().trim();
+                const sPlt  = cols.length >= 6 ? $(cols[4]).text().trim() : '';
+                const sTug  = cols.length >= 6 ? $(cols[5]).text().trim() : $(cols[4]).text().trim();
 
                 if (sName && !sName.toLowerCase().includes('gemi') && !sName.toLowerCase().includes('adı')) {
                     ships.push({
@@ -81,7 +80,31 @@ async function handleShipRequest(req, res) {
             }
         });
 
-        console.log(`[BAŞARILI] Bulunan gemi: ${ships.length}`);
+        // Eğer POST tablosu boş dönerse GET parametreli dene
+        if (ships.length === 0) {
+            const getRes = await session.get(`https://www.kiyiemniyeti.gov.tr/gemi_trafigi?bogaz=${bogaz}&yon=${encodeURIComponent(yon)}&hareket=${encodeURIComponent(hareket)}`, {
+                headers: { ...BROWSER_HEADERS, 'Cookie': cookie }
+            });
+            const $get = cheerio.load(getRes.data);
+            $get('table tr').each((_, el) => {
+                const cols = $get(el).find('td');
+                if (cols.length >= 5) {
+                    const sName = $get(cols[0]).text().trim();
+                    if (sName && !sName.toLowerCase().includes('gemi')) {
+                        ships.push({
+                            shipName: sName,
+                            planTime: $get(cols[1]).text().trim(),
+                            length: $get(cols[2]).text().trim(),
+                            shipType: $get(cols[3]).text().trim(),
+                            pilot: cols.length >= 6 ? $get(cols[4]).text().trim() : '',
+                            tug: cols.length >= 6 ? $get(cols[5]).text().trim() : $get(cols[4]).text().trim()
+                        });
+                    }
+                }
+            });
+        }
+
+        console.log(`[SONUÇ] Çekilen gerçek gemi sayısı: ${ships.length}`);
 
         return res.json({
             success: true,
@@ -93,7 +116,7 @@ async function handleShipRequest(req, res) {
         console.error('[HATA]:', error.message);
         return res.status(500).json({
             success: false,
-            message: 'Veri çekilemedi: ' + error.message,
+            message: 'Veri hatası: ' + error.message,
             data: []
         });
     }
