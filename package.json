@@ -1,10 +1,11 @@
 {
   "name": "kegm-trafik-onrender",
-  "version": "1.1.0",
-  "description": "KEGM Gemi Trafik Bot Filtrelerini Aşan Veri Çekme",
+  "version": "1.2.0",
+  "description": "KEGM Gemi Trafik Bot Filtrelerini Aşan Puppeteer Modu",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
     "axios": "^1.6.7",
