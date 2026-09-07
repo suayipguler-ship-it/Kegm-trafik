@@ -10,15 +10,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Hem /ships hem de /api/ships çağrılarını karşılayan ortak veri fonksiyonu
 async function handleShipRequest(req, res) {
     try {
         const { bogaz = 'CANAKKALE', yon = 'GÜNEY-KUZEY', hareket = 'PLAN. GEÇİŞ' } = req.query;
+        console.log(`[GELEN İSTEK] Boğaz: ${bogaz} | Yön: ${yon} | Hareket: ${hareket}`);
 
-        console.log(`[İSTEK ALINDI] Boğaz: ${bogaz} | Yön: ${yon} | Hareket: ${hareket}`);
-
-        // KEGM resmi Boğaz Trafik Sorgulama URL'si
-        const targetUrl = 'https://www.kiyiemniyeti.gov.tr/gemi_trafigi';
+        // KEGM Resmi Boğaz Trafik Sayfası
+        const targetUrl = 'https://www.kiyiemniyeti.gov.tr/bogaz_trafigi';
         
         const response = await axios.get(targetUrl, {
             params: {
@@ -28,44 +26,40 @@ async function handleShipRequest(req, res) {
             },
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Referer': 'https://www.kiyiemniyeti.gov.tr/'
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             },
-            timeout: 20000
+            timeout: 25000
         });
 
         const $ = cheerio.load(response.data);
         const ships = [];
 
-        // Tablo satırlarını tespit et
-        $('table tbody tr, table tr').each((i, el) => {
+        // Tablodaki tüm satırları tara
+        $('table tr').each((i, el) => {
             const cols = $(el).find('td');
             if (cols.length >= 6) {
-                const col0 = $(cols[0]).text().trim();
-                const col1 = $(cols[1]).text().trim();
-                const col2 = $(cols[2]).text().trim();
-                const col3 = $(cols[3]).text().trim();
-                const col4 = $(cols[4]).text().trim();
-                const col5 = $(cols[5]).text().trim();
+                const shipName = $(cols[0]).text().trim();
+                const planTime = $(cols[1]).text().trim();
+                const length = $(cols[2]).text().trim();
+                const shipType = $(cols[3]).text().trim();
+                const pilot = $(cols[4]).text().trim();
+                const tug = $(cols[5]).text().trim();
 
-                // Başlık satırını atla
-                if (col0 && !col0.toLowerCase().includes('gemi') && !col0.toLowerCase().includes('adı')) {
+                if (shipName && !shipName.toLowerCase().includes('gemi')) {
                     ships.push({
-                        shipName: col0,
-                        planTime: col1,
-                        length: col2,
-                        shipType: col3,
-                        pilot: col4,
-                        tug: col5
+                        shipName,
+                        planTime,
+                        length,
+                        shipType,
+                        pilot,
+                        tug
                     });
                 }
             }
         });
 
-        console.log(`[BAŞARILI] Çekilen Gemi Sayısı: ${ships.length}`);
+        console.log(`[SONUÇ] Bulunan gemi sayısı: ${ships.length}`);
 
-        // Hem dizi hem de { data: [] } bekleyen istemciler için standart yanıt
         res.json({
             success: true,
             count: ships.length,
@@ -73,20 +67,18 @@ async function handleShipRequest(req, res) {
         });
 
     } catch (error) {
-        console.error('[HATA OLUŞTU]:', error.message);
-        res.status(500).json({ 
-            success: false, 
-            message: 'KEGM sunucusuna bağlanılamadı: ' + error.message,
-            data: [] 
+        console.error('[HATA]:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'KEGM verisi alınamadı: ' + error.message,
+            data: []
         });
     }
 }
 
-// Android ve Web farklı endpoint çağırsa bile ikisini de yakala:
 app.get('/ships', handleShipRequest);
 app.get('/api/ships', handleShipRequest);
 
-// Web Arayüzü İçin Kök Dizin
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
