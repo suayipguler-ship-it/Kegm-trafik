@@ -10,30 +10,23 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-async function handleShipRequest(req, res) {
+app.get('/ships', async (req, res) => {
     try {
         const { bogaz = 'CANAKKALE', yon = 'GÜNEY-KUZEY', hareket = 'PLAN. GEÇİŞ' } = req.query;
-        console.log(`[İSTEK] Boğaz: ${bogaz} | Yön: ${yon} | Hareket: ${hareket}`);
-
-        // KEGM Hedef Sayfası
         const targetUrl = 'https://www.kiyiemniyeti.gov.tr/gemi_trafigi';
-        
-        // 418 IP Blokajını aşmak için aracı proxy tüneli
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
-        console.log('[TÜNEL] Proxy üzerinden KEGM verisi isteniyor...');
-
-        const response = await axios.get(proxyUrl, {
-            timeout: 25000,
+        const response = await axios.get(targetUrl, {
+            timeout: 20000,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8'
             }
         });
 
         const $ = cheerio.load(response.data);
         const ships = [];
 
-        // Tablo satırlarını ayrıştır
         $('table tr').each((_, el) => {
             const cols = $(el).find('td');
             if (cols.length >= 5) {
@@ -50,38 +43,32 @@ async function handleShipRequest(req, res) {
                         planTime: pTime,
                         length: sLen,
                         shipType: sType,
-                        pilot: sPlt,
-                        tug: sTug
+                        pilot: sPlt.length > 0 ? sPlt : 'Hayır',
+                        tug: sTug.length > 0 ? sTug : 'Hayır'
                     });
                 }
             }
         });
 
-        console.log(`[BAŞARILI] 418 aşıldı! Çekilen gemi sayısı: ${ships.length}`);
-
-        res.json({
+        return res.json({
             success: true,
             count: ships.length,
             data: ships
         });
 
     } catch (error) {
-        console.error('[HATA]:', error.message);
-        res.status(500).json({
+        return res.json({
             success: false,
-            message: 'Veri tünelden alınamadı: ' + error.message,
+            message: error.message,
             data: []
         });
     }
-}
-
-app.get('/ships', handleShipRequest);
-app.get('/api/ships', handleShipRequest);
+});
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`Sunucu ${PORT} portunda aktif.`);
+    console.log(`Sunucu ${PORT} portunda devrede.`);
 });
