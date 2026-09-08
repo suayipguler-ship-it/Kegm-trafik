@@ -3,57 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Boğaz Trafik Planlama</title>
+    <title>BOĞAZ GEÇİŞ PLANLAMA</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; padding: 12px; }
+        body { background-color: #050b14; color: #f8fafc; padding: 12px; }
         
-        .header { text-align: center; margin-bottom: 14px; padding: 8px; border-bottom: 1px solid #1e293b; }
-        .header h1 { font-size: 1.1rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
+        .header { text-align: center; margin-bottom: 14px; padding: 10px; }
+        .header h1 { font-size: 1.15rem; color: #38bdf8; letter-spacing: 1px; font-weight: 700; }
 
-        .filter-card { background-color: #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .filter-card { background-color: #0f172a; border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #1e293b; }
         .filter-row { display: flex; gap: 8px; }
-        select, button { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc; font-size: 0.85rem; }
+        select, button { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #334155; background-color: #0b1329; color: #f8fafc; font-size: 0.9rem; font-weight: 500; }
         select:focus, button:focus { outline: none; border-color: #38bdf8; }
         
-        button.btn-search { background-color: #0284c7; border: none; font-weight: 600; cursor: pointer; color: #fff; }
+        button.btn-search { background-color: #0284c7; border: none; font-weight: 700; cursor: pointer; color: #fff; margin-top: 2px; }
         button.btn-search:active { background-color: #0369a1; }
 
         .ship-list { display: flex; flex-direction: column; gap: 10px; }
-        .ship-card { background-color: #1e293b; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; position: relative; }
-        .ship-card.assigned { border-left-color: #22c55e; background-color: #132337; }
+        .ship-card { background-color: #0f172a; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; border: 1px solid #1e293b; border-left-width: 5px; }
+        .ship-card.assigned { border-left-color: #22c55e; background-color: #08211b; }
 
         .ship-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-        .ship-name { font-size: 1rem; font-weight: bold; color: #ffffff; }
-        .ship-time { font-size: 0.85rem; font-weight: 600; color: #38bdf8; background: #0f172a; padding: 2px 6px; border-radius: 4px; }
+        .ship-name { font-size: 1.05rem; font-weight: bold; color: #ffffff; }
+        .ship-time { font-size: 0.85rem; font-weight: 600; color: #38bdf8; background: #0b1329; padding: 2px 6px; border-radius: 4px; }
 
         .ship-details { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 8px; }
         .ship-details span { color: #e2e8f0; font-weight: 500; }
 
-        .pilot-row { display: flex; gap: 6px; align-items: center; border-top: 1px solid #334155; padding-top: 8px; }
-        .pilot-input { flex: 1; padding: 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #f8fafc; }
+        .pilot-row { display: flex; gap: 6px; align-items: center; border-top: 1px solid #1e293b; padding-top: 8px; }
+        .pilot-input { flex: 1; padding: 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid #334155; background: #0b1329; color: #f8fafc; }
         .btn-assign { width: auto; padding: 8px 16px; background: #0284c7; border: none; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: #fff; }
         .btn-assign.saved { background: #22c55e; }
 
         .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
-        .toast-notify { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #22c55e; color: #000; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; display: none; z-index: 99; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Boğaz Geçiş Planlama</h1>
+        <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
     </div>
 
     <div class="filter-card">
         <div class="filter-row">
             <select id="selBogaz" onchange="renderList()">
-                <option value="CANAKKALE">Çanakkale</option>
-                <option value="ISTANBUL">İstanbul</option>
+                <option value="CANAKKALE">CANAKKALE</option>
+                <option value="ISTANBUL">ISTANBUL</option>
             </select>
             <select id="selYon" onchange="renderList()">
-                <option value="GÜNEY-KUZEY">Güney - Kuzey</option>
-                <option value="KUZEY-GÜNEY">Kuzey - Güney</option>
+                <option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
+                <option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
             </select>
         </div>
         <select id="selHareket" onchange="renderList()">
@@ -67,8 +66,6 @@
     <div id="shipContainer" class="ship-list">
         <div class="status-msg">Veriler yükleniyor...</div>
     </div>
-    
-    <div id="toast" class="toast-notify">Kılavuz Atandı!</div>
 
     <script>
         let allShips = [];
@@ -79,13 +76,6 @@
             } catch (e) {
                 return {};
             }
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById("toast");
-            t.innerText = msg;
-            t.style.display = "block";
-            setTimeout(() => { t.style.display = "none"; }, 1500);
         }
 
         function savePilot(index, shipName) {
@@ -101,13 +91,11 @@
                 card.classList.add("assigned");
                 btn.classList.add("saved");
                 btn.innerText = "Kaydedildi";
-                showToast(shipName + " atandı!");
             } else {
                 delete assignments[shipName];
                 card.classList.remove("assigned");
                 btn.classList.remove("saved");
                 btn.innerText = "Ata";
-                showToast("Atama silindi.");
             }
 
             localStorage.setItem("kegm_pilot_store", JSON.stringify(assignments));
@@ -115,15 +103,15 @@
 
         async function loadShipsData() {
             const container = document.getElementById("shipContainer");
-            container.innerHTML = '<div class="status-msg">Veri güncelleniyor...</div>';
+            container.innerHTML = '<div class="status-msg">Veri yükleniyor...</div>';
             
             try {
                 const res = await fetch("ships.json?t=" + Date.now());
-                if (!res.ok) throw new Error("Dosya bulunamadı");
+                if (!res.ok) throw new Error("Henüz dosya oluşmadı");
                 allShips = await res.json();
                 renderList();
             } catch (err) {
-                container.innerHTML = '<div class="status-msg">Gemi verisi hazırlanıyor, lütfen birazdan butona tekrar dokunun.</div>';
+                container.innerHTML = '<div class="status-msg">Gemi verisi henüz hazır değil. Actions botunun tamamlanmasını bekleyip tekrar dokunun.</div>';
             }
         }
 
