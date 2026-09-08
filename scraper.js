@@ -38,9 +38,8 @@ function cleanText(text) {
 }
 
 async function scrape() {
-  console.log("KEGM Veri Çekme Başlıyor...");
+  console.log("KEGM Veri Çekme Başlıyor (IMO Destekli)...");
 
-  // 1. ADIM: Ana sayfayı açıp oturum çerezini (Cookie) ve RequestVerificationToken'ı alıyoruz
   const initial = await makeRequest("https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems");
   
   let cookieHeader = "";
@@ -48,13 +47,11 @@ async function scrape() {
     cookieHeader = initial.cookies.map(c => c.split(";")[0]).join("; ");
   }
 
-  // ASP.NET Anti-Forgery Token varsa yakala
   let token = "";
   const tokenMatch = initial.data.match(/name=["']__RequestVerificationToken["']\s+type=["']hidden["']\s+value=["']([^"']+)["']/i) ||
                      initial.data.match(/value=["']([^"']+)["']\s+name=["']__RequestVerificationToken["']/i);
   if (tokenMatch) {
     token = tokenMatch[1];
-    console.log("Token yakalandı.");
   }
 
   const straits = [
@@ -76,7 +73,6 @@ async function scrape() {
   for (const st of straits) {
     for (const dir of directions) {
       for (const mov of movements) {
-        // POST gövdesi
         let params = [];
         if (token) params.push(`__RequestVerificationToken=${encodeURIComponent(token)}`);
         params.push(`Strait=${encodeURIComponent(st.code)}`);
@@ -96,13 +92,25 @@ async function scrape() {
           body: postData
         });
 
-        // Tablo satırlarını ayıkla
         const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
         let trMatch;
         let count = 0;
 
         while ((trMatch = trRegex.exec(res.data)) !== null) {
           const rowContent = trMatch[1];
+
+          // IMO numarasını fonksiyon çağrısından veya parametreden yakala
+          let imo = "";
+          const mapMatch = rowContent.match(/ShowOnMap\(\s*['"]?[0-9]{9}['"]?\s*,\s*['"]?([0-9]{7})['"]?\s*\)/i);
+          if (mapMatch) {
+            imo = mapMatch[1];
+          } else {
+            const histMatch = rowContent.match(/ShowHistory\(\s*['"]?([0-9]{7})['"]?\s*\)/i);
+            if (histMatch) imo = histMatch[1];
+            const imoUrlMatch = rowContent.match(/IMONumber=([0-9]{7})/i);
+            if (imoUrlMatch) imo = imoUrlMatch[1];
+          }
+
           const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
           let tdMatch;
           let cols = [];
@@ -123,6 +131,7 @@ async function scrape() {
                 yon: dir.name,
                 hareket: mov.name,
                 name: shipName,
+                imo: imo || "",
                 time: cols[1] || mov.name,
                 len: cols[3] || "-",
                 type: cols.length >= 5 ? cols[4] : "-",
