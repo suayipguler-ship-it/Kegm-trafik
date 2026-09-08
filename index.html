@@ -47,30 +47,29 @@
 
     <div class="filter-card">
         <div class="filter-row">
-            <select id="selBogaz">
+            <select id="selBogaz" onchange="renderList()">
                 <option value="CANAKKALE">Çanakkale</option>
                 <option value="ISTANBUL">İstanbul</option>
             </select>
-            <select id="selYon">
+            <select id="selYon" onchange="renderList()">
                 <option value="GÜNEY-KUZEY">Güney - Kuzey</option>
                 <option value="KUZEY-GÜNEY">Kuzey - Güney</option>
             </select>
         </div>
-        <select id="selHareket">
+        <select id="selHareket" onchange="renderList()">
             <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
-            <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
-            <option value="BOĞAZDA">BOĞAZDA</option>
         </select>
-        <button class="btn-search" id="btnSearch" onclick="fetchLiveShips()">Listeyi Getir</button>
+        <button class="btn-search" onclick="loadShipsData()">Yenile</button>
     </div>
 
     <div id="shipContainer" class="ship-list">
-        <div class="status-msg">Listelemek için "Listeyi Getir"e dokunun.</div>
+        <div class="status-msg">Veriler yükleniyor...</div>
     </div>
+    
     <div id="toast" class="toast-notify">Kılavuz Atandı!</div>
 
     <script>
-        let liveShips = [];
+        let allShips = [];
 
         function getAssignments() {
             try {
@@ -112,76 +111,39 @@
             localStorage.setItem("kegm_pilot_store", JSON.stringify(assignments));
         }
 
-        async function fetchLiveShips() {
+        async function loadShipsData() {
             const container = document.getElementById("shipContainer");
-            const btn = document.getElementById("btnSearch");
-            const bogaz = document.getElementById("selBogaz").value;
-            const yon = document.getElementById("selYon").value;
-            const hareket = document.getElementById("selHareket").value;
-
-            btn.innerText = "Yükleniyor...";
-            btn.disabled = true;
-            container.innerHTML = '<div class="status-msg">KEGM canlı verileri sorgulanıyor...</div>';
-
-            const targetUrl = `https://www.kiyiemniyeti.gov.tr/gemi_trafigi?bogaz=${encodeURIComponent(bogaz)}&yon=${encodeURIComponent(yon)}&hareket=${encodeURIComponent(hareket)}&_t=${Date.now()}`;
-            const proxy = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
-
+            container.innerHTML = '<div class="status-msg">Veri yükleniyor...</div>';
+            
             try {
-                const response = await fetch(proxy);
-                const htmlText = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlText, 'text/html');
-
-                const rows = doc.querySelectorAll('table tbody tr').length > 0 
-                    ? doc.querySelectorAll('table tbody tr') 
-                    : doc.querySelectorAll('table tr');
-
-                liveShips = [];
-
-                rows.forEach(row => {
-                    const cols = row.querySelectorAll('td');
-                    if (cols.length >= 5) {
-                        const name = cols[0].innerText.trim();
-                        const time = cols[1].innerText.trim();
-                        const len = cols[2].innerText.trim();
-                        const type = cols[3].innerText.trim();
-                        const pilot = cols.length >= 6 ? cols[4].innerText.trim() : '';
-                        const tug = cols.length >= 6 ? cols[5].innerText.trim() : cols[4].innerText.trim();
-
-                        if (name && !name.toLowerCase().includes('gemi') && !name.toLowerCase().includes('adı')) {
-                            liveShips.push({
-                                name: name,
-                                time: time,
-                                len: len,
-                                type: type,
-                                pilotReq: pilot || 'Hayır',
-                                tug: tug || 'Hayır'
-                            });
-                        }
-                    }
-                });
-
-                renderShips();
-
+                // Doğrudan kendi GitHub sayfanızdan engelsiz JSON çeker
+                const res = await fetch("ships.json?t=" + Date.now());
+                if (!res.ok) throw new Error("Veri henüz hazır değil.");
+                allShips = await res.json();
+                renderList();
             } catch (err) {
-                container.innerHTML = `<div class="status-msg">Bağlantı hatası: Canlı tablo çekilemedi. (${err.message})</div>`;
-            } finally {
-                btn.innerText = "Listeyi Getir";
-                btn.disabled = false;
+                container.innerHTML = '<div class="status-msg">Gemi verisi hazırlanıyor, lütfen 1 dakika sonra Yenile butonuna basın.</div>';
             }
         }
 
-        function renderShips() {
+        function renderList() {
             const container = document.getElementById("shipContainer");
+            const bogaz = document.getElementById("selBogaz").value;
+            const yon = document.getElementById("selYon").value;
+            const hareket = document.getElementById("selHareket").value;
             const assignments = getAssignments();
 
-            if (!liveShips || liveShips.length === 0) {
-                container.innerHTML = '<div class="status-msg">Bu filtre için resmi planlamada kayıt bulunamadı.</div>';
+            const filtered = allShips.filter(s => 
+                s.bogaz === bogaz && s.yon === yon && s.hareket === hareket
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="status-msg">Bu kritere uygun planlanmış gemi bulunamadı.</div>';
                 return;
             }
 
             let html = "";
-            liveShips.forEach((ship, index) => {
+            filtered.forEach((ship, index) => {
                 const assignedPilot = assignments[ship.name] || "";
                 const isAssigned = assignedPilot.length > 0;
 
@@ -193,7 +155,7 @@
                         </div>
                         <div class="ship-details">
                             Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
-                            Kılavuz Talebi: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
+                            Kılavuz: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
                         </div>
                         <div class="pilot-row">
                             <input type="text" 
@@ -214,7 +176,7 @@
             container.innerHTML = html;
         }
 
-        window.onload = fetchLiveShips;
+        window.onload = loadShipsData;
     </script>
 </body>
 </html>
