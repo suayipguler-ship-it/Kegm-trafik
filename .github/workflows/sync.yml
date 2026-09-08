@@ -17,10 +17,7 @@ jobs:
       - name: Node.js Kur
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-
-      - name: Paketleri Yükle
-        run: npm install axios cheerio
+          node-version: 20
 
       - name: Verileri Çek
         run: node scraper.js
@@ -30,4 +27,5 @@ jobs:
           git config --global user.name "KEGM Bot"
           git config --global user.email "bot@github.com"
           git add ships.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Gemi listesi güncellendi" && git push)
+          git commit -m "Otomatik gemi listesi" || exit 0
+          git push origin main || exit 0
