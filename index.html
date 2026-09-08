@@ -35,7 +35,7 @@
         .btn-assign { width: auto; padding: 6px 12px; background: #22c55e; border: none; font-size: 0.8rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
         .btn-assign:active { background: #16a34a; }
 
-        .empty-msg { text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 24px; }
+        .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
     </style>
 </head>
 <body>
@@ -51,24 +51,25 @@
                 <option value="ISTANBUL">İstanbul</option>
             </select>
             <select id="selYon">
-                <option value="GÜNEY-KUZEY">Güney - Kuzey</option>
                 <option value="KUZEY-GÜNEY">Kuzey - Güney</option>
+                <option value="GÜNEY-KUZEY">Güney - Kuzey</option>
             </select>
         </div>
         <select id="selHareket">
+            <option value="GEÇİŞE HAZIR">Geçişe Hazır</option>
             <option value="PLAN. GEÇİŞ">Planlanan Geçiş</option>
             <option value="BOĞAZDA">Boğazda</option>
-            <option value="GEÇİŞE HAZIR">Geçişe Hazır</option>
         </select>
-        <button class="btn-search" onclick="fetchAndRender()">Listeyi Getir</button>
+        <button class="btn-search" id="btnSearch" onclick="fetchLiveData()">Listeyi Getir</button>
     </div>
 
     <div id="shipContainer" class="ship-list">
-        <div class="empty-msg">Listelemek için butona dokunun.</div>
+        <div class="status-msg">Veriler yükleniyor...</div>
     </div>
 
     <script>
-        // Cihazın kendi yerel hafızasından atamaları oku
+        let currentShips = [];
+
         function getAssignments() {
             try {
                 return JSON.parse(localStorage.getItem("local_pilot_assignments") || "{}");
@@ -77,7 +78,6 @@
             }
         }
 
-        // Kılavuzu bu cihaza özel kaydet
         function assignPilot(shipName) {
             const input = document.getElementById("input-" + encodeURIComponent(shipName));
             if (!input) return;
@@ -94,17 +94,66 @@
             renderList();
         }
 
-        // Başlangıç/yedek sıralı veri havuzu
-        let currentShips = [
-            { name: "LADY ROSE", time: "16:30", len: "180 m", type: "Dökme Yük", pilotReq: "Evet", tug: "Hayır" },
-            { name: "MARMARA STAR", time: "17:15", len: "145 m", type: "Genel Kargo", pilotReq: "Hayır", tug: "Hayır" },
-            { name: "AEGEAN BREEZE", time: "18:00", len: "220 m", type: "Konteyner", pilotReq: "Evet", tug: "Evet" },
-            { name: "BOSPHORUS VOYAGER", time: "19:10", len: "160 m", type: "Tanker", pilotReq: "Evet", tug: "Hayır" }
-        ];
+        async function fetchLiveData() {
+            const container = document.getElementById("shipContainer");
+            const btn = document.getElementById("btnSearch");
+            const bogaz = document.getElementById("selBogaz").value;
+            const yon = document.getElementById("selYon").value;
+            const hareket = document.getElementById("selHareket").value;
 
-        function fetchAndRender() {
-            // Harici sunucu beklemeden anında sıralı planlamayı çizer
-            renderList();
+            btn.innerText = "Yükleniyor...";
+            btn.disabled = true;
+            container.innerHTML = '<div class="status-msg">Kıyı Emniyeti tablosu çekiliyor...</div>';
+
+            // KEGM doğrudan sorgu URL'i
+            const targetUrl = `https://www.kiyiemniyeti.gov.tr/gemi_trafigi?bogaz=${encodeURIComponent(bogaz)}&yon=${encodeURIComponent(yon)}&hareket=${encodeURIComponent(hareket)}`;
+            
+            // Tarayıcı güvenlik duvarını (CORS) aşan açık köprü
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+
+                const rows = doc.querySelectorAll('table tbody tr').length > 0 
+                    ? doc.querySelectorAll('table tbody tr') 
+                    : doc.querySelectorAll('table tr');
+
+                currentShips = [];
+
+                rows.forEach(row => {
+                    const cols = row.querySelectorAll('td');
+                    if (cols.length >= 5) {
+                        const name = cols[0].innerText.trim();
+                        const time = cols[1].innerText.trim();
+                        const len = cols[2].innerText.trim();
+                        const type = cols[3].innerText.trim();
+                        const pilot = cols.length >= 6 ? cols[4].innerText.trim() : '';
+                        const tug = cols.length >= 6 ? cols[5].innerText.trim() : cols[4].innerText.trim();
+
+                        if (name && !name.toLowerCase().includes('gemi') && !name.toLowerCase().includes('adı')) {
+                            currentShips.push({
+                                name: name,
+                                time: time,
+                                len: len,
+                                type: type,
+                                pilotReq: pilot || 'Hayır',
+                                tug: tug || 'Hayır'
+                            });
+                        }
+                    }
+                });
+
+                renderList();
+
+            } catch (err) {
+                container.innerHTML = `<div class="status-msg">Bağlantı hatası oluştu: ${err.message}</div>`;
+            } finally {
+                btn.innerText = "Listeyi Getir";
+                btn.disabled = false;
+            }
         }
 
         function renderList() {
@@ -112,7 +161,7 @@
             const assignments = getAssignments();
 
             if (!currentShips || currentShips.length === 0) {
-                container.innerHTML = '<div class="empty-msg">Kayıt bulunamadı.</div>';
+                container.innerHTML = '<div class="status-msg">Bu kriterde kayıt bulunamadı.</div>';
                 return;
             }
 
@@ -148,8 +197,8 @@
             container.innerHTML = html;
         }
 
-        // Sayfa açıldığında otomatik yükle
-        window.onload = renderList;
+        // Sayfa açıldığında varsayılan filtreyle canlı çek
+        window.onload = fetchLiveData;
     </script>
 </body>
 </html>
