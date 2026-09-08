@@ -3,17 +3,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "PAUL",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 06:35",
-    "len": "31,27",
-    "type": "TUG",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "GREGAL",
     "time": "PLAN. GE&#199;İŞ 09.09.26 07:00",
     "len": "274,2",
@@ -36,6 +25,17 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
+    "name": "ALLEGRI",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 03:15",
+    "len": "168,8",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
     "name": "LIDER PERIHAN",
     "time": "PLAN. GE&#199;İŞ 08.09.26 23:30",
     "len": "136,49",
@@ -51,17 +51,6 @@
     "time": "PLAN. GE&#199;İŞ 09.09.26 04:00",
     "len": "179,88",
     "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "SAPPHIRE A",
-    "time": "PLAN. GE&#199;İŞ 22.09.26 22:30",
-    "len": "144,03",
-    "type": "CHEMICAL TANKER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -272,17 +261,6 @@
     "len": "247,9",
     "type": "TANKER",
     "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "SEA EXPLORER",
-    "time": "PLAN. GE&#199;İŞ 08.09.26 22:30",
-    "len": "103,5",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
