@@ -20,7 +20,7 @@
         button.btn-search:active { background-color: #0369a1; }
 
         .ship-list { display: flex; flex-direction: column; gap: 10px; }
-        .ship-card { background-color: #1e293b; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; position: relative; transition: all 0.2s ease; }
+        .ship-card { background-color: #1e293b; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; position: relative; }
         .ship-card.assigned { border-left-color: #22c55e; background-color: #132337; }
 
         .ship-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
@@ -36,7 +36,7 @@
         .btn-assign.saved { background: #22c55e; }
 
         .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
-        .toast-notify { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #22c55e; color: #000; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; display: none; z-index: 99; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .toast-notify { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #22c55e; color: #000; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; display: none; z-index: 99; }
     </style>
 </head>
 <body>
@@ -47,53 +47,34 @@
 
     <div class="filter-card">
         <div class="filter-row">
-            <select id="selBogaz" onchange="applyFilter()">
+            <select id="selBogaz">
                 <option value="CANAKKALE">Çanakkale</option>
                 <option value="ISTANBUL">İstanbul</option>
             </select>
-            <select id="selYon" onchange="applyFilter()">
+            <select id="selYon">
                 <option value="GÜNEY-KUZEY">Güney - Kuzey</option>
                 <option value="KUZEY-GÜNEY">Kuzey - Güney</option>
             </select>
         </div>
-        <select id="selHareket" onchange="applyFilter()">
+        <select id="selHareket">
             <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
             <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
             <option value="BOĞAZDA">BOĞAZDA</option>
         </select>
-        <button class="btn-search" onclick="applyFilter()">Listeyi Getir</button>
+        <button class="btn-search" id="btnSearch" onclick="fetchLiveShips()">Listeyi Getir</button>
     </div>
 
-    <div id="shipContainer" class="ship-list"></div>
+    <div id="shipContainer" class="ship-list">
+        <div class="status-msg">Listelemek için "Listeyi Getir"e dokunun.</div>
+    </div>
     <div id="toast" class="toast-notify">Kılavuz Atandı!</div>
 
     <script>
-        const masterShipDB = [
-            // Çanakkale - Güney-Kuzey
-            { bogaz: "CANAKKALE", yon: "GÜNEY-KUZEY", hareket: "PLAN. GEÇİŞ", name: "LADY ROSE", time: "16:30", len: "180 m", type: "Dökme Yük", pilotReq: "Evet", tug: "Hayır" },
-            { bogaz: "CANAKKALE", yon: "GÜNEY-KUZEY", hareket: "PLAN. GEÇİŞ", name: "MARMARA STAR", time: "17:15", len: "145 m", type: "Genel Kargo", pilotReq: "Hayır", tug: "Hayır" },
-            { bogaz: "CANAKKALE", yon: "GÜNEY-KUZEY", hareket: "GEÇİŞE HAZIR", name: "OCEAN GLORY", time: "16:50", len: "195 m", type: "Dökme Yük", pilotReq: "Evet", tug: "Hayır" },
-            { bogaz: "CANAKKALE", yon: "GÜNEY-KUZEY", hareket: "BOĞAZDA", name: "EGE PRENSESİ", time: "15:20", len: "85 m", type: "Genel Kargo", pilotReq: "Hayır", tug: "Hayır" },
-
-            // Çanakkale - Kuzey-Güney
-            { bogaz: "CANAKKALE", yon: "KUZEY-GÜNEY", hareket: "PLAN. GEÇİŞ", name: "AEGEAN VOYAGER", time: "18:00", len: "220 m", type: "Konteyner", pilotReq: "Evet", tug: "Evet" },
-            { bogaz: "CANAKKALE", yon: "KUZEY-GÜNEY", hareket: "PLAN. GEÇİŞ", name: "BLUE HORIZON", time: "18:30", len: "160 m", type: "Konteyner", pilotReq: "Hayır", tug: "Hayır" },
-            { bogaz: "CANAKKALE", yon: "KUZEY-GÜNEY", hareket: "GEÇİŞE HAZIR", name: "AKDENİZ 1", time: "15:40", len: "110 m", type: "Kimyasal Tanker", pilotReq: "Evet", tug: "Hayır" },
-
-            // İstanbul - Kuzey-Güney
-            { bogaz: "ISTANBUL", yon: "KUZEY-GÜNEY", hareket: "PLAN. GEÇİŞ", name: "BLACK SEA SPIRIT", time: "17:00", len: "250 m", type: "Ham Petrol Tankeri", pilotReq: "Evet", tug: "Evet" },
-            { bogaz: "ISTANBUL", yon: "KUZEY-GÜNEY", hareket: "PLAN. GEÇİŞ", name: "BOSPHORUS PRIDE", time: "18:45", len: "175 m", type: "Dökme Yük", pilotReq: "Evet", tug: "Hayır" },
-            { bogaz: "ISTANBUL", yon: "KUZEY-GÜNEY", hareket: "BOĞAZDA", name: "KUZEY YILDIZI", time: "15:55", len: "130 m", type: "Genel Kargo", pilotReq: "Hayır", tug: "Hayır" },
-
-            // İstanbul - Güney-Kuzey
-            { bogaz: "ISTANBUL", yon: "GÜNEY-KUZEY", hareket: "PLAN. GEÇİŞ", name: "ANATOLIA SUN", time: "16:15", len: "140 m", type: "Konteyner", pilotReq: "Evet", tug: "Hayır" },
-            { bogaz: "ISTANBUL", yon: "GÜNEY-KUZEY", hareket: "PLAN. GEÇİŞ", name: "SAROS BAY", time: "19:20", len: "210 m", type: "Kimyasal Tanker", pilotReq: "Evet", tug: "Evet" },
-            { bogaz: "ISTANBUL", yon: "GÜNEY-KUZEY", hareket: "BOĞAZDA", name: "MARMARA LEADER", time: "15:30", len: "165 m", type: "Dökme Yük", pilotReq: "Evet", tug: "Hayır" }
-        ];
+        let liveShips = [];
 
         function getAssignments() {
             try {
-                return JSON.parse(localStorage.getItem("kegm_pilot_local_store") || "{}");
+                return JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
             } catch (e) {
                 return {};
             }
@@ -119,36 +100,88 @@
                 card.classList.add("assigned");
                 btn.classList.add("saved");
                 btn.innerText = "Kaydedildi";
-                showToast(shipName + " için atandı!");
+                showToast(shipName + " atandı!");
             } else {
                 delete assignments[shipName];
                 card.classList.remove("assigned");
                 btn.classList.remove("saved");
                 btn.innerText = "Ata";
-                showToast("Atama kaldırıldı");
+                showToast("Atama silindi.");
             }
 
-            localStorage.setItem("kegm_pilot_local_store", JSON.stringify(assignments));
+            localStorage.setItem("kegm_pilot_store", JSON.stringify(assignments));
         }
 
-        function applyFilter() {
+        async function fetchLiveShips() {
+            const container = document.getElementById("shipContainer");
+            const btn = document.getElementById("btnSearch");
             const bogaz = document.getElementById("selBogaz").value;
             const yon = document.getElementById("selYon").value;
             const hareket = document.getElementById("selHareket").value;
+
+            btn.innerText = "Yükleniyor...";
+            btn.disabled = true;
+            container.innerHTML = '<div class="status-msg">KEGM canlı verileri sorgulanıyor...</div>';
+
+            const targetUrl = `https://www.kiyiemniyeti.gov.tr/gemi_trafigi?bogaz=${encodeURIComponent(bogaz)}&yon=${encodeURIComponent(yon)}&hareket=${encodeURIComponent(hareket)}&_t=${Date.now()}`;
+            const proxy = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
+
+            try {
+                const response = await fetch(proxy);
+                const htmlText = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+
+                const rows = doc.querySelectorAll('table tbody tr').length > 0 
+                    ? doc.querySelectorAll('table tbody tr') 
+                    : doc.querySelectorAll('table tr');
+
+                liveShips = [];
+
+                rows.forEach(row => {
+                    const cols = row.querySelectorAll('td');
+                    if (cols.length >= 5) {
+                        const name = cols[0].innerText.trim();
+                        const time = cols[1].innerText.trim();
+                        const len = cols[2].innerText.trim();
+                        const type = cols[3].innerText.trim();
+                        const pilot = cols.length >= 6 ? cols[4].innerText.trim() : '';
+                        const tug = cols.length >= 6 ? cols[5].innerText.trim() : cols[4].innerText.trim();
+
+                        if (name && !name.toLowerCase().includes('gemi') && !name.toLowerCase().includes('adı')) {
+                            liveShips.push({
+                                name: name,
+                                time: time,
+                                len: len,
+                                type: type,
+                                pilotReq: pilot || 'Hayır',
+                                tug: tug || 'Hayır'
+                            });
+                        }
+                    }
+                });
+
+                renderShips();
+
+            } catch (err) {
+                container.innerHTML = `<div class="status-msg">Bağlantı hatası: Canlı tablo çekilemedi. (${err.message})</div>`;
+            } finally {
+                btn.innerText = "Listeyi Getir";
+                btn.disabled = false;
+            }
+        }
+
+        function renderShips() {
             const container = document.getElementById("shipContainer");
             const assignments = getAssignments();
 
-            const filteredShips = masterShipDB.filter(s => 
-                s.bogaz === bogaz && s.yon === yon && s.hareket === hareket
-            );
-
-            if (filteredShips.length === 0) {
-                container.innerHTML = '<div class="status-msg">Bu kriterlere uygun kayıt bulunamadı.</div>';
+            if (!liveShips || liveShips.length === 0) {
+                container.innerHTML = '<div class="status-msg">Bu filtre için resmi planlamada kayıt bulunamadı.</div>';
                 return;
             }
 
             let html = "";
-            filteredShips.forEach((ship, index) => {
+            liveShips.forEach((ship, index) => {
                 const assignedPilot = assignments[ship.name] || "";
                 const isAssigned = assignedPilot.length > 0;
 
@@ -160,13 +193,13 @@
                         </div>
                         <div class="ship-details">
                             Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
-                            Kılavuz: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
+                            Kılavuz Talebi: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
                         </div>
                         <div class="pilot-row">
                             <input type="text" 
                                    id="pilot_in_${index}" 
                                    class="pilot-input" 
-                                   placeholder="Kılavuz Kaptan Adı..." 
+                                   placeholder="Kılavuz Kaptan Ata..." 
                                    value="${assignedPilot}">
                             <button id="pilot_btn_${index}" 
                                     class="btn-assign ${isAssigned ? 'saved' : ''}" 
@@ -181,7 +214,7 @@
             container.innerHTML = html;
         }
 
-        window.onload = applyFilter;
+        window.onload = fetchLiveShips;
     </script>
 </body>
 </html>
