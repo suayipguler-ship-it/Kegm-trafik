@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Boğaz Trafik Planlama</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; padding: 12px; }
+        
+        .header { text-align: center; margin-bottom: 16px; padding: 8px; border-bottom: 1px solid #1e293b; }
+        .header h1 { font-size: 1.1rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
+
+        .filter-card { background-color: #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .filter-row { display: flex; gap: 8px; }
+        select, button { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc; font-size: 0.85rem; }
+        select:focus, button:focus { outline: none; border-color: #38bdf8; }
+        
+        button.btn-search { background-color: #0284c7; border: none; font-weight: 600; cursor: pointer; }
+        button.btn-search:active { background-color: #0369a1; }
+
+        .ship-list { display: flex; flex-direction: column; gap: 10px; }
+        .ship-card { background-color: #1e293b; border-radius: 10px; padding: 12px; border-left: 4px solid #38bdf8; position: relative; }
+        .ship-card.assigned { border-left-color: #22c55e; }
+
+        .ship-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+        .ship-name { font-size: 1rem; font-weight: bold; color: #ffffff; }
+        .ship-time { font-size: 0.85rem; font-weight: 600; color: #38bdf8; background: #0f172a; padding: 2px 6px; border-radius: 4px; }
+
+        .ship-details { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 8px; }
+        .ship-details span { color: #e2e8f0; font-weight: 500; }
+
+        .pilot-row { display: flex; gap: 6px; align-items: center; border-top: 1px solid #334155; padding-top: 8px; }
+        .pilot-input { flex: 1; padding: 6px 8px; font-size: 0.8rem; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #f8fafc; }
+        .btn-assign { width: auto; padding: 6px 12px; background: #22c55e; border: none; font-size: 0.8rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
+        .btn-assign:active { background: #16a34a; }
+
+        .empty-msg { text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 24px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Boğaz Geçiş Planlama</h1>
+    </div>
+
+    <div class="filter-card">
+        <div class="filter-row">
+            <select id="selBogaz">
+                <option value="CANAKKALE">Çanakkale</option>
+                <option value="ISTANBUL">İstanbul</option>
+            </select>
+            <select id="selYon">
+                <option value="GÜNEY-KUZEY">Güney - Kuzey</option>
+                <option value="KUZEY-GÜNEY">Kuzey - Güney</option>
+            </select>
+        </div>
+        <select id="selHareket">
+            <option value="PLAN. GEÇİŞ">Planlanan Geçiş</option>
+            <option value="BOĞAZDA">Boğazda</option>
+            <option value="GEÇİŞE HAZIR">Geçişe Hazır</option>
+        </select>
+        <button class="btn-search" onclick="fetchAndRender()">Listeyi Getir</button>
+    </div>
+
+    <div id="shipContainer" class="ship-list">
+        <div class="empty-msg">Listelemek için butona dokunun.</div>
+    </div>
+
+    <script>
+        // Cihazın kendi yerel hafızasından atamaları oku
+        function getAssignments() {
+            try {
+                return JSON.parse(localStorage.getItem("local_pilot_assignments") || "{}");
+            } catch (e) {
+                return {};
+            }
+        }
+
+        // Kılavuzu bu cihaza özel kaydet
+        function assignPilot(shipName) {
+            const input = document.getElementById("input-" + encodeURIComponent(shipName));
+            if (!input) return;
+            const pilotName = input.value.trim();
+            const assignments = getAssignments();
+
+            if (pilotName) {
+                assignments[shipName] = pilotName;
+            } else {
+                delete assignments[shipName];
+            }
+
+            localStorage.setItem("local_pilot_assignments", JSON.stringify(assignments));
+            renderList();
+        }
+
+        // Başlangıç/yedek sıralı veri havuzu
+        let currentShips = [
+            { name: "LADY ROSE", time: "16:30", len: "180 m", type: "Dökme Yük", pilotReq: "Evet", tug: "Hayır" },
+            { name: "MARMARA STAR", time: "17:15", len: "145 m", type: "Genel Kargo", pilotReq: "Hayır", tug: "Hayır" },
+            { name: "AEGEAN BREEZE", time: "18:00", len: "220 m", type: "Konteyner", pilotReq: "Evet", tug: "Evet" },
+            { name: "BOSPHORUS VOYAGER", time: "19:10", len: "160 m", type: "Tanker", pilotReq: "Evet", tug: "Hayır" }
+        ];
+
+        function fetchAndRender() {
+            // Harici sunucu beklemeden anında sıralı planlamayı çizer
+            renderList();
+        }
+
+        function renderList() {
+            const container = document.getElementById("shipContainer");
+            const assignments = getAssignments();
+
+            if (!currentShips || currentShips.length === 0) {
+                container.innerHTML = '<div class="empty-msg">Kayıt bulunamadı.</div>';
+                return;
+            }
+
+            let html = "";
+            currentShips.forEach((ship) => {
+                const assignedPilot = assignments[ship.name] || "";
+                const isAssigned = assignedPilot.length > 0;
+
+                html += `
+                    <div class="ship-card ${isAssigned ? 'assigned' : ''}">
+                        <div class="ship-header">
+                            <span class="ship-name">${ship.name}</span>
+                            <span class="ship-time">${ship.time}</span>
+                        </div>
+                        <div class="ship-details">
+                            Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
+                            Kılavuz Talebi: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
+                        </div>
+                        <div class="pilot-row">
+                            <input type="text" 
+                                   id="input-${encodeURIComponent(ship.name)}" 
+                                   class="pilot-input" 
+                                   placeholder="Kılavuz Kaptan Ata..." 
+                                   value="${assignedPilot}">
+                            <button class="btn-assign" onclick="assignPilot('${ship.name.replace(/'/g, "\\'")}')">
+                                ${isAssigned ? 'Güncelle' : 'Ata'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Sayfa açıldığında otomatik yükle
+        window.onload = renderList;
+    </script>
+</body>
+</html>
