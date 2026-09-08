@@ -16,7 +16,7 @@
         select, button { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background-color: #0f172a; color: #f8fafc; font-size: 0.85rem; }
         select:focus, button:focus { outline: none; border-color: #38bdf8; }
         
-        button.btn-search { background-color: #0284c7; border: none; font-weight: 600; cursor: pointer; }
+        button.btn-search { background-color: #0284c7; border: none; font-weight: 600; cursor: pointer; color: #fff; }
         button.btn-search:active { background-color: #0369a1; }
 
         .ship-list { display: flex; flex-direction: column; gap: 10px; }
@@ -58,8 +58,10 @@
         </div>
         <select id="selHareket" onchange="renderList()">
             <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
+            <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
+            <option value="BOĞAZDA">BOĞAZDA</option>
         </select>
-        <button class="btn-search" onclick="loadShipsData()">Yenile</button>
+        <button class="btn-search" onclick="loadShipsData()">Listeyi Yenile</button>
     </div>
 
     <div id="shipContainer" class="ship-list">
@@ -113,16 +115,15 @@
 
         async function loadShipsData() {
             const container = document.getElementById("shipContainer");
-            container.innerHTML = '<div class="status-msg">Veri yükleniyor...</div>';
+            container.innerHTML = '<div class="status-msg">Veri güncelleniyor...</div>';
             
             try {
-                // Doğrudan kendi GitHub sayfanızdan engelsiz JSON çeker
                 const res = await fetch("ships.json?t=" + Date.now());
-                if (!res.ok) throw new Error("Veri henüz hazır değil.");
+                if (!res.ok) throw new Error("Dosya bulunamadı");
                 allShips = await res.json();
                 renderList();
             } catch (err) {
-                container.innerHTML = '<div class="status-msg">Gemi verisi hazırlanıyor, lütfen 1 dakika sonra Yenile butonuna basın.</div>';
+                container.innerHTML = '<div class="status-msg">Gemi verisi hazırlanıyor, lütfen birazdan butona tekrar dokunun.</div>';
             }
         }
 
@@ -138,7 +139,7 @@
             );
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="status-msg">Bu kritere uygun planlanmış gemi bulunamadı.</div>';
+                container.innerHTML = '<div class="status-msg">Bu kritere uygun gemi bulunamadı.</div>';
                 return;
             }
 
@@ -155,7 +156,7 @@
                         </div>
                         <div class="ship-details">
                             Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
-                            Kılavuz: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
+                            Kılavuz Talebi: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
                         </div>
                         <div class="pilot-row">
                             <input type="text" 
