@@ -30,33 +30,49 @@
             display: flex; 
             justify-content: space-between; 
             align-items: flex-start; 
-            gap: 10px; 
+            gap: 8px; 
             margin-bottom: 6px; 
         }
         
+        /* Gemi adı: Bir tık küçültüldü (0.95rem) */
         .ship-name-link {
             color: #ffffff;
             text-decoration: none;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 700;
             display: inline-block;
-            line-height: 1.25;
+            line-height: 1.3;
             word-break: break-word;
             flex: 1;
         }
         .ship-name-link:active { color: #38bdf8; }
-        .ais-icon { font-size: 0.85rem; color: #38bdf8; margin-left: 3px; }
+        .ais-icon { font-size: 0.8rem; color: #38bdf8; margin-left: 3px; }
 
-        .ship-time { 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            color: #38bdf8; 
-            background: #0b1329; 
-            padding: 3px 6px; 
-            border-radius: 4px;
-            white-space: nowrap; 
-            flex-shrink: 0;      
-            text-align: right;
+        /* Tek satır rozet: Gemi adıyla eşit büyüklükte (0.95rem) */
+        .ship-time-badge { 
+            display: inline-flex;
+            align-items: center;
+            background: #1e293b; 
+            border: 1px solid #d97706; 
+            padding: 3px 7px; 
+            border-radius: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            font-size: 0.95rem;
+            line-height: 1.2;
+        }
+        .time-prefix {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-right: 5px;
+            letter-spacing: 0.3px;
+        }
+        .time-val {
+            font-weight: 800;
+            color: #fbbf24; /* Parlak sarı/amber */
+            letter-spacing: 0.5px;
         }
 
         .ship-details { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 8px; }
@@ -135,6 +151,23 @@
             return 9999999999999;
         }
 
+        // Zamanı "09/ 04:30" biçimine dönüştürür
+        function formatDisplayTime(timeStr) {
+            if (!timeStr) return "-";
+
+            const match = timeStr.match(/(\d{2})[./](\d{2})[./]\d{2,4}\s+(\d{2}:\d{2})/);
+            if (match) {
+                return `${match[1]}/ ${match[3]}`;
+            }
+
+            const timeOnly = timeStr.match(/(\d{2}:\d{2})/);
+            if (timeOnly) {
+                return timeOnly[1];
+            }
+
+            return timeStr;
+        }
+
         function savePilot(index, uniqueKey) {
             const input = document.getElementById("pilot_in_" + index);
             const btn = document.getElementById("pilot_btn_" + index);
@@ -209,13 +242,18 @@
                     aisUrl = `https://www.google.com/search?q=${encodeURIComponent(ship.name + ' ' + ship.len + 'm marinetraffic')}&btnI=1`;
                 }
 
+                const displayTime = formatDisplayTime(ship.time);
+
                 html += `
                     <div class="ship-card ${isAssigned ? 'assigned' : ''}" id="card_${index}">
                         <div class="ship-header">
                             <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
                                 ${ship.name} <span class="ais-icon">↗</span>
                             </a>
-                            <span class="ship-time">${ship.time}</span>
+                            <div class="ship-time-badge">
+                                <span class="time-prefix">PLAN. GEÇİŞ</span>
+                                <span class="time-val">${displayTime}</span>
+                            </div>
                         </div>
                         <div class="ship-details">
                             Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
