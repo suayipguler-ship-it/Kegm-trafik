@@ -3,17 +3,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "ORUBA",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 06:35",
-    "len": "131,55",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "PAUL",
     "time": "PLAN. GE&#199;İŞ 09.09.26 06:35",
     "len": "31,27",
@@ -30,6 +19,17 @@
     "len": "274,2",
     "type": "TANKER",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "BRITTA K",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 01:30",
+    "len": "73,7",
+    "type": "LIVESTOCK CARRIER",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -106,6 +106,17 @@
     "time": "PLAN. GE&#199;İŞ 09.09.26 08:00",
     "len": "274,2",
     "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "ORUBA",
+    "time": "GE&#199;İŞE HAZIR 08.09.26 01:15",
+    "len": "131,55",
+    "type": "GENERAL CARGO",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -201,17 +212,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
-    "name": "ODYSSEY",
-    "time": "BOĞAZDA 08.09.26 19:30",
-    "len": "134,44",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
     "name": "HAJE HESEN",
     "time": "BOĞAZDA 08.09.26 20:55",
     "len": "100,7",
@@ -227,17 +227,6 @@
     "time": "BOĞAZDA 08.09.26 10:50",
     "len": "145,9",
     "type": "CONTAINER",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "name": "HACI HILMI-II",
-    "time": "BOĞAZDA 08.09.26 17:50",
-    "len": "111,95",
-    "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   },
@@ -355,17 +344,6 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "STOCKTON",
-    "time": "PLAN. GE&#199;İŞ 08.09.26 21:30",
-    "len": "179,94",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "UNITED SPIRIT",
     "time": "PLAN. GE&#199;İŞ 08.09.26 23:15",
     "len": "174,98",
@@ -453,12 +431,34 @@
   {
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "JIN FU",
+    "time": "GE&#199;İŞE HAZIR 08.09.26 20:35",
+    "len": "199,99",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
     "name": "NEW RANGER",
     "time": "BOĞAZDA 04.09.26 11:00",
     "len": "127,2",
     "type": "CHEMICAL TANKER",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "STAR OSPREY",
+    "time": "BOĞAZDA 08.09.26 22:05",
+    "len": "179,88",
+    "type": "TANKER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -497,6 +497,17 @@
   {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "ILGAZ",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 01:50",
+    "len": "99,87",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
     "name": "LADY JASMIN",
     "time": "GE&#199;İŞE HAZIR 08.09.26 15:12",
@@ -514,17 +525,6 @@
     "len": "137,52",
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "SUM",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 17:05",
-    "len": "95,05",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -585,28 +585,6 @@
   {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "ILGAZ",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 17:49",
-    "len": "99,87",
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "COFFEE STAR",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 20:19",
-    "len": "139,1",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
     "name": "LABRADOR",
     "time": "BOĞAZDA 01.09.26 08:00",
@@ -623,17 +601,6 @@
     "time": "BOĞAZDA 03.09.26 08:05",
     "len": "100,31",
     "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "ULTRA SAKA",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 18:48",
-    "len": "199,99",
-    "type": "BULK CARRIER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -684,11 +651,11 @@
   {
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "DOGANBEY",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 18:42",
-    "len": "87,25",
-    "type": "GENERAL CARGO",
+    "hareket": "BOĞAZDA",
+    "name": "WOLF 2",
+    "time": "BOĞAZDA 05.09.26 13:34",
+    "len": "62,95",
+    "type": "TANKER",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   },
@@ -696,11 +663,11 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "WOLF 2",
-    "time": "BOĞAZDA 05.09.26 13:34",
-    "len": "62,95",
-    "type": "TANKER",
-    "pilotReq": "Hayır",
+    "name": "ULTRA SAKA",
+    "time": "BOĞAZDA 08.09.26 21:45",
+    "len": "199,99",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -740,17 +707,6 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "NERMİN TELLİ",
-    "time": "BOĞAZDA 08.09.26 20:27",
-    "len": "91,7",
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
     "name": "SAHIN 3",
     "time": "BOĞAZDA 08.09.26 21:03",
     "len": "94,56",
@@ -773,10 +729,10 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "KENAN T",
-    "time": "BOĞAZDA 08.09.26 20:12",
-    "len": "94,72",
-    "type": "GENERAL CARGO",
+    "name": "ISLAND POLARIS",
+    "time": "BOĞAZDA 08.09.26 20:54",
+    "len": "101,39",
+    "type": "TANKER",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   },
@@ -784,10 +740,21 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "ISLAND POLARIS",
-    "time": "BOĞAZDA 08.09.26 20:54",
-    "len": "101,39",
-    "type": "TANKER",
+    "name": "AC GLORIOUS",
+    "time": "BOĞAZDA 08.09.26 22:02",
+    "len": "234,88",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "DOGANBEY",
+    "time": "BOĞAZDA 08.09.26 21:35",
+    "len": "87,25",
+    "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   }
