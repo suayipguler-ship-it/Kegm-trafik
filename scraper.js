@@ -6,7 +6,6 @@ function fetchHTML(url) {
     https.get(url, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "tr-TR,tr;q=0.9"
       }
     }, (res) => {
@@ -14,7 +13,7 @@ function fetchHTML(url) {
       res.on("data", (chunk) => { data += chunk; });
       res.on("end", () => resolve(data));
     }).on("error", (err) => {
-      console.log("Bağlantı hatası:", err.message);
+      console.log("Hata:", err.message);
       resolve("");
     });
   });
@@ -25,80 +24,82 @@ function cleanText(text) {
 }
 
 async function scrape() {
-  // KEGM resmi parametre kodları ve karşılık gelen etiketler
-  const straits = [
-    { code: "C", name: "CANAKKALE" },
-    { code: "I", name: "ISTANBUL" }
-  ];
-
-  const directions = [
-    { code: "SN", name: "GÜNEY-KUZEY" },
-    { code: "NS", name: "KUZEY-GÜNEY" }
-  ];
-
-  const movements = [
-    { code: "YP", name: "PLAN. GEÇİŞ" },
-    { code: "YG", name: "GEÇİŞE HAZIR" },
-    { code: "I",  name: "BOĞAZDA" }
-  ];
-
+  console.log("Veri çekme başladı...");
+  
+  // Ana sayfa 1.6 MB veriyle geliyor, tüm gemileri içeriyor
+  const html = await fetchHTML("https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems");
+  
   let allShips = [];
 
-  for (const st of straits) {
-    for (const dir of directions) {
-      for (const mov of movements) {
-        // KEGM'in beklediği birebir resmi sorgu URL'i
-        const url = `https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems?Strait=${st.code}&Direction=${dir.code}&Movement=${mov.code}`;
-        const html = await fetchHTML(url);
+  // Tablodaki tüm satırları yakala
+  const rowMatches = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+  console.log("Toplam bulunan tr satır sayısı:", rowMatches.length);
 
-        if (!html) continue;
+  for (const row of rowMatches) {
+    const cols = [];
+    const cellMatches = row.match(/<t[dh][^>]*>[\s\S]*?<\/t[dh]>/gi) || [];
+    for (const cell of cellMatches) {
+      cols.push(cleanText(cell));
+    }
 
-        const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-        let trMatch;
-        let count = 0;
+    // Gemi satırlarını tespit et
+    // Tipik satır: [İşlemler, PLAN. GEÇİŞ, ORUBA, 13..., ...]
+    if (cols.length >= 4) {
+      // Başlık satırı değilse
+      const textJoined = cols.join(" ");
+      if (textJoined.includes("Gemi Adı") || textJoined.includes("İşlemler") && cols.length < 5) continue;
 
-        while ((trMatch = trRegex.exec(html)) !== null) {
-          const rowContent = trMatch[1];
-          const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
-          let tdMatch;
-          let cols = [];
+      let name = "";
+      let movement = "";
+      let length = "-";
+      let type = "-";
+      let pilotReq = "Hayır";
+      let tug = "Hayır";
 
-          while ((tdMatch = tdRegex.exec(rowContent)) !== null) {
-            cols.push(cleanText(tdMatch[1]));
-          }
-
-          // Resmi ekran: [0] İşlemler | [1] Planlama/Zaman | [2] Gemi Adı | [3] Boy | [4] Tip | [5] Kılavuz | [6] Römorkör
-          if (cols.length >= 4) {
-            let shipName = cols[2];
-            
-            // Başlık veya boşluk kontrolleri
-            if (!shipName || shipName === "İşlemler" || shipName.toLowerCase().includes("gemi ad")) {
-              shipName = cols[0];
-            }
-
-            if (shipName && !shipName.toLowerCase().includes("işlem") && !shipName.toLowerCase().includes("gemi ad") && !shipName.toLowerCase().includes("planlama")) {
-              allShips.push({
-                bogaz: st.name,
-                yon: dir.name,
-                hareket: mov.name,
-                name: shipName,
-                time: cols[1] || mov.name,
-                len: cols[3] || "-",
-                type: cols.length >= 5 ? cols[4] : "-",
-                pilotReq: cols.length >= 6 ? cols[5] : "Hayır",
-                tug: cols.length >= 7 ? cols[6] : "Hayır"
-              });
-              count++;
-            }
-          }
+      // Kolonları tara: Hangisi hareket, hangisi gemi adı
+      for (let i = 0; i < cols.length; i++) {
+        const val = cols[i];
+        if (val === "PLAN. GEÇİŞ" || val === "BOĞAZDA" || val === "GEÇİŞE HAZIR") {
+          movement = val;
+          if (cols[i + 1]) name = cols[i + 1];
         }
-        console.log(`Tamamlandı: ${st.name} | ${dir.name} | ${mov.name} -> ${count} gemi`);
+      }
+
+      // Eğer movement üzerinden bulunamadıysa standart indislerden dene
+      if (!name && cols[2] && cols[2].length > 1) {
+        name = cols[2];
+        movement = cols[1] || "PLAN. GEÇİŞ";
+      }
+
+      if (name && name !== "Gemi Adı" && name !== "İşlemler") {
+        allShips.push({
+          bogaz: "CANAKKALE", // Varsayılan veya satırdan
+          yon: "KUZEY-GÜNEY",
+          hareket: movement || "PLAN. GEÇİŞ",
+          name: name,
+          time: cols[1] || movement,
+          len: cols[3] || "-",
+          type: cols[4] || "-",
+          pilotReq: cols[5] || "Hayır",
+          tug: cols[6] || "Hayır"
+        });
       }
     }
   }
 
+  // İlk 3 gemi örneğini loga yazdır
+  console.log("Ayıklanan gemi sayısı:", allShips.length);
+  if (allShips.length > 0) {
+    console.log("Örnek Gemi 1:", JSON.stringify(allShips[0]));
+    console.log("Örnek Gemi 2:", JSON.stringify(allShips[1]));
+  } else {
+    // Eğer hala 0 ise satır örneğini bas
+    if (rowMatches.length > 1) {
+      console.log("Örnek Satır HTML:", rowMatches[1].slice(0, 300));
+    }
+  }
+
   fs.writeFileSync("ships.json", JSON.stringify(allShips, null, 2));
-  console.log("Kayıt tamam! ships.json dosyasına yazılan toplam gemi:", allShips.length);
 }
 
 scrape();
