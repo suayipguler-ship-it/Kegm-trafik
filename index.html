@@ -8,14 +8,17 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #050b14; color: #f8fafc; padding: 12px; }
         
-        .header { text-align: center; margin-bottom: 14px; padding: 10px; }
+        .header { text-align: center; margin-bottom: 12px; padding: 6px; }
         .header h1 { font-size: 1.15rem; color: #38bdf8; letter-spacing: 1px; font-weight: 700; }
 
-        .filter-card { background-color: #0f172a; border-radius: 12px; padding: 12px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #1e293b; }
+        .filter-card { background-color: #0f172a; border-radius: 12px; padding: 12px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px; border: 1px solid #1e293b; }
         .filter-row { display: flex; gap: 8px; }
-        select, button { width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #334155; background-color: #0b1329; color: #f8fafc; font-size: 0.9rem; font-weight: 500; }
-        select:focus, button:focus { outline: none; border-color: #38bdf8; }
+        select, input, button { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background-color: #0b1329; color: #f8fafc; font-size: 0.9rem; font-weight: 500; }
+        select:focus, input:focus, button:focus { outline: none; border-color: #38bdf8; }
         
+        .search-box { background-color: #131f37; border-color: #0284c7; font-size: 0.95rem; }
+        .search-box::placeholder { color: #64748b; }
+
         button.btn-search { background-color: #0284c7; border: none; font-weight: 700; cursor: pointer; color: #fff; margin-top: 2px; }
         button.btn-search:active { background-color: #0369a1; }
 
@@ -23,8 +26,21 @@
         .ship-card { background-color: #0f172a; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; border: 1px solid #1e293b; border-left-width: 5px; }
         .ship-card.assigned { border-left-color: #22c55e; background-color: #08211b; }
 
-        .ship-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-        .ship-name { font-size: 1.05rem; font-weight: bold; color: #ffffff; }
+        .ship-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        
+        /* Gemi adı tıklanabilir AIS linki */
+        .ship-name-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .ship-name-link:active { color: #38bdf8; }
+        .ais-icon { font-size: 0.85rem; color: #38bdf8; }
+
         .ship-time { font-size: 0.82rem; font-weight: 600; color: #38bdf8; background: #0b1329; padding: 2px 6px; border-radius: 4px; }
 
         .ship-details { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 8px; }
@@ -45,6 +61,9 @@
     </div>
 
     <div class="filter-card">
+        <!-- Canlı Arama -->
+        <input type="text" id="txtShipSearch" class="search-box" placeholder="🔍 Gemi Adı Ara..." oninput="renderList()">
+
         <div class="filter-row">
             <select id="selBogaz" onchange="renderList()">
                 <option value="CANAKKALE">CANAKKALE</option>
@@ -81,19 +100,19 @@
         function parseTimeString(timeStr) {
             if (!timeStr) return 9999999999999;
             
-            // "08.09.26 22:00" veya "08.09.2026 22:00" formatını metin içinden yakalar
+            // "08.09.26 22:00" veya "08.09.2026 22:00" formatı
             const dateMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
             if (dateMatch) {
                 const day = parseInt(dateMatch[1], 10);
                 const month = parseInt(dateMatch[2], 10) - 1;
                 let year = parseInt(dateMatch[3], 10);
-                if (year < 100) year += 2000; // "26" değerini 2026 yapar
+                if (year < 100) year += 2000;
                 const hour = parseInt(dateMatch[4], 10);
                 const minute = parseInt(dateMatch[5], 10);
                 return new Date(year, month, day, hour, minute).getTime();
             }
 
-            // Sadece saat formatı varsa ("22:00")
+            // Sadece saat formatı
             const timeOnlyMatch = timeStr.match(/(\d{2}):(\d{2})/);
             if (timeOnlyMatch) {
                 const now = new Date();
@@ -103,7 +122,7 @@
             return 9999999999999;
         }
 
-        function savePilot(index, shipName) {
+        function savePilot(index, uniqueKey) {
             const input = document.getElementById("pilot_in_" + index);
             const btn = document.getElementById("pilot_btn_" + index);
             const card = document.getElementById("card_" + index);
@@ -112,12 +131,12 @@
             const assignments = getAssignments();
 
             if (pilotName.length > 0) {
-                assignments[shipName] = pilotName;
+                assignments[uniqueKey] = pilotName;
                 card.classList.add("assigned");
                 btn.classList.add("saved");
                 btn.innerText = "Kaydedildi";
             } else {
-                delete assignments[shipName];
+                delete assignments[uniqueKey];
                 card.classList.remove("assigned");
                 btn.classList.remove("saved");
                 btn.innerText = "Ata";
@@ -132,7 +151,7 @@
             
             try {
                 const res = await fetch("ships.json?t=" + Date.now());
-                if (!res.ok) throw new Error("Henüz dosya oluşmadı");
+                if (!res.ok) throw new Error("Dosya okunamadı");
                 allShips = await res.json();
                 renderList();
             } catch (err) {
@@ -145,30 +164,47 @@
             const bogaz = document.getElementById("selBogaz").value;
             const yon = document.getElementById("selYon").value;
             const hareket = document.getElementById("selHareket").value;
+            const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
             const assignments = getAssignments();
 
-            // Seçilen filtreye göre eşle
-            let filtered = allShips.filter(s => 
-                s.bogaz === bogaz && s.yon === yon && s.hareket === hareket
-            );
+            let filtered = allShips.filter(s => {
+                const matchFilter = s.bogaz === bogaz && s.yon === yon && s.hareket === hareket;
+                if (!matchFilter) return false;
+                if (searchQuery.length > 0) {
+                    return s.name.toLowerCase().includes(searchQuery);
+                }
+                return true;
+            });
 
             if (filtered.length === 0) {
                 container.innerHTML = '<div class="status-msg">Bu kritere uygun gemi bulunamadı.</div>';
                 return;
             }
 
-            // Kronolojik sıralama: En yakın tarihten ileriye doğru
+            // Kronolojik sıralama
             filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
 
             let html = "";
             filtered.forEach((ship, index) => {
-                const assignedPilot = assignments[ship.name] || "";
+                // Tekil kimlik: İsim + Saat (Aynı isimli gemiler çakışmaz)
+                const uniqueKey = `${ship.name}_${ship.time}`;
+                const assignedPilot = assignments[uniqueKey] || assignments[ship.name] || "";
                 const isAssigned = assignedPilot.length > 0;
+                
+                // AIS URL Kurgusu: IMO varsa nokta atışı resmi profil, yoksa Google şanslı arama
+                let aisUrl = "";
+                if (ship.imo && ship.imo.length === 7) {
+                    aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`;
+                } else {
+                    aisUrl = `https://www.google.com/search?q=${encodeURIComponent(ship.name + ' ' + ship.len + 'm marinetraffic')}&btnI=1`;
+                }
 
                 html += `
                     <div class="ship-card ${isAssigned ? 'assigned' : ''}" id="card_${index}">
                         <div class="ship-header">
-                            <span class="ship-name">${ship.name}</span>
+                            <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
+                                ${ship.name} <span class="ais-icon">↗</span>
+                            </a>
                             <span class="ship-time">${ship.time}</span>
                         </div>
                         <div class="ship-details">
@@ -183,7 +219,7 @@
                                    value="${assignedPilot}">
                             <button id="pilot_btn_${index}" 
                                     class="btn-assign ${isAssigned ? 'saved' : ''}" 
-                                    onclick="savePilot(${index}, '${ship.name.replace(/'/g, "\\'")}')">
+                                    onclick="savePilot(${index}, '${uniqueKey.replace(/'/g, "\\'")}')">
                                 ${isAssigned ? 'Kaydedildi' : 'Ata'}
                             </button>
                         </div>
