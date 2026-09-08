@@ -14,6 +14,17 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
+    "name": "MSC MAYA",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 05:15",
+    "len": "395,4",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
     "name": "HOSEI VENTURE",
     "time": "PLAN. GE&#199;İŞ 09.09.26 03:30",
     "len": "182,98",
@@ -51,17 +62,6 @@
     "time": "PLAN. GE&#199;İŞ 09.09.26 04:00",
     "len": "179,88",
     "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "MSC RICHIKA F",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 01:00",
-    "len": "160,88",
-    "type": "CONTAINER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -205,6 +205,17 @@
     "time": "BOĞAZDA 08.09.26 22:35",
     "len": "144,03",
     "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MSC RICHIKA F",
+    "time": "BOĞAZDA 09.09.26 00:55",
+    "len": "160,88",
+    "type": "CONTAINER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -498,6 +509,17 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
+    "name": "LADY MARIS",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 02:40",
+    "len": "179,99",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
     "name": "BG BLUE",
     "time": "PLAN. GE&#199;İŞ 09.09.26 02:20",
     "len": "169,95",
@@ -520,11 +542,33 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
+    "name": "HISTRIA AMBRA",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 03:00",
+    "len": "179,96",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
     "name": "BURAK BAYRAKTAR",
     "time": "PLAN. GE&#199;İŞ 09.09.26 02:00",
     "len": "135,99",
     "type": "CONTAINER",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "PLANEO",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 03:20",
+    "len": "134,6",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -536,6 +580,17 @@
     "len": "137,52",
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "POLARIS Z",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 00:59",
+    "len": "148,17",
+    "type": "BULK CARRIER",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
