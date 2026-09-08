@@ -322,17 +322,6 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "STAR OSPREY",
-    "time": "PLAN. GE&#199;İŞ 08.09.26 22:00",
-    "len": "179,88",
-    "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "SIAN",
     "time": "PLAN. GE&#199;İŞ 09.09.26 00:30",
     "len": "225",
@@ -360,17 +349,6 @@
     "len": "140,85",
     "type": "TANKER",
     "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "ALBAY",
-    "time": "PLAN. GE&#199;İŞ 08.09.26 22:15",
-    "len": "67,3",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -498,22 +476,44 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "ILGAZ",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 01:50",
-    "len": "99,87",
-    "type": "CHEMICAL TANKER",
+    "name": "LADY JASMIN",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 02:30",
+    "len": "134,45",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "SUM",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 02:10",
+    "len": "95,05",
+    "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "LADY JASMIN",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 15:12",
-    "len": "134,45",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "LADY MARIS",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 02:40",
+    "len": "179,99",
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "ILGAZ",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 01:50",
+    "len": "99,87",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -558,17 +558,6 @@
     "len": "74,05",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "LADY MARIS",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 20:15",
-    "len": "179,99",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -630,10 +619,10 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "NS EXPLORER",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 19:57",
-    "len": "89,9",
-    "type": "GENERAL CARGO",
+    "name": "ALATEPE",
+    "time": "GE&#199;İŞE HAZIR 08.09.26 22:21",
+    "len": "115,5",
+    "type": "CHEMICAL TANKER",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   },
@@ -641,11 +630,11 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "AC GLORIOUS",
-    "time": "GE&#199;İŞE HAZIR 08.09.26 18:51",
-    "len": "234,88",
-    "type": "BULK CARRIER",
-    "pilotReq": "Evet",
+    "name": "NS EXPLORER",
+    "time": "GE&#199;İŞE HAZIR 08.09.26 19:57",
+    "len": "89,9",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
