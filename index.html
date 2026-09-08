@@ -25,7 +25,7 @@
 
         .ship-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
         .ship-name { font-size: 1.05rem; font-weight: bold; color: #ffffff; }
-        .ship-time { font-size: 0.85rem; font-weight: 600; color: #38bdf8; background: #0b1329; padding: 2px 6px; border-radius: 4px; }
+        .ship-time { font-size: 0.82rem; font-weight: 600; color: #38bdf8; background: #0b1329; padding: 2px 6px; border-radius: 4px; }
 
         .ship-details { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 8px; }
         .ship-details span { color: #e2e8f0; font-weight: 500; }
@@ -81,21 +81,25 @@
         function parseTimeString(timeStr) {
             if (!timeStr) return 9999999999999;
             
-            // "08.09.2026 21:30" veya "08/09/2026 21:30" formatı
-            const fullMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{4})\s+(\d{2}):(\d{2})/);
-            if (fullMatch) {
-                const [_, day, month, year, hour, minute] = fullMatch;
-                return new Date(year, month - 1, day, hour, minute).getTime();
+            // "08.09.26 22:00" veya "08.09.2026 22:00" formatını metin içinden yakalar
+            const dateMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
+            if (dateMatch) {
+                const day = parseInt(dateMatch[1], 10);
+                const month = parseInt(dateMatch[2], 10) - 1;
+                let year = parseInt(dateMatch[3], 10);
+                if (year < 100) year += 2000; // "26" değerini 2026 yapar
+                const hour = parseInt(dateMatch[4], 10);
+                const minute = parseInt(dateMatch[5], 10);
+                return new Date(year, month, day, hour, minute).getTime();
             }
 
-            // Sadece "21:30" saat formatı
+            // Sadece saat formatı varsa ("22:00")
             const timeOnlyMatch = timeStr.match(/(\d{2}):(\d{2})/);
             if (timeOnlyMatch) {
                 const now = new Date();
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate(), timeOnlyMatch[1], timeOnlyMatch[2]).getTime();
+                return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(timeOnlyMatch[1], 10), parseInt(timeOnlyMatch[2], 10)).getTime();
             }
 
-            // Eğer saat bulunamazsa listenin en sonuna at
             return 9999999999999;
         }
 
@@ -143,7 +147,7 @@
             const hareket = document.getElementById("selHareket").value;
             const assignments = getAssignments();
 
-            // İlgili filtreye göre gemileri seç
+            // Seçilen filtreye göre eşle
             let filtered = allShips.filter(s => 
                 s.bogaz === bogaz && s.yon === yon && s.hareket === hareket
             );
@@ -153,7 +157,7 @@
                 return;
             }
 
-            // Kronolojik sıralama: En erken saatten en geç saate doğru
+            // Kronolojik sıralama: En yakın tarihten ileriye doğru
             filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
 
             let html = "";
