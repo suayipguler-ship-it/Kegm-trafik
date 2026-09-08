@@ -19,87 +19,32 @@ function fetchHTML(url) {
   });
 }
 
-function cleanText(text) {
-  return text.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
-}
-
 async function scrape() {
-  console.log("Veri çekme başladı...");
-  
-  // Ana sayfa 1.6 MB veriyle geliyor, tüm gemileri içeriyor
   const html = await fetchHTML("https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems");
   
-  let allShips = [];
-
-  // Tablodaki tüm satırları yakala
-  const rowMatches = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
-  console.log("Toplam bulunan tr satır sayısı:", rowMatches.length);
-
-  for (const row of rowMatches) {
-    const cols = [];
-    const cellMatches = row.match(/<t[dh][^>]*>[\s\S]*?<\/t[dh]>/gi) || [];
-    for (const cell of cellMatches) {
-      cols.push(cleanText(cell));
-    }
-
-    // Gemi satırlarını tespit et
-    // Tipik satır: [İşlemler, PLAN. GEÇİŞ, ORUBA, 13..., ...]
-    if (cols.length >= 4) {
-      // Başlık satırı değilse
-      const textJoined = cols.join(" ");
-      if (textJoined.includes("Gemi Adı") || textJoined.includes("İşlemler") && cols.length < 5) continue;
-
-      let name = "";
-      let movement = "";
-      let length = "-";
-      let type = "-";
-      let pilotReq = "Hayır";
-      let tug = "Hayır";
-
-      // Kolonları tara: Hangisi hareket, hangisi gemi adı
-      for (let i = 0; i < cols.length; i++) {
-        const val = cols[i];
-        if (val === "PLAN. GEÇİŞ" || val === "BOĞAZDA" || val === "GEÇİŞE HAZIR") {
-          movement = val;
-          if (cols[i + 1]) name = cols[i + 1];
-        }
-      }
-
-      // Eğer movement üzerinden bulunamadıysa standart indislerden dene
-      if (!name && cols[2] && cols[2].length > 1) {
-        name = cols[2];
-        movement = cols[1] || "PLAN. GEÇİŞ";
-      }
-
-      if (name && name !== "Gemi Adı" && name !== "İşlemler") {
-        allShips.push({
-          bogaz: "CANAKKALE", // Varsayılan veya satırdan
-          yon: "KUZEY-GÜNEY",
-          hareket: movement || "PLAN. GEÇİŞ",
-          name: name,
-          time: cols[1] || movement,
-          len: cols[3] || "-",
-          type: cols[4] || "-",
-          pilotReq: cols[5] || "Hayır",
-          tug: cols[6] || "Hayır"
-        });
-      }
-    }
-  }
-
-  // İlk 3 gemi örneğini loga yazdır
-  console.log("Ayıklanan gemi sayısı:", allShips.length);
-  if (allShips.length > 0) {
-    console.log("Örnek Gemi 1:", JSON.stringify(allShips[0]));
-    console.log("Örnek Gemi 2:", JSON.stringify(allShips[1]));
+  // 1. Form etiketini ve methodunu yakala
+  const formMatch = html.match(/<form[\s\S]*?action=["']?([^"'>]*)["']?[\s\S]*?>/i);
+  if (formMatch) {
+    console.log("FORM BULUNDU -> Action:", formMatch[1] || "(kendi adresine)");
   } else {
-    // Eğer hala 0 ise satır örneğini bas
-    if (rowMatches.length > 1) {
-      console.log("Örnek Satır HTML:", rowMatches[1].slice(0, 300));
+    console.log("Form etiketi bulunamadı.");
+  }
+
+  // 2. Sayfadaki AJAX veya API çağrısı yapan scriptleri yakala
+  const scripts = html.match(/<script[\s\S]*?<\/script>/gi) || [];
+  console.log("Bulunan Script Sayısı:", scripts.length);
+
+  for (const sc of scripts) {
+    if (sc.includes("ajax") || sc.includes("fetch") || sc.includes("vessel") || sc.includes("DataTable") || sc.includes("post")) {
+      console.log("--- KRİTİK SCRİPT BULUNDU ---");
+      // İlgili scriptin ilk 300 karakterini dök
+      console.log(sc.replace(/\s+/g, " ").slice(0, 400));
     }
   }
 
-  fs.writeFileSync("ships.json", JSON.stringify(allShips, null, 2));
+  if (!fs.existsSync("ships.json")) {
+    fs.writeFileSync("ships.json", JSON.stringify([], null, 2));
+  }
 }
 
 scrape();
