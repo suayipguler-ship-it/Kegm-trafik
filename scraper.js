@@ -38,7 +38,7 @@ function cleanText(text) {
 }
 
 async function scrape() {
-  console.log("KEGM Veri Çekme Başlıyor (IMO Destekli)...");
+  console.log("KEGM Veri Çekme Başlıyor (IMO + Log Destekli)...");
 
   const initial = await makeRequest("https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems");
   
@@ -99,7 +99,6 @@ async function scrape() {
         while ((trMatch = trRegex.exec(res.data)) !== null) {
           const rowContent = trMatch[1];
 
-          // IMO numarasını fonksiyon çağrısından veya parametreden yakala
           let imo = "";
           const mapMatch = rowContent.match(/ShowOnMap\(\s*['"]?[0-9]{9}['"]?\s*,\s*['"]?([0-9]{7})['"]?\s*\)/i);
           if (mapMatch) {
@@ -147,8 +146,45 @@ async function scrape() {
     }
   }
 
+  // 1. Canlı anlık listeyi kaydet
   fs.writeFileSync("ships.json", JSON.stringify(allShips, null, 2));
-  console.log("TAMAMLANDI! ships.json toplam gemi sayısı:", allShips.length);
+
+  // 2. Kılavuzlu Geçiş Geçmişi (Log) Yönetimi
+  let history = [];
+  if (fs.existsSync("history.json")) {
+    try {
+      history = JSON.parse(fs.readFileSync("history.json", "utf-8"));
+    } catch (e) {
+      history = [];
+    }
+  }
+
+  const now = Date.now();
+  const twoDaysAgo = now - (48 * 60 * 60 * 1000);
+
+  // Sadece "BOĞAZDA" olan ve kılavuz talebi "Evet" olan gemileri filtrele
+  const inStraitWithPilot = allShips.filter(s => 
+    s.hareket === "BOĞAZDA" && 
+    (s.pilotReq.toLowerCase().includes("evet") || s.pilotReq.toLowerCase().includes("yes"))
+  );
+
+  for (const ship of inStraitWithPilot) {
+    const uniqueKey = `${ship.name}_${ship.time}_${ship.bogaz}_${ship.yon}`;
+    const exists = history.some(h => `${h.name}_${h.time}_${h.bogaz}_${h.yon}` === uniqueKey);
+
+    if (!exists) {
+      history.push({
+        ...ship,
+        entryTimestamp: now
+      });
+    }
+  }
+
+  // 48 saatten eski kayıtları temizle
+  history = history.filter(h => (h.entryTimestamp || 0) > twoDaysAgo);
+
+  fs.writeFileSync("history.json", JSON.stringify(history, null, 2));
+  console.log(`Log güncellendi. Toplam kayıtlı kılavuzlu gemi: ${history.length}`);
 }
 
 scrape();
