@@ -8,8 +8,10 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #050b14; color: #f8fafc; padding: 12px; }
         
-        .header { text-align: center; margin-bottom: 12px; padding: 4px; }
-        .header h1 { font-size: 1.15rem; color: #38bdf8; letter-spacing: 1px; font-weight: 700; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 4px 6px; }
+        .header h1 { font-size: 1.15rem; color: #38bdf8; letter-spacing: 1px; font-weight: 700; margin: 0; }
+        .btn-settings { background: none; border: none; font-size: 1.25rem; color: #94a3b8; cursor: pointer; padding: 4px; }
+        .cloud-status { font-size: 0.8rem; margin-right: 6px; }
 
         .nav-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
         .btn-tab { flex: 1; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #334155; background: #0f172a; color: #94a3b8; cursor: pointer; }
@@ -96,7 +98,7 @@
             font-weight: 700;
         }
 
-        /* Pilot Seçim Modalı */
+        /* Modal Pencereler */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -117,7 +119,7 @@
             gap: 10px;
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
-        .modal-header h3 { font-size: 1rem; color: #38bdf8; }
+        .modal-header h3 { font-size: 1rem; color: #38bdf8; margin: 0; }
         .btn-close { width: auto; background: none; border: none; font-size: 1.3rem; color: #94a3b8; cursor: pointer; padding: 0 4px; }
         
         .vardiya-tabs { display: flex; gap: 6px; }
@@ -152,6 +154,16 @@
             font-weight: 700;
         }
 
+        /* Ayar Modalı */
+        .settings-content {
+            border-radius: 12px;
+            margin: auto;
+            width: 90%;
+            max-width: 400px;
+            border-top: none;
+            border: 1px solid #334155;
+        }
+
         .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
     </style>
 </head>
@@ -159,6 +171,10 @@
 
     <div class="header">
         <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
+        <div style="display:flex; align-items:center;">
+            <span id="cloudStatus" class="cloud-status" title="Senkronizasyon Durumu">☁️</span>
+            <button class="btn-settings" onclick="openSettingsModal()" title="Ayarlar">⚙️</button>
+        </div>
     </div>
 
     <div class="nav-tabs">
@@ -218,8 +234,25 @@
         </div>
     </div>
 
+    <!-- Ayar / GitHub Token Modalı -->
+    <div id="settingsModal" class="modal-overlay" onclick="closeSettingsModal(event)">
+        <div class="modal-content settings-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>GitHub Bulut Senkronizasyonu</h3>
+                <button class="btn-close" onclick="closeSettingsModal()">✕</button>
+            </div>
+            <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
+                Atamaların en az 1 yıl boyunca tüm cihazlarda kalıcı olması için oluşturduğunuz GitHub Token kodunu kaydedin:
+            </div>
+            <input type="password" id="txtGithubToken" placeholder="github_pat_..." style="margin-top:6px;">
+            <button class="btn-search" onclick="saveSettings()">Kaydet ve Bağlan</button>
+        </div>
+    </div>
+
     <script>
-        // 3 Vardiyanın Kılavuz Kaptan Listeleri
+        const REPO_OWNER = "suayipguler-ship-it";
+        const REPO_NAME = "Kegm-trafik";
+
         const VARDIYALAR = {
             1: [
                 "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
@@ -257,13 +290,40 @@
         let selectedShipKey = "";
         let allShips = [];
         let historyShips = [];
+        let globalAssignments = {};
+        let assignmentsSha = ""; // GitHub dosya SHA kontrolü
 
-        function getAssignments() {
-            try {
-                return JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
-            } catch (e) {
-                return {};
+        function getStoredToken() {
+            return localStorage.getItem("kegm_gh_token") || "";
+        }
+
+        function updateCloudStatus(status) {
+            const el = document.getElementById("cloudStatus");
+            if (status === "syncing") el.innerText = "🔄";
+            else if (status === "ok") el.innerText = "☁️✅";
+            else if (status === "error") el.innerText = "⚠️";
+            else el.innerText = "☁️";
+        }
+
+        function openSettingsModal() {
+            document.getElementById("txtGithubToken").value = getStoredToken();
+            document.getElementById("settingsModal").style.display = "flex";
+        }
+
+        function closeSettingsModal(e) {
+            if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        function saveSettings() {
+            const token = document.getElementById("txtGithubToken").value.trim();
+            if (token) {
+                localStorage.setItem("kegm_gh_token", token);
+            } else {
+                localStorage.removeItem("kegm_gh_token");
             }
+            document.getElementById("settingsModal").style.display = "none";
+            loadAllData();
         }
 
         function switchMode(mode) {
@@ -286,11 +346,8 @@
             renderCurrentView();
         }
 
-        // Kesin Kronolojik Zaman Dönüştürücü
         function parseTimeString(timeStr) {
             if (!timeStr) return 0;
-            
-            // "09.09.26 15:30" veya "09/09/2026 15:30"
             const dateMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
             if (dateMatch) {
                 const day = parseInt(dateMatch[1], 10);
@@ -302,7 +359,6 @@
                 return new Date(year, month, day, hour, minute).getTime();
             }
 
-            // Sadece "15:30"
             const timeOnlyMatch = timeStr.match(/(\d{2}):(\d{2})/);
             if (timeOnlyMatch) {
                 const now = new Date();
@@ -321,7 +377,6 @@
             return timeStr;
         }
 
-        // Pilot Atama Modalı İşlemleri
         function openPilotModal(uniqueKey, shipName) {
             selectedShipKey = uniqueKey;
             document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
@@ -353,16 +408,62 @@
             container.innerHTML = html;
         }
 
-        function assignPilot(pilotName) {
-            const assignments = getAssignments();
+        // Buluta ve Belleğe Kaydetme Motoru
+        async function assignPilot(pilotName) {
             if (pilotName) {
-                assignments[selectedShipKey] = pilotName;
+                globalAssignments[selectedShipKey] = pilotName;
             } else {
-                delete assignments[selectedShipKey];
+                delete globalAssignments[selectedShipKey];
             }
-            localStorage.setItem("kegm_pilot_store", JSON.stringify(assignments));
+
+            // 1. Yerel belleği hemen güncelle (hızlı tepki için)
+            localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
             document.getElementById("pilotModal").style.display = "none";
             renderCurrentView();
+
+            // 2. GitHub Bulutuna Commit Gönder
+            const token = getStoredToken();
+            if (token) {
+                updateCloudStatus("syncing");
+                try {
+                    // En güncel dosya SHA bilgisini al
+                    const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/assignments.json`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    
+                    if (getRes.ok) {
+                        const fileData = await getRes.json();
+                        assignmentsSha = fileData.sha;
+                    }
+
+                    const utf8Content = unescape(encodeURIComponent(JSON.stringify(globalAssignments, null, 2)));
+                    const base64Content = btoa(utf8Content);
+
+                    const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/assignments.json`, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: `Kılavuz Atama: ${selectedShipKey} -> ${pilotName || 'Silindi'}`,
+                            content: base64Content,
+                            sha: assignmentsSha
+                        })
+                    });
+
+                    if (putRes.ok) {
+                        const putData = await putRes.json();
+                        assignmentsSha = putData.content.sha;
+                        updateCloudStatus("ok");
+                    } else {
+                        updateCloudStatus("error");
+                    }
+                } catch (e) {
+                    console.error("Bulut kayıt hatası:", e);
+                    updateCloudStatus("error");
+                }
+            }
         }
 
         async function loadAllData() {
@@ -370,14 +471,28 @@
             container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
             
             try {
-                const [liveRes, histRes] = await Promise.all([
+                // Yerel hafızayı yedek olarak oku
+                try {
+                    globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
+                } catch (e) { globalAssignments = {}; }
+
+                const [liveRes, histRes, assignRes] = await Promise.all([
                     fetch("ships.json?t=" + Date.now()).catch(() => ({ ok: false })),
-                    fetch("history.json?t=" + Date.now()).catch(() => ({ ok: false }))
+                    fetch("history.json?t=" + Date.now()).catch(() => ({ ok: false })),
+                    fetch("assignments.json?t=" + Date.now()).catch(() => ({ ok: false }))
                 ]);
 
                 if (liveRes.ok) allShips = await liveRes.json();
                 if (histRes.ok) historyShips = await histRes.json();
                 
+                // Buluttaki kalıcı atamalar varsa yerel olanla harmanla
+                if (assignRes.ok) {
+                    const cloudAssignments = await assignRes.json();
+                    globalAssignments = { ...globalAssignments, ...cloudAssignments };
+                    localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
+                    if (getStoredToken()) updateCloudStatus("ok");
+                }
+
                 renderCurrentView();
             } catch (err) {
                 container.innerHTML = '<div class="status-msg">Veri okunamadı. Lütfen birazdan tekrar deneyin.</div>';
@@ -398,7 +513,6 @@
             const yon = document.getElementById("selYon").value;
             const hareket = document.getElementById("selHareket").value;
             const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-            const assignments = getAssignments();
 
             let filtered = allShips.filter(s => {
                 const match = s.bogaz === bogaz && s.yon === yon && s.hareket === hareket;
@@ -412,13 +526,12 @@
                 return;
             }
 
-            // Kronolojik Sıralama: En erken saatten ileriye doğru
             filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
 
             let html = "";
             filtered.forEach((ship, index) => {
                 const uniqueKey = `${ship.name}_${ship.time}`;
-                const assignedPilot = assignments[uniqueKey] || assignments[ship.name] || "";
+                const assignedPilot = globalAssignments[uniqueKey] || globalAssignments[ship.name] || "";
                 const isAssigned = assignedPilot.length > 0;
                 
                 let aisUrl = ship.imo && ship.imo.length === 7 
@@ -458,7 +571,6 @@
             const container = document.getElementById("shipContainer");
             const bogaz = document.getElementById("selBogaz").value;
             const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-            const assignments = getAssignments();
 
             const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
 
@@ -478,7 +590,6 @@
             const nsList = baseList.filter(s => s.yon === "KUZEY-GÜNEY");
             const snList = baseList.filter(s => s.yon === "GÜNEY-KUZEY");
 
-            // KRONOLOJİK SIRALAMA: Kesin tarih/saate göre (En yeniden eskiye doğru)
             const sorter = (a, b) => {
                 const timeA = parseTimeString(a.time) || a.entryTimestamp || 0;
                 const timeB = parseTimeString(b.time) || b.entryTimestamp || 0;
@@ -500,7 +611,7 @@
                 html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
                 nsList.forEach(ship => {
-                    html += buildCompactLogRow(ship, assignments);
+                    html += buildCompactLogRow(ship);
                 });
             }
             html += `</div>`;
@@ -515,7 +626,7 @@
                 html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
                 snList.forEach(ship => {
-                    html += buildCompactLogRow(ship, assignments);
+                    html += buildCompactLogRow(ship);
                 });
             }
             html += `</div>`;
@@ -523,9 +634,9 @@
             container.innerHTML = html;
         }
 
-        function buildCompactLogRow(ship, assignments) {
+        function buildCompactLogRow(ship) {
             const uniqueKey = `${ship.name}_${ship.time}`;
-            const assignedPilot = assignments[uniqueKey] || assignments[ship.name] || "";
+            const assignedPilot = globalAssignments[uniqueKey] || globalAssignments[ship.name] || "";
             const isAssigned = assignedPilot.length > 0;
             const displayTime = formatDisplayTime(ship.time);
 
