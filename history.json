@@ -258,5 +258,31 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1788961372975
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "MSC POLINA",
+    "imo": "9376141",
+    "time": "BOĞAZDA 09.09.26 16:47",
+    "len": "208,95",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788963180155
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "ANDREY ZUEV",
+    "imo": "9873125",
+    "time": "BOĞAZDA 09.09.26 16:40",
+    "len": "140,88",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788963180155
   }
 ]
