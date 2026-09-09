@@ -291,18 +291,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
-    "name": "MOONLIT",
-    "imo": "9293882",
-    "time": "BOĞAZDA 09.09.26 21:29",
-    "len": "170,7",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
     "name": "SITHONIA II",
     "imo": "9455571",
     "time": "BOĞAZDA 09.09.26 23:40",
@@ -379,18 +367,6 @@
     "imo": "9048639",
     "time": "BOĞAZDA 09.09.26 11:45",
     "len": "89,99",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "name": "ERLE",
-    "imo": "9506576",
-    "time": "BOĞAZDA 09.09.26 21:10",
-    "len": "89,95",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
@@ -735,6 +711,18 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "GEÇİŞE HAZIR",
+    "name": "KENAN T",
+    "imo": "9373199",
+    "time": "GE&#199;İŞE HAZIR 10.09.26 01:18",
+    "len": "94,72",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "GEÇİŞE HAZIR",
     "name": "LISA ESSBERGER",
     "imo": "9295438",
     "time": "GE&#199;İŞE HAZIR 10.09.26 00:50",
@@ -753,30 +741,6 @@
     "len": "89,75",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "LADY MARIE CHRISTINE",
-    "imo": "9904326",
-    "time": "GE&#199;İŞE HAZIR 09.09.26 23:18",
-    "len": "115,2",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "OKOLCHITSA",
-    "imo": "9841653",
-    "time": "GE&#199;İŞE HAZIR 09.09.26 22:42",
-    "len": "190",
-    "type": "BULK CARRIER",
-    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -831,12 +795,36 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
+    "name": "ATLANTIC POWER",
+    "imo": "9369552",
+    "time": "BOĞAZDA 10.09.26 01:45",
+    "len": "63,4",
+    "type": "SUPPLY",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
     "name": "ULTRA SAKA",
     "imo": "9637210",
     "time": "BOĞAZDA 09.09.26 23:14",
     "len": "199,99",
     "type": "BULK CARRIER",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "BELLIS",
+    "imo": "9381952",
+    "time": "BOĞAZDA 10.09.26 01:35",
+    "len": "112,76",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -888,14 +876,38 @@
     "tug": "Hayır"
   },
   {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "KINGSTON",
+    "imo": "9389693",
+    "time": "BOĞAZDA 10.09.26 01:30",
+    "len": "260,01",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "HOSEI VENTURE",
-    "imo": "9550670",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 01:40",
-    "len": "182,98",
-    "type": "GENERAL CARGO",
+    "name": "AILEEN",
+    "imo": "9214252",
+    "time": "PLAN. GE&#199;İŞ 10.09.26 03:30",
+    "len": "148,17",
+    "type": "BULK CARRIER",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "GAZ EXPLORER",
+    "imo": "9506150",
+    "time": "PLAN. GE&#199;İŞ 10.09.26 03:10",
+    "len": "120",
+    "type": "LPG TANKER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -933,18 +945,6 @@
     "len": "122,2",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "TAI HUA WAN",
-    "imo": "9814387",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 01:30",
-    "len": "114,92",
-    "type": "TANKER",
-    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
