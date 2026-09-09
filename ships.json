@@ -277,18 +277,6 @@
   },
   {
     "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "name": "CONTSHIP JET",
-    "imo": "9348625",
-    "time": "BOĞAZDA 09.09.26 03:43",
-    "len": "159,8",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
     "name": "ASHLEY LADY",
@@ -494,6 +482,18 @@
   {
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "GERDA S",
+    "imo": "8402656",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 14:30",
+    "len": "78,86",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
     "hareket": "GEÇİŞE HAZIR",
     "name": "NISSOS IOS",
     "imo": "9886770",
@@ -614,18 +614,6 @@
   {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "MANILA I",
-    "imo": "9242326",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 04:20",
-    "len": "183,02",
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Evet",
-    "tug": "Evet"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
     "name": "CHELSEA-4",
     "imo": "9386146",
@@ -711,12 +699,24 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "BIEN",
-    "imo": "9109653",
-    "time": "GE&#199;İŞE HAZIR 09.09.26 04:19",
-    "len": "53,51",
+    "name": "MEDKON ONO",
+    "imo": "9324978",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 04:37",
+    "len": "147,85",
     "type": "CONTAINER",
-    "pilotReq": "Hayır",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "HARUKA",
+    "imo": "9589619",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 04:57",
+    "len": "169,37",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -795,18 +795,6 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
-    "name": "HISTRIA AMBRA",
-    "imo": "9607631",
-    "time": "BOĞAZDA 09.09.26 03:05",
-    "len": "179,96",
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Evet",
-    "tug": "Evet"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
     "name": "MANILA I",
     "imo": "9242326",
     "time": "BOĞAZDA 09.09.26 04:30",
@@ -849,6 +837,18 @@
     "len": "115,21",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "EUROPE I",
+    "imo": "9905332",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 06:30",
+    "len": "274",
+    "type": "TANKER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
