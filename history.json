@@ -544,5 +544,44 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1788977636722
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MOONLIT",
+    "imo": "9293882",
+    "time": "BOĞAZDA 09.09.26 21:29",
+    "len": "170,7",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788980001764
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "LUNA MAERSK",
+    "imo": "9190781",
+    "time": "BOĞAZDA 09.09.26 21:15",
+    "len": "265,84",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1788980001764
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "LEMANIA",
+    "imo": "1113048",
+    "time": "BOĞAZDA 09.09.26 21:34",
+    "len": "113,6",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788980001764
   }
 ]
