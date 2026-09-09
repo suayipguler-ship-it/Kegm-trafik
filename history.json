@@ -323,5 +323,57 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1788966638630
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "CELTIC ENDEAVOUR",
+    "imo": "9346706",
+    "time": "BOĞAZDA 09.09.26 18:25",
+    "len": "89,95",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788968788851
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "SLED",
+    "imo": "9284805",
+    "time": "BOĞAZDA 09.09.26 18:15",
+    "len": "189,01",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788968788851
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "AC GLORIOUS",
+    "imo": "9374155",
+    "time": "BOĞAZDA 09.09.26 18:42",
+    "len": "234,88",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788968788851
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "HONG LI YUAN YANG",
+    "imo": "1029728",
+    "time": "BOĞAZDA 09.09.26 18:30",
+    "len": "185,5",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788968788851
   }
 ]
