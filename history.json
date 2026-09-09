@@ -427,5 +427,44 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1788971421842
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "POSEIDON GAS",
+    "imo": "9249697",
+    "time": "BOĞAZDA 09.09.26 19:20",
+    "len": "99,57",
+    "type": "LPG TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788973815533
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "KAIYA",
+    "imo": "9053593",
+    "time": "BOĞAZDA 09.09.26 19:30",
+    "len": "114,8",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788973815533
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "MSC POH LIN",
+    "imo": "9279977",
+    "time": "BOĞAZDA 09.09.26 19:45",
+    "len": "294,16",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1788973815533
   }
 ]
