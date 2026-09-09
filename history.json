@@ -375,5 +375,57 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1788968788851
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "WILSON NEWCASTLE",
+    "imo": "9431006",
+    "time": "BOĞAZDA 09.09.26 19:00",
+    "len": "123,04",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788971421842
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "BEYKOZ",
+    "imo": "9558945",
+    "time": "BOĞAZDA 09.09.26 19:02",
+    "len": "119,95",
+    "type": "LPG TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788971421842
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "STOLT SPRAY",
+    "imo": "9168611",
+    "time": "BOĞAZDA 09.09.26 19:17",
+    "len": "162,6",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788971421842
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "MUSA DZHALIL",
+    "imo": "9766140",
+    "time": "BOĞAZDA 09.09.26 19:00",
+    "len": "139,9",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788971421842
   }
 ]
