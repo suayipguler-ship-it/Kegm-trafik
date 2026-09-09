@@ -219,18 +219,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "ERLE",
-    "imo": "9506576",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 21:10",
-    "len": "89,95",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "AZARA",
     "imo": "9132492",
     "time": "PLAN. GE&#199;İŞ 10.09.26 00:30",
@@ -260,18 +248,6 @@
     "time": "PLAN. GE&#199;İŞ 10.09.26 07:45",
     "len": "228",
     "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "ECO SALERNO",
-    "imo": "9985538",
-    "time": "PLAN. GE&#199;İŞ 02.09.26 20:45",
-    "len": "238",
-    "type": "RORO",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -350,6 +326,18 @@
   {
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "COUSINS",
+    "imo": "9161156",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 21:09",
+    "len": "71,97",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
     "name": "CELTIC ENDEAVOUR",
     "imo": "9346706",
@@ -411,12 +399,36 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
+    "name": "ERLE",
+    "imo": "9506576",
+    "time": "BOĞAZDA 09.09.26 21:10",
+    "len": "89,95",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
     "name": "LİDYA",
     "imo": "9260550",
     "time": "BOĞAZDA 09.09.26 13:47",
     "len": "89,85",
     "type": "CHEMICAL TANKER",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "ECO SALERNO",
+    "imo": "9985538",
+    "time": "BOĞAZDA 09.09.26 20:45",
+    "len": "238",
+    "type": "RORO",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -804,18 +816,6 @@
     "tug": "Evet"
   },
   {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "name": "HONG LI YUAN YANG",
-    "imo": "1029728",
-    "time": "BOĞAZDA 09.09.26 18:30",
-    "len": "185,5",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
@@ -860,7 +860,19 @@
     "time": "GE&#199;İŞE HAZIR 09.09.26 02:30",
     "len": "139,95",
     "type": "CHEMICAL TANKER",
-    "pilotReq": "Hayır",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "GAZ EXPLORER",
+    "imo": "9506150",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 20:50",
+    "len": "120",
+    "type": "LPG TANKER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -993,6 +1005,18 @@
     "len": "75,2",
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "BMI EMPEROR",
+    "imo": "9310331",
+    "time": "BOĞAZDA 09.09.26 21:10",
+    "len": "113,09",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   }
 ]
