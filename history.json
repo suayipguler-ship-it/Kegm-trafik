@@ -674,5 +674,57 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1788986657364
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "BURHAN DIZMAN",
+    "imo": "9381809",
+    "time": "BOĞAZDA 10.09.26 01:05",
+    "len": "126,8",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788991830134
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "MED &#199;ORLU",
+    "imo": "9106479",
+    "time": "BOĞAZDA 10.09.26 01:08",
+    "len": "151,47",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788991830134
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "BLUES",
+    "imo": "8901030",
+    "time": "BOĞAZDA 10.09.26 00:58",
+    "len": "99,68",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788991830134
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "CHARM SPIRIT",
+    "imo": "9339636",
+    "time": "BOĞAZDA 10.09.26 00:48",
+    "len": "163,61",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1788991830134
   }
 ]
