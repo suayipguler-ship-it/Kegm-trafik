@@ -87,18 +87,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "MONOLIT",
-    "imo": "9232931",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 07:30",
-    "len": "274,2",
-    "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "NEPTUNE AVRA",
     "imo": "8807155",
     "time": "PLAN. GE&#199;İŞ 09.09.26 11:00",
@@ -117,6 +105,18 @@
     "len": "169,58",
     "type": "VEHICLE CARRIER",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "MY EFEKAN 1",
+    "imo": "9048639",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 11:45",
+    "len": "89,99",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -255,6 +255,18 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
+    "name": "MONOLIT",
+    "imo": "9232931",
+    "time": "BOĞAZDA 09.09.26 07:30",
+    "len": "274,2",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
     "name": "TAI HUA WAN",
     "imo": "9814387",
     "time": "BOĞAZDA 09.09.26 05:55",
@@ -262,18 +274,6 @@
     "type": "TANKER",
     "pilotReq": "Evet",
     "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "name": "AEOLIAN SUNRISE",
-    "imo": "9582544",
-    "time": "BOĞAZDA 09.09.26 04:30",
-    "len": "228,99",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Evet"
   },
   {
     "bogaz": "CANAKKALE",
@@ -501,6 +501,18 @@
     "len": "81",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "MYRA SEAWAYS",
+    "imo": "9422122",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 11:15",
+    "len": "223,3",
+    "type": "RORO",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -795,18 +807,6 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "VICTORIA K",
-    "imo": "1041348",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 07:40",
-    "len": "109,8",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "GOKOVA B",
     "imo": "9521693",
     "time": "PLAN. GE&#199;İŞ 09.09.26 08:00",
@@ -818,13 +818,13 @@
   {
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "SKY LBS",
-    "imo": "1029003",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 07:20",
-    "len": "89,75",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "HAI JIANG WAN YANG 1",
+    "imo": "9933822",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 07:34",
+    "len": "228",
+    "type": "RORO",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -859,6 +859,18 @@
     "imo": "8408648",
     "time": "BOĞAZDA 09.09.26 07:09",
     "len": "115,21",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "VICTORIA K",
+    "imo": "1041348",
+    "time": "BOĞAZDA 09.09.26 07:35",
+    "len": "109,8",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
@@ -903,6 +915,18 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
+    "name": "NEW BORN",
+    "imo": "9406037",
+    "time": "BOĞAZDA 09.09.26 07:30",
+    "len": "178,7",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
     "name": "EUROPE I",
     "imo": "9905332",
     "time": "BOĞAZDA 09.09.26 06:30",
@@ -927,11 +951,23 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "BOZOK",
-    "imo": "7531656",
-    "time": "BOĞAZDA 09.09.26 06:15",
-    "len": "36,23",
-    "type": "VEHICLE CARRIER",
+    "name": "ISKANDER",
+    "imo": "9375587",
+    "time": "BOĞAZDA 09.09.26 07:25",
+    "len": "81",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "SKY LBS",
+    "imo": "1029003",
+    "time": "BOĞAZDA 09.09.26 07:16",
+    "len": "89,75",
+    "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   }
