@@ -11,7 +11,6 @@
         .header { text-align: center; margin-bottom: 12px; padding: 4px; }
         .header h1 { font-size: 1.15rem; color: #38bdf8; letter-spacing: 1px; font-weight: 700; }
 
-        /* Mod Değiştirme Butonları */
         .nav-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
         .btn-tab { flex: 1; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #334155; background: #0f172a; color: #94a3b8; cursor: pointer; }
         .btn-tab.active { background: #0284c7; color: #ffffff; border-color: #38bdf8; }
@@ -24,7 +23,6 @@
         .search-box { background-color: #131f37; border-color: #0284c7; font-size: 0.95rem; }
         .search-box::placeholder { color: #64748b; }
 
-        /* Log Saat Aralık Butonları */
         .log-range-row { display: none; gap: 6px; }
         .btn-range { flex: 1; padding: 8px; font-size: 0.8rem; font-weight: 700; background: #0b1329; border: 1px solid #334155; color: #94a3b8; border-radius: 6px; cursor: pointer; }
         .btn-range.active { background: #f59e0b; color: #000000; border-color: #d97706; }
@@ -33,65 +31,92 @@
         button.btn-search:active { background-color: #0369a1; }
 
         .ship-list { display: flex; flex-direction: column; gap: 10px; }
+
         .ship-card { background-color: #0f172a; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; border: 1px solid #1e293b; border-left-width: 5px; }
         .ship-card.assigned { border-left-color: #22c55e; background-color: #08211b; }
-        .ship-card.log-card { border-left-color: #f59e0b; }
-
-        .ship-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-            gap: 8px; 
-            margin-bottom: 6px; 
-        }
         
-        .ship-name-link {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 700;
-            display: inline-block;
-            line-height: 1.3;
-            word-break: break-word;
-            flex: 1;
-        }
+        .ship-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+        .ship-name-link { color: #ffffff; text-decoration: none; font-size: 0.95rem; font-weight: 700; display: inline-block; line-height: 1.3; word-break: break-word; flex: 1; }
         .ship-name-link:active { color: #38bdf8; }
         .ais-icon { font-size: 0.8rem; color: #38bdf8; margin-left: 3px; }
 
-        .ship-time-badge { 
-            display: inline-flex;
-            align-items: center;
-            background: #1e293b; 
-            border: 1px solid #d97706; 
-            padding: 4px 8px; 
-            border-radius: 6px;
-            white-space: nowrap;
-            flex-shrink: 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-            line-height: 1.2;
-        }
-        .time-prefix {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #94a3b8;
-            margin-right: 6px;
-            letter-spacing: 0.3px;
-        }
-        .time-val {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #fbbf24;
-            letter-spacing: 0.5px;
-        }
+        .ship-time-badge { display: inline-flex; align-items: center; background: #1e293b; border: 1px solid #d97706; padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.4); line-height: 1.2; }
+        .time-prefix { font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-right: 6px; letter-spacing: 0.3px; }
+        .time-val { font-size: 1.05rem; font-weight: 800; color: #fbbf24; letter-spacing: 0.5px; }
 
         .ship-details { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; margin-bottom: 8px; }
         .ship-details span { color: #e2e8f0; font-weight: 500; }
-        .dir-tag { display: inline-block; padding: 1px 5px; border-radius: 4px; font-weight: 700; font-size: 0.75rem; background: #1e293b; color: #38bdf8; margin-bottom: 4px; }
 
         .pilot-row { display: flex; gap: 6px; align-items: center; border-top: 1px solid #1e293b; padding-top: 8px; }
         .pilot-input { flex: 1; padding: 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid #334155; background: #0b1329; color: #f8fafc; }
         .btn-assign { width: auto; padding: 8px 16px; background: #0284c7; border: none; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: #fff; }
         .btn-assign.saved { background: #22c55e; }
+
+        /* Compact Log Tasarımı */
+        .direction-section { margin-bottom: 16px; }
+        .direction-title { font-size: 0.95rem; font-weight: 700; color: #38bdf8; padding: 6px 10px; background: #0f172a; border-radius: 6px; margin-bottom: 6px; border-left: 4px solid #0284c7; display: flex; justify-content: space-between; }
+        
+        .log-row-compact {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+        .log-row-compact.assigned { border-left: 4px solid #22c55e; }
+        
+        .log-ship-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+        }
+        .log-ship-name-plain {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .log-ship-time {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .log-pilot-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            width: 48%;
+            flex-shrink: 0;
+        }
+        .log-pilot-input {
+            padding: 6px 8px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            background: #050b14;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            width: 100%;
+        }
+        .log-pilot-btn {
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: #0284c7;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .log-pilot-btn.saved { background: #22c55e; }
 
         .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
     </style>
@@ -102,7 +127,6 @@
         <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
     </div>
 
-    <!-- Mod Sekmeleri -->
     <div class="nav-tabs">
         <button id="tabLive" class="btn-tab active" onclick="switchMode('live')">📋 Canlı Planlama</button>
         <button id="tabHistory" class="btn-tab" onclick="switchMode('history')">📜 Kılavuzlu Geçiş Logu</button>
@@ -117,21 +141,18 @@
                 <option value="ISTANBUL">ISTANBUL</option>
             </select>
 
-            <!-- Sadece Canlı Modda Yön Seçimi -->
             <select id="selYon" onchange="renderCurrentView()">
                 <option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
                 <option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
             </select>
         </div>
 
-        <!-- Sadece Canlı Modda Hareket Seçimi -->
         <select id="selHareket" onchange="renderCurrentView()">
             <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
             <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
             <option value="BOĞAZDA">BOĞAZDA</option>
         </select>
 
-        <!-- Sadece Log Modunda Saat Seçimi -->
         <div id="logRangeBox" class="log-range-row">
             <button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
             <button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
@@ -146,7 +167,7 @@
     </div>
 
     <script>
-        let currentMode = "live"; // "live" veya "history"
+        let currentMode = "live";
         let logHours = 6;
         let allShips = [];
         let historyShips = [];
@@ -221,14 +242,12 @@
 
             if (pilotName.length > 0) {
                 assignments[uniqueKey] = pilotName;
-                card.classList.add("assigned");
-                btn.classList.add("saved");
-                btn.innerText = "Kaydedildi";
+                if (card) card.classList.add("assigned");
+                if (btn) { btn.classList.add("saved"); btn.innerText = "✓"; }
             } else {
                 delete assignments[uniqueKey];
-                card.classList.remove("assigned");
-                btn.classList.remove("saved");
-                btn.innerText = "Ata";
+                if (card) card.classList.remove("assigned");
+                if (btn) { btn.classList.remove("saved"); btn.innerText = "Ata"; }
             }
 
             localStorage.setItem("kegm_pilot_store", JSON.stringify(assignments));
@@ -282,61 +301,21 @@
             }
 
             filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
-            buildCardHTML(filtered, assignments, false);
-        }
 
-        function renderHistoryList() {
-            const container = document.getElementById("shipContainer");
-            const bogaz = document.getElementById("selBogaz").value;
-            const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-            const assignments = getAssignments();
-
-            const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
-
-            // Boğaz eşleşen, çift yönlü (K-G ve G-K), kılavuzlu ve seçilen saat aralığında girenler
-            let filtered = historyShips.filter(s => {
-                if (s.bogaz !== bogaz) return false;
-                const timestamp = s.entryTimestamp || parseTimeString(s.time);
-                if (timestamp < cutoffTime) return false;
-                if (searchQuery.length > 0) return s.name.toLowerCase().includes(searchQuery);
-                return true;
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde ${bogaz} boğazına girmiş kılavuzlu gemi kaydı yok.</div>`;
-                return;
-            }
-
-            // Kronolojik sıralama: En son girenden geriye doğru
-            filtered.sort((a, b) => {
-                const timeA = a.entryTimestamp || parseTimeString(a.time);
-                const timeB = b.entryTimestamp || parseTimeString(b.time);
-                return timeB - timeA;
-            });
-
-            buildCardHTML(filtered, assignments, true);
-        }
-
-        function buildCardHTML(shipList, assignments, isHistoryMode) {
-            const container = document.getElementById("shipContainer");
             let html = "";
-
-            shipList.forEach((ship, index) => {
+            filtered.forEach((ship, index) => {
                 const uniqueKey = `${ship.name}_${ship.time}`;
                 const assignedPilot = assignments[uniqueKey] || assignments[ship.name] || "";
                 const isAssigned = assignedPilot.length > 0;
                 
-                let aisUrl = "";
-                if (ship.imo && ship.imo.length === 7) {
-                    aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`;
-                } else {
-                    aisUrl = `https://www.google.com/search?q=${encodeURIComponent(ship.name + ' ' + ship.len + 'm marinetraffic')}&btnI=1`;
-                }
+                let aisUrl = ship.imo && ship.imo.length === 7 
+                    ? `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`
+                    : `https://www.google.com/search?q=${encodeURIComponent(ship.name + ' ' + ship.len + 'm marinetraffic')}&btnI=1`;
 
                 const displayTime = formatDisplayTime(ship.time);
 
                 html += `
-                    <div class="ship-card ${isAssigned ? 'assigned' : ''} ${isHistoryMode ? 'log-card' : ''}" id="card_${index}">
+                    <div class="ship-card ${isAssigned ? 'assigned' : ''}" id="card_${index}">
                         <div class="ship-header">
                             <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
                                 ${ship.name} <span class="ais-icon">↗</span>
@@ -347,7 +326,6 @@
                             </div>
                         </div>
                         <div class="ship-details">
-                            ${isHistoryMode ? `<span class="dir-tag">🧭 ${ship.yon}</span><br>` : ''}
                             Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
                             Kılavuz: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
                         </div>
@@ -366,8 +344,100 @@
                     </div>
                 `;
             });
+            container.innerHTML = html;
+        }
+
+        function renderHistoryList() {
+            const container = document.getElementById("shipContainer");
+            const bogaz = document.getElementById("selBogaz").value;
+            const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
+            const assignments = getAssignments();
+
+            const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
+
+            let baseList = historyShips.filter(s => {
+                if (s.bogaz !== bogaz) return false;
+                const timestamp = s.entryTimestamp || parseTimeString(s.time);
+                if (timestamp < cutoffTime) return false;
+                if (searchQuery.length > 0) return s.name.toLowerCase().includes(searchQuery);
+                return true;
+            });
+
+            if (baseList.length === 0) {
+                container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde girmiş kayıtlı kılavuzlu gemi yok.</div>`;
+                return;
+            }
+
+            const nsList = baseList.filter(s => s.yon === "KUZEY-GÜNEY");
+            const snList = baseList.filter(s => s.yon === "GÜNEY-KUZEY");
+
+            const sorter = (a, b) => (b.entryTimestamp || parseTimeString(b.time)) - (a.entryTimestamp || parseTimeString(a.time));
+            nsList.sort(sorter);
+            snList.sort(sorter);
+
+            let html = "";
+
+            // KUZEY - GÜNEY
+            html += `<div class="direction-section">
+                <div class="direction-title">
+                    <span>🧭 KUZEY - GÜNEY</span>
+                    <span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span>
+                </div>`;
+            if (nsList.length === 0) {
+                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+            } else {
+                nsList.forEach((ship, i) => {
+                    const rowId = `ns_${i}`;
+                    html += buildCompactLogRow(ship, rowId, assignments);
+                });
+            }
+            html += `</div>`;
+
+            // GÜNEY - KUZEY
+            html += `<div class="direction-section">
+                <div class="direction-title">
+                    <span>🧭 GÜNEY - KUZEY</span>
+                    <span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span>
+                </div>`;
+            if (snList.length === 0) {
+                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+            } else {
+                snList.forEach((ship, i) => {
+                    const rowId = `sn_${i}`;
+                    html += buildCompactLogRow(ship, rowId, assignments);
+                });
+            }
+            html += `</div>`;
 
             container.innerHTML = html;
+        }
+
+        function buildCompactLogRow(ship, id, assignments) {
+            const uniqueKey = `${ship.name}_${ship.time}`;
+            const assignedPilot = assignments[uniqueKey] || assignments[ship.name] || "";
+            const isAssigned = assignedPilot.length > 0;
+            const displayTime = formatDisplayTime(ship.time);
+
+            return `
+                <div class="log-row-compact ${isAssigned ? 'assigned' : ''}" id="card_${id}">
+                    <div class="log-ship-info">
+                        <span class="log-ship-name-plain">${ship.name}</span>
+                        <span class="log-ship-time">🕒 ${displayTime}</span>
+                    </div>
+                    <div class="log-pilot-box">
+                        <input type="text" 
+                               id="pilot_in_${id}" 
+                               class="log-pilot-input" 
+                               placeholder="Kılavuz Kaptan..." 
+                               value="${assignedPilot}">
+                        <button id="pilot_btn_${id}" 
+                                class="log-pilot-btn ${isAssigned ? 'saved' : ''}" 
+                                onclick="savePilot('${id}', '${uniqueKey.replace(/'/g, "\\'")}')">
+                            ${isAssigned ? '✓' : 'Ata'}
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
         window.onload = loadAllData;
