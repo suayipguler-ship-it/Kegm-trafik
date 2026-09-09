@@ -167,5 +167,31 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1788957902897
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "CELEBRITY INFINITY",
+    "imo": "9189421",
+    "time": "BOĞAZDA 09.09.26 15:30",
+    "len": "294",
+    "type": "PASSENGER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788958778532
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "FESCO NOVIK",
+    "imo": "9296987",
+    "time": "BOĞAZDA 09.09.26 15:15",
+    "len": "133,58",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788958778532
   }
 ]
