@@ -50,6 +50,18 @@
   {
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "ECO SALERNO",
+    "imo": "9985538",
+    "time": "PLAN. GE&#199;İŞ 02.09.26 20:45",
+    "len": "238",
+    "type": "RORO",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
     "name": "ORUBA",
     "imo": "9430624",
@@ -543,18 +555,6 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "GERDA S",
-    "imo": "8402656",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 14:30",
-    "len": "78,86",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "NACI SELIMOGLU",
     "imo": "9382059",
     "time": "PLAN. GE&#199;İŞ 09.09.26 20:30",
@@ -735,30 +735,6 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "ISLAND POLARIS",
-    "imo": "9697296",
-    "time": "BOĞAZDA 09.09.26 11:30",
-    "len": "101,39",
-    "type": "TANKER",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "name": "LYNN",
-    "imo": "9295531",
-    "time": "BOĞAZDA 09.09.26 12:00",
-    "len": "140,7",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
     "name": "KAAN",
     "imo": "8853582",
     "time": "BOĞAZDA 09.09.26 14:05",
@@ -777,6 +753,18 @@
     "len": "199,9",
     "type": "RORO",
     "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "GERDA S",
+    "imo": "8402656",
+    "time": "BOĞAZDA 09.09.26 14:10",
+    "len": "78,86",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -807,12 +795,12 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "A. M. K. MARIN",
-    "imo": "7610103",
-    "time": "GE&#199;İŞE HAZIR 09.09.26 12:35",
-    "len": "105,45",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
+    "name": "BRITTA K",
+    "imo": "7368815",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 14:30",
+    "len": "73,7",
+    "type": "LIVESTOCK CARRIER",
+    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -850,30 +838,6 @@
     "type": "CHEMICAL TANKER",
     "pilotReq": "Evet",
     "tug": "Evet"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "name": "KIMOLOS",
-    "imo": "9791145",
-    "time": "BOĞAZDA 09.09.26 12:39",
-    "len": "274",
-    "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Evet"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "name": "D&#220;ZGİT DIGNITY",
-    "imo": "9581019",
-    "time": "BOĞAZDA 09.09.26 12:33",
-    "len": "124,12",
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
   },
   {
     "bogaz": "ISTANBUL",
