@@ -483,18 +483,6 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "ATLANTIC POWER",
-    "imo": "9369552",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 01:45",
-    "len": "63,4",
-    "type": "SUPPLY",
-    "pilotReq": "Hayır",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "NISSOS IOS",
     "imo": "9886770",
     "time": "PLAN. GE&#199;İŞ 10.09.26 15:30",
@@ -1035,18 +1023,6 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "NS SPIRIT",
-    "imo": "9088263",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 01:25",
-    "len": "89,56",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
     "name": "NEPTUNE THELISIS",
     "imo": "9306718",
     "time": "GE&#199;İŞE HAZIR 09.09.26 21:29",
@@ -1078,6 +1054,18 @@
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
     "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "HOSEI VENTURE",
+    "imo": "9550670",
+    "time": "BOĞAZDA 10.09.26 01:40",
+    "len": "182,98",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Evet"
   },
   {
     "bogaz": "ISTANBUL",
@@ -1117,6 +1105,30 @@
   },
   {
     "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "TAI HUA WAN",
+    "imo": "9814387",
+    "time": "BOĞAZDA 10.09.26 01:30",
+    "len": "114,92",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MSC HOGGAR",
+    "imo": "9286449",
+    "time": "BOĞAZDA 10.09.26 01:46",
+    "len": "137,42",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
     "name": "BARYON",
@@ -1148,6 +1160,30 @@
     "time": "PLAN. GE&#199;İŞ 10.09.26 06:00",
     "len": "138,9",
     "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "ARTVIN",
+    "imo": "8917869",
+    "time": "PLAN. GE&#199;İŞ 10.09.26 08:20",
+    "len": "79,62",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "PLAN. GEÇİŞ",
+    "name": "TOPAZ DIGNITY",
+    "imo": "9654983",
+    "time": "PLAN. GE&#199;İŞ 10.09.26 08:40",
+    "len": "67,4",
+    "type": "SPECIAL SERVICE",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -1196,18 +1232,6 @@
     "time": "PLAN. GE&#199;İŞ 10.09.26 06:40",
     "len": "274,1",
     "type": "TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "TOPAZ DIGNITY",
-    "imo": "9654983",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 01:29",
-    "len": "67,4",
-    "type": "SPECIAL SERVICE",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
