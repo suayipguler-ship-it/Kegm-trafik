@@ -32,6 +32,7 @@
 
         .ship-list { display: flex; flex-direction: column; gap: 10px; }
 
+        /* Canlı Planlama Kartı */
         .ship-card { background-color: #0f172a; border-radius: 10px; padding: 12px; border-left: 5px solid #38bdf8; border: 1px solid #1e293b; border-left-width: 5px; }
         .ship-card.assigned { border-left-color: #22c55e; background-color: #08211b; }
         
@@ -48,11 +49,10 @@
         .ship-details span { color: #e2e8f0; font-weight: 500; }
 
         .pilot-row { display: flex; gap: 6px; align-items: center; border-top: 1px solid #1e293b; padding-top: 8px; }
-        .pilot-input { flex: 1; padding: 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid #334155; background: #0b1329; color: #f8fafc; }
-        .btn-assign { width: auto; padding: 8px 16px; background: #0284c7; border: none; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: #fff; }
-        .btn-assign.saved { background: #22c55e; }
+        .btn-assign-badge { width: 100%; padding: 8px; background: #0b1329; border: 1px solid #334155; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: #94a3b8; text-align: center; }
+        .btn-assign-badge.saved { background: #064e3b; border-color: #22c55e; color: #4ade80; font-weight: 700; }
 
-        /* Compact Log Tasarımı */
+        /* Kompakt Log Satırı */
         .direction-section { margin-bottom: 16px; }
         .direction-title { font-size: 0.95rem; font-weight: 700; color: #38bdf8; padding: 6px 10px; background: #0f172a; border-radius: 6px; margin-bottom: 6px; border-left: 4px solid #0284c7; display: flex; justify-content: space-between; }
         
@@ -60,7 +60,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 6px;
+            gap: 8px;
             background: #0b1329;
             border: 1px solid #1e293b;
             padding: 8px 10px;
@@ -69,54 +69,88 @@
         }
         .log-row-compact.assigned { border-left: 4px solid #22c55e; }
         
-        .log-ship-info {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 0;
-        }
-        .log-ship-name-plain {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #ffffff;
+        .log-ship-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+        .log-ship-name-plain { font-size: 0.9rem; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .log-ship-time { font-size: 0.8rem; font-weight: 700; color: #fbbf24; }
+
+        .log-pilot-tag {
+            width: 45%;
+            padding: 6px 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 5px;
+            background: #1e293b;
+            border: 1px dashed #475569;
+            color: #94a3b8;
+            cursor: pointer;
+            text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            flex-shrink: 0;
         }
-        .log-ship-time {
-            font-size: 0.8rem;
+        .log-pilot-tag.saved {
+            background: #064e3b;
+            border: 1px solid #22c55e;
+            color: #4ade80;
             font-weight: 700;
-            color: #fbbf24;
         }
 
-        .log-pilot-box {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            width: 48%;
-            flex-shrink: 0;
+        /* Pilot Seçim Modalı */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 999;
+            align-items: flex-end;
         }
-        .log-pilot-input {
-            padding: 6px 8px;
-            font-size: 0.8rem;
-            border-radius: 5px;
-            background: #050b14;
-            border: 1px solid #334155;
-            color: #f8fafc;
+        .modal-content {
             width: 100%;
+            max-height: 80vh;
+            background: #0f172a;
+            border-top: 2px solid #0284c7;
+            border-radius: 16px 16px 0 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        .log-pilot-btn {
-            padding: 6px 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            background: #0284c7;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
+        .modal-header h3 { font-size: 1rem; color: #38bdf8; }
+        .btn-close { width: auto; background: none; border: none; font-size: 1.3rem; color: #94a3b8; cursor: pointer; padding: 0 4px; }
+        
+        .vardiya-tabs { display: flex; gap: 6px; }
+        .btn-v-tab { flex: 1; padding: 8px; font-size: 0.8rem; font-weight: 700; border: 1px solid #334155; border-radius: 6px; background: #0b1329; color: #94a3b8; cursor: pointer; }
+        .btn-v-tab.active { background: #0284c7; color: #fff; border-color: #38bdf8; }
+
+        .pilot-list-box {
+            overflow-y: auto;
+            max-height: 48vh;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-right: 4px;
+        }
+        .btn-pilot-item {
+            text-align: left;
+            padding: 9px 12px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #f8fafc;
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
-            flex-shrink: 0;
         }
-        .log-pilot-btn.saved { background: #22c55e; }
+        .btn-pilot-item:active { background: #0284c7; }
+        .btn-pilot-clear {
+            background: #7f1d1d;
+            border-color: #dc2626;
+            color: #fecaca;
+            text-align: center;
+            font-weight: 700;
+        }
 
         .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
     </style>
@@ -166,9 +200,61 @@
         <div class="status-msg">Veriler yükleniyor...</div>
     </div>
 
+    <!-- Pilot Seçim Modalı -->
+    <div id="pilotModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalShipTitle">Kılavuz Kaptan Ata</h3>
+                <button class="btn-close" onclick="closeModal()">✕</button>
+            </div>
+
+            <div class="vardiya-tabs">
+                <button id="tabV1" class="btn-v-tab active" onclick="switchVardiya(1)">Çanakkale-1</button>
+                <button id="tabV2" class="btn-v-tab" onclick="switchVardiya(2)">Çanakkale-2</button>
+                <button id="tabV3" class="btn-v-tab" onclick="switchVardiya(3)">Çanakkale-3</button>
+            </div>
+
+            <div id="pilotListContainer" class="pilot-list-box"></div>
+        </div>
+    </div>
+
     <script>
+        // 3 Vardiyanın Kılavuz Kaptan Listeleri
+        const VARDIYALAR = {
+            1: [
+                "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
+                "AHMET ENDER SEVİM", "CANER GÜRSOY", "CİHAT DEVRİM", "ÇETİNER ÖNDÜL",
+                "DENİZ YÜCEEFEGÜÇ", "ENİS OKUTAN", "GÖKHAN BAHTİYAR", "GÖKSENİN KAPLAN",
+                "GÜNAY GÜR", "HAKAN ÖZSOY", "İLKAY MARTLI", "İLKER GÜNDOĞAN",
+                "İRFAN İLKE ÖZÜARI", "MEHMET ALİ ÇAMLI", "MURAT EMRE ERDEMİR", "RAHMİ ALPASLAN SOYUER",
+                "SERDAR AKKOCA", "SERDİNÇ KOÇ", "SONER ÇAYAN", "ŞERİF DOĞRUER",
+                "ŞÜKRÜ ERBİL OĞUZHAN", "TAMER YAĞIZ", "TAMER YILDIRIM", "VOLKAN ÖZSOY",
+                "VURAL MUCUK", "ZAFER ALTUNCU"
+            ],
+            2: [
+                "CEM ERİNÇİN (Baş Klv. Kp.)", "MURAT TURAN", "ADNAN KEREM YALÇIN", "AHMET UYGUN",
+                "ALİ GÜL", "ALİ RIZA URAZ", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ",
+                "BÜLENT MEMİŞ", "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK",
+                "ERÇİN GÖNÜLCAN", "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK",
+                "GÖKHAN KARSLI", "KEREM GÜL", "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ",
+                "MERT ATAYILMAZ", "MERTOL AKOĞLAN", "SUNAY IRMAK", "ŞUAYİP GÜLER",
+                "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
+            ],
+            3: [
+                "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
+                "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU",
+                "ERKAN ÇETİN", "GÜLTEKİN ÖZDEMİR", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ",
+                "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
+                "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
+                "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
+                "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
+            ]
+        };
+
         let currentMode = "live";
         let logHours = 6;
+        let activeVardiya = 1;
+        let selectedShipKey = "";
         let allShips = [];
         let historyShips = [];
 
@@ -200,9 +286,11 @@
             renderCurrentView();
         }
 
+        // Kesin Kronolojik Zaman Dönüştürücü
         function parseTimeString(timeStr) {
-            if (!timeStr) return 9999999999999;
+            if (!timeStr) return 0;
             
+            // "09.09.26 15:30" veya "09/09/2026 15:30"
             const dateMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
             if (dateMatch) {
                 const day = parseInt(dateMatch[1], 10);
@@ -214,13 +302,14 @@
                 return new Date(year, month, day, hour, minute).getTime();
             }
 
+            // Sadece "15:30"
             const timeOnlyMatch = timeStr.match(/(\d{2}):(\d{2})/);
             if (timeOnlyMatch) {
                 const now = new Date();
                 return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(timeOnlyMatch[1], 10), parseInt(timeOnlyMatch[2], 10)).getTime();
             }
 
-            return 9999999999999;
+            return 0;
         }
 
         function formatDisplayTime(timeStr) {
@@ -232,25 +321,48 @@
             return timeStr;
         }
 
-        function savePilot(index, uniqueKey) {
-            const input = document.getElementById("pilot_in_" + index);
-            const btn = document.getElementById("pilot_btn_" + index);
-            const card = document.getElementById("card_" + index);
+        // Pilot Atama Modalı İşlemleri
+        function openPilotModal(uniqueKey, shipName) {
+            selectedShipKey = uniqueKey;
+            document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
+            document.getElementById("pilotModal").style.display = "flex";
+            renderModalPilots();
+        }
+
+        function closeModal(e) {
+            if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+            document.getElementById("pilotModal").style.display = "none";
+        }
+
+        function switchVardiya(vNum) {
+            activeVardiya = vNum;
+            document.getElementById("tabV1").classList.toggle("active", vNum === 1);
+            document.getElementById("tabV2").classList.toggle("active", vNum === 2);
+            document.getElementById("tabV3").classList.toggle("active", vNum === 3);
+            renderModalPilots();
+        }
+
+        function renderModalPilots() {
+            const container = document.getElementById("pilotListContainer");
+            const list = VARDIYALAR[activeVardiya] || [];
             
-            const pilotName = input.value.trim();
+            let html = `<button class="btn-pilot-item btn-pilot-clear" onclick="assignPilot('')">✖ Atamayı Kaldır / Temizle</button>`;
+            list.forEach(p => {
+                html += `<button class="btn-pilot-item" onclick="assignPilot('${p.replace(/'/g, "\\'")}')">${p}</button>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function assignPilot(pilotName) {
             const assignments = getAssignments();
-
-            if (pilotName.length > 0) {
-                assignments[uniqueKey] = pilotName;
-                if (card) card.classList.add("assigned");
-                if (btn) { btn.classList.add("saved"); btn.innerText = "✓"; }
+            if (pilotName) {
+                assignments[selectedShipKey] = pilotName;
             } else {
-                delete assignments[uniqueKey];
-                if (card) card.classList.remove("assigned");
-                if (btn) { btn.classList.remove("saved"); btn.innerText = "Ata"; }
+                delete assignments[selectedShipKey];
             }
-
             localStorage.setItem("kegm_pilot_store", JSON.stringify(assignments));
+            document.getElementById("pilotModal").style.display = "none";
+            renderCurrentView();
         }
 
         async function loadAllData() {
@@ -300,6 +412,7 @@
                 return;
             }
 
+            // Kronolojik Sıralama: En erken saatten ileriye doğru
             filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
 
             let html = "";
@@ -315,7 +428,7 @@
                 const displayTime = formatDisplayTime(ship.time);
 
                 html += `
-                    <div class="ship-card ${isAssigned ? 'assigned' : ''}" id="card_${index}">
+                    <div class="ship-card ${isAssigned ? 'assigned' : ''}">
                         <div class="ship-header">
                             <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
                                 ${ship.name} <span class="ais-icon">↗</span>
@@ -330,15 +443,9 @@
                             Kılavuz: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
                         </div>
                         <div class="pilot-row">
-                            <input type="text" 
-                                   id="pilot_in_${index}" 
-                                   class="pilot-input" 
-                                   placeholder="Kılavuz Kaptan Ata..." 
-                                   value="${assignedPilot}">
-                            <button id="pilot_btn_${index}" 
-                                    class="btn-assign ${isAssigned ? 'saved' : ''}" 
-                                    onclick="savePilot(${index}, '${uniqueKey.replace(/'/g, "\\'")}')">
-                                ${isAssigned ? 'Kaydedildi' : 'Ata'}
+                            <button class="btn-assign-badge ${isAssigned ? 'saved' : ''}" 
+                                    onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${ship.name.replace(/'/g, "\\'")}')">
+                                ${isAssigned ? '👨‍✈️ ' + assignedPilot : '+ Kılavuz Kaptan Ata'}
                             </button>
                         </div>
                     </div>
@@ -357,8 +464,8 @@
 
             let baseList = historyShips.filter(s => {
                 if (s.bogaz !== bogaz) return false;
-                const timestamp = s.entryTimestamp || parseTimeString(s.time);
-                if (timestamp < cutoffTime) return false;
+                const timeVal = parseTimeString(s.time) || s.entryTimestamp || 0;
+                if (timeVal < cutoffTime) return false;
                 if (searchQuery.length > 0) return s.name.toLowerCase().includes(searchQuery);
                 return true;
             });
@@ -371,13 +478,19 @@
             const nsList = baseList.filter(s => s.yon === "KUZEY-GÜNEY");
             const snList = baseList.filter(s => s.yon === "GÜNEY-KUZEY");
 
-            const sorter = (a, b) => (b.entryTimestamp || parseTimeString(b.time)) - (a.entryTimestamp || parseTimeString(a.time));
+            // KRONOLOJİK SIRALAMA: Kesin tarih/saate göre (En yeniden eskiye doğru)
+            const sorter = (a, b) => {
+                const timeA = parseTimeString(a.time) || a.entryTimestamp || 0;
+                const timeB = parseTimeString(b.time) || b.entryTimestamp || 0;
+                return timeB - timeA;
+            };
+            
             nsList.sort(sorter);
             snList.sort(sorter);
 
             let html = "";
 
-            // KUZEY - GÜNEY
+            // KUZEY - GÜNEY LİSTESİ
             html += `<div class="direction-section">
                 <div class="direction-title">
                     <span>🧭 KUZEY - GÜNEY</span>
@@ -386,14 +499,13 @@
             if (nsList.length === 0) {
                 html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
-                nsList.forEach((ship, i) => {
-                    const rowId = `ns_${i}`;
-                    html += buildCompactLogRow(ship, rowId, assignments);
+                nsList.forEach(ship => {
+                    html += buildCompactLogRow(ship, assignments);
                 });
             }
             html += `</div>`;
 
-            // GÜNEY - KUZEY
+            // GÜNEY - KUZEY LİSTESİ
             html += `<div class="direction-section">
                 <div class="direction-title">
                     <span>🧭 GÜNEY - KUZEY</span>
@@ -402,9 +514,8 @@
             if (snList.length === 0) {
                 html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
-                snList.forEach((ship, i) => {
-                    const rowId = `sn_${i}`;
-                    html += buildCompactLogRow(ship, rowId, assignments);
+                snList.forEach(ship => {
+                    html += buildCompactLogRow(ship, assignments);
                 });
             }
             html += `</div>`;
@@ -412,29 +523,21 @@
             container.innerHTML = html;
         }
 
-        function buildCompactLogRow(ship, id, assignments) {
+        function buildCompactLogRow(ship, assignments) {
             const uniqueKey = `${ship.name}_${ship.time}`;
             const assignedPilot = assignments[uniqueKey] || assignments[ship.name] || "";
             const isAssigned = assignedPilot.length > 0;
             const displayTime = formatDisplayTime(ship.time);
 
             return `
-                <div class="log-row-compact ${isAssigned ? 'assigned' : ''}" id="card_${id}">
+                <div class="log-row-compact ${isAssigned ? 'assigned' : ''}">
                     <div class="log-ship-info">
                         <span class="log-ship-name-plain">${ship.name}</span>
                         <span class="log-ship-time">🕒 ${displayTime}</span>
                     </div>
-                    <div class="log-pilot-box">
-                        <input type="text" 
-                               id="pilot_in_${id}" 
-                               class="log-pilot-input" 
-                               placeholder="Kılavuz Kaptan..." 
-                               value="${assignedPilot}">
-                        <button id="pilot_btn_${id}" 
-                                class="log-pilot-btn ${isAssigned ? 'saved' : ''}" 
-                                onclick="savePilot('${id}', '${uniqueKey.replace(/'/g, "\\'")}')">
-                            ${isAssigned ? '✓' : 'Ata'}
-                        </button>
+                    <div class="log-pilot-tag ${isAssigned ? 'saved' : ''}" 
+                         onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${ship.name.replace(/'/g, "\\'")}')">
+                        ${isAssigned ? assignedPilot : '+ Ata'}
                     </div>
                 </div>
             `;
