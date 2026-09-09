@@ -447,6 +447,18 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
+    "name": "ECO CHIOS",
+    "imo": "9698367",
+    "time": "PLAN. GE&#199;İŞ 09.09.26 16:15",
+    "len": "117,03",
+    "type": "LPG TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "PLAN. GEÇİŞ",
     "name": "WELL PRIME",
     "imo": "9243928",
     "time": "PLAN. GE&#199;İŞ 09.09.26 14:45",
@@ -524,18 +536,6 @@
     "time": "PLAN. GE&#199;İŞ 09.09.26 14:15",
     "len": "108,4",
     "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "MYRA SEAWAYS",
-    "imo": "9422122",
-    "time": "PLAN. GE&#199;İŞ 09.09.26 11:15",
-    "len": "223,3",
-    "type": "RORO",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -849,18 +849,6 @@
     "len": "57,66",
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "RAŞİTBEY",
-    "imo": "6710080",
-    "time": "GE&#199;İŞE HAZIR 09.09.26 11:09",
-    "len": "61,6",
-    "type": "BARGE",
-    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
