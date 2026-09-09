@@ -34,7 +34,6 @@
             margin-bottom: 6px; 
         }
         
-        /* Gemi adı: Bir tık küçültüldü (0.95rem) */
         .ship-name-link {
             color: #ffffff;
             text-decoration: none;
@@ -48,30 +47,30 @@
         .ship-name-link:active { color: #38bdf8; }
         .ais-icon { font-size: 0.8rem; color: #38bdf8; margin-left: 3px; }
 
-        /* Tek satır rozet: Gemi adıyla eşit büyüklükte (0.95rem) */
+        /* Rozet: Bir tık büyütüldü ve dinamik etiket desteği eklendi */
         .ship-time-badge { 
             display: inline-flex;
             align-items: center;
             background: #1e293b; 
             border: 1px solid #d97706; 
-            padding: 3px 7px; 
+            padding: 4px 8px; 
             border-radius: 6px;
             white-space: nowrap;
             flex-shrink: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-            font-size: 0.95rem;
             line-height: 1.2;
         }
         .time-prefix {
-            font-size: 0.72rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #94a3b8;
-            margin-right: 5px;
+            margin-right: 6px;
             letter-spacing: 0.3px;
         }
         .time-val {
+            font-size: 1.05rem;
             font-weight: 800;
-            color: #fbbf24; /* Parlak sarı/amber */
+            color: #fbbf24;
             letter-spacing: 0.5px;
         }
 
@@ -151,7 +150,6 @@
             return 9999999999999;
         }
 
-        // Zamanı "09/ 04:30" biçimine dönüştürür
         function formatDisplayTime(timeStr) {
             if (!timeStr) return "-";
 
@@ -251,7 +249,7 @@
                                 ${ship.name} <span class="ais-icon">↗</span>
                             </a>
                             <div class="ship-time-badge">
-                                <span class="time-prefix">PLAN. GEÇİŞ</span>
+                                <span class="time-prefix">${ship.hareket}</span>
                                 <span class="time-val">${displayTime}</span>
                             </div>
                         </div>
