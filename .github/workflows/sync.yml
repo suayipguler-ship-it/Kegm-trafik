@@ -21,6 +21,6 @@ jobs:
         run: |
           git config --global user.name "KEGM Bot"
           git config --global user.email "bot@github.com"
-          git add ships.json
-          git commit -m "Otomatik gemi listesi" || exit 0
+          git add ships.json history.json
+          git commit -m "Otomatik gemi ve log listesi" || exit 0
           git push origin main || exit 0
