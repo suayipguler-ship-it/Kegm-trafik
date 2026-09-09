@@ -783,6 +783,18 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
+    "name": "NS EXPLORER",
+    "imo": "9048641",
+    "time": "BOĞAZDA 10.09.26 02:26",
+    "len": "89,9",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
     "name": "ISKANDER",
     "imo": "9375587",
     "time": "BOĞAZDA 10.09.26 00:41",
@@ -970,6 +982,18 @@
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
     "tug": "Evet"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "BRITTA K",
+    "imo": "7368815",
+    "time": "BOĞAZDA 10.09.26 02:25",
+    "len": "73,7",
+    "type": "LIVESTOCK CARRIER",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
   },
   {
     "bogaz": "ISTANBUL",
