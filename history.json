@@ -466,5 +466,70 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1788973815533
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "SPIRIT OF SINGAPORE",
+    "imo": "9362396",
+    "time": "BOĞAZDA 09.09.26 20:15",
+    "len": "254,06",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1788975682008
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "KARAZI",
+    "imo": "8215807",
+    "time": "BOĞAZDA 09.09.26 20:00",
+    "len": "77,95",
+    "type": "LIVESTOCK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788975682008
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "LADY RUBINA",
+    "imo": "9370109",
+    "time": "BOĞAZDA 09.09.26 20:08",
+    "len": "138,07",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788975682008
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "SIRIUS",
+    "imo": "9541887",
+    "time": "BOĞAZDA 09.09.26 20:24",
+    "len": "180",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788975682008
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "ANNA",
+    "imo": "9040962",
+    "time": "BOĞAZDA 09.09.26 20:33",
+    "len": "75,2",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1788975682008
   }
 ]
