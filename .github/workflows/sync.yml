@@ -36,7 +36,6 @@ jobs:
           git add ships.json history.json || true
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Oto-Trafik Güncellemesi [skip ci]"
-            git pull origin main --rebase || git reset --soft origin/main
             git push origin HEAD:main --force
           else
             echo "Değişiklik yok."
