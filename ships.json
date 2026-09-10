@@ -458,6 +458,18 @@
   {
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "MSC AUBE F",
+    "imo": "9360283",
+    "time": "GE&#199;İŞE HAZIR 10.09.26 09:07",
+    "len": "147",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
     "name": "NEW RANGER",
     "imo": "9328326",
@@ -471,11 +483,11 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "TC VICTORY",
-    "imo": "9167344",
-    "time": "BOĞAZDA 10.09.26 06:25",
-    "len": "84,98",
-    "type": "GENERAL CARGO",
+    "name": "MSC TALIA F",
+    "imo": "9308601",
+    "time": "BOĞAZDA 10.09.26 09:12",
+    "len": "139,1",
+    "type": "CONTAINER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -513,6 +525,18 @@
     "len": "23,95",
     "type": "BARGE",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "LISA ESSBERGER",
+    "imo": "9295438",
+    "time": "BOĞAZDA 10.09.26 08:59",
+    "len": "115",
+    "type": "CHEMICAL TANKER",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -572,18 +596,6 @@
     "time": "BOĞAZDA 10.09.26 08:16",
     "len": "117,5",
     "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "SILVAR",
-    "imo": "9291262",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 05:48",
-    "len": "253,5",
-    "type": "TANKER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -699,35 +711,11 @@
     "bogaz": "ISTANBUL",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "RAMCO",
-    "imo": "8906494",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 09:20",
-    "len": "92,8",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "ANMIRO",
     "imo": "9434577",
     "time": "PLAN. GE&#199;İŞ 10.09.26 10:00",
     "len": "87,97",
     "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "SADALSUUD",
-    "imo": "9360996",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 08:54",
-    "len": "138,15",
-    "type": "CONTAINER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -742,42 +730,6 @@
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "EEMSBORG",
-    "imo": "9423748",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 08:34",
-    "len": "137,9",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "GEÇİŞE HAZIR",
-    "name": "FLAVIN",
-    "imo": "9787912",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 07:33",
-    "len": "249,9",
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "name": "TELERIG",
-    "imo": "9452854",
-    "time": "BOĞAZDA 10.09.26 08:00",
-    "len": "189,99",
-    "type": "BULK CARRIER",
-    "pilotReq": "Evet",
-    "tug": "Evet"
   },
   {
     "bogaz": "ISTANBUL",
@@ -813,6 +765,18 @@
     "len": "89,12",
     "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "RAMCO",
+    "imo": "8906494",
+    "time": "BOĞAZDA 10.09.26 09:20",
+    "len": "92,8",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
