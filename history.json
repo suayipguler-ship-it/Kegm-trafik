@@ -1623,5 +1623,44 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1789038659830
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "ATA 2",
+    "imo": "9387669",
+    "time": "BOĞAZDA 10.09.26 10:25",
+    "len": "118,6",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789039638562
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "NEPTUNE THELISIS",
+    "imo": "9306718",
+    "time": "BOĞAZDA 10.09.26 13:48",
+    "len": "164,4",
+    "type": "VEHICLE CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789039638562
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MSC ELBE III",
+    "imo": "9236688",
+    "time": "BOĞAZDA 10.09.26 14:10",
+    "len": "208,31",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789039638562
   }
 ]
