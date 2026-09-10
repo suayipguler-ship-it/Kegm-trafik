@@ -908,5 +908,44 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1788999307951
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "LOXANDRA",
+    "imo": "9343871",
+    "time": "BOĞAZDA 10.09.26 03:35",
+    "len": "229,5",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789001772028
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "NEVA-LEADER 3",
+    "imo": "9598830",
+    "time": "BOĞAZDA 10.09.26 03:45",
+    "len": "139,95",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789001772028
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "HAWAIIAN HIGHWAY",
+    "imo": "9712632",
+    "time": "BOĞAZDA 10.09.26 03:15",
+    "len": "199,96",
+    "type": "VEHICLE CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789001772028
   }
 ]
