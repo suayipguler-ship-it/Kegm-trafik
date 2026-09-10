@@ -1,191 +1,142 @@
-const https = require("https");
-const fs = require("fs");
+const axios = require('axios');
+const cheerio = require('cheerio');
+const fs = require('fs');
 
-function makeRequest(url, options = {}) {
-  return new Promise((resolve) => {
-    const urlObj = new URL(url);
-    const reqOptions = {
-      hostname: urlObj.hostname,
-      path: urlObj.pathname + urlObj.search,
-      method: options.method || "GET",
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "tr-TR,tr;q=0.9",
-        ...(options.headers || {})
-      }
-    };
+const BOGAZLAR = [
+    { name: 'CANAKKALE', val: '2' },
+    { name: 'ISTANBUL', val: '1' }
+];
 
-    const req = https.request(reqOptions, (res) => {
-      let data = "";
-      const cookies = res.headers["set-cookie"] || [];
-      res.on("data", (chunk) => { data += chunk; });
-      res.on("end", () => resolve({ status: res.statusCode, data, cookies, headers: res.headers }));
-    });
+const YONLER = [
+    { name: 'GÜNEY-KUZEY', val: '1' },
+    { name: 'KUZEY-GÜNEY', val: '2' }
+];
 
-    req.on("error", (err) => {
-      console.log("Hata:", err.message);
-      resolve({ status: 500, data: "", cookies: [] });
-    });
+const HAREKETLER = [
+    { name: 'PLAN. GEÇİŞ', val: '1' },
+    { name: 'GEÇİŞE HAZIR', val: '2' },
+    { name: 'BOĞAZDA', val: '3' }
+];
 
-    if (options.body) req.write(options.body);
-    req.end();
-  });
+function cleanText(str) {
+    if (!str) return '';
+    return str.replace(/\s+/g, ' ').trim();
 }
 
-function cleanText(text) {
-  return text.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+function parseCustomDate(str) {
+    if (!str) return 0;
+    const match = str.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
+    if (match) {
+        const day = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1;
+        let year = parseInt(match[3], 10);
+        if (year < 100) year += 2000;
+        const hour = parseInt(match[4], 10);
+        const minute = parseInt(match[5], 10);
+        return new Date(year, month, day, hour, minute).getTime();
+    }
+    const timeMatch = str.match(/(\d{2}):(\d{2})/);
+    if (timeMatch) {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(timeMatch[1], 10), parseInt(timeMatch[2], 10)).getTime();
+    }
+    return 0;
 }
 
 async function scrape() {
-  console.log("KEGM Veri Çekme Başlıyor (IMO + Log Destekli)...");
+    console.log('KEGM Trafik Verileri Çekiliyor...');
+    const liveShips = [];
 
-  const initial = await makeRequest("https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems");
-  
-  let cookieHeader = "";
-  if (initial.cookies && initial.cookies.length > 0) {
-    cookieHeader = initial.cookies.map(c => c.split(";")[0]).join("; ");
-  }
-
-  let token = "";
-  const tokenMatch = initial.data.match(/name=["']__RequestVerificationToken["']\s+type=["']hidden["']\s+value=["']([^"']+)["']/i) ||
-                     initial.data.match(/value=["']([^"']+)["']\s+name=["']__RequestVerificationToken["']/i);
-  if (tokenMatch) {
-    token = tokenMatch[1];
-  }
-
-  const straits = [
-    { code: "C", name: "CANAKKALE" },
-    { code: "I", name: "ISTANBUL" }
-  ];
-  const directions = [
-    { code: "SN", name: "GÜNEY-KUZEY" },
-    { code: "NS", name: "KUZEY-GÜNEY" }
-  ];
-  const movements = [
-    { code: "YP", name: "PLAN. GEÇİŞ" },
-    { code: "YG", name: "GEÇİŞE HAZIR" },
-    { code: "I",  name: "BOĞAZDA" }
-  ];
-
-  let allShips = [];
-
-  for (const st of straits) {
-    for (const dir of directions) {
-      for (const mov of movements) {
-        let params = [];
-        if (token) params.push(`__RequestVerificationToken=${encodeURIComponent(token)}`);
-        params.push(`Strait=${encodeURIComponent(st.code)}`);
-        params.push(`Direction=${encodeURIComponent(dir.code)}`);
-        params.push(`Movement=${encodeURIComponent(mov.code)}`);
-        const postData = params.join("&");
-
-        const res = await makeRequest("https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Content-Length": Buffer.byteLength(postData),
-            "Cookie": cookieHeader,
-            "Origin": "https://www.kiyiemniyeti.gov.tr",
-            "Referer": "https://www.kiyiemniyeti.gov.tr/vessel_traffic_information_systems"
-          },
-          body: postData
-        });
-
-        const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-        let trMatch;
-        let count = 0;
-
-        while ((trMatch = trRegex.exec(res.data)) !== null) {
-          const rowContent = trMatch[1];
-
-          let imo = "";
-          const mapMatch = rowContent.match(/ShowOnMap\(\s*['"]?[0-9]{9}['"]?\s*,\s*['"]?([0-9]{7})['"]?\s*\)/i);
-          if (mapMatch) {
-            imo = mapMatch[1];
-          } else {
-            const histMatch = rowContent.match(/ShowHistory\(\s*['"]?([0-9]{7})['"]?\s*\)/i);
-            if (histMatch) imo = histMatch[1];
-            const imoUrlMatch = rowContent.match(/IMONumber=([0-9]{7})/i);
-            if (imoUrlMatch) imo = imoUrlMatch[1];
-          }
-
-          const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
-          let tdMatch;
-          let cols = [];
-
-          while ((tdMatch = tdRegex.exec(rowContent)) !== null) {
-            cols.push(cleanText(tdMatch[1]));
-          }
-
-          if (cols.length >= 4) {
-            let shipName = cols[2];
-            if (!shipName || shipName === "İşlemler" || shipName.includes("Gemi Ad")) {
-              shipName = cols[0];
-            }
-
-            if (shipName && !shipName.includes("İşlemler") && !shipName.includes("Gemi Ad") && !shipName.includes("Planlama")) {
-              allShips.push({
-                bogaz: st.name,
-                yon: dir.name,
-                hareket: mov.name,
-                name: shipName,
-                imo: imo || "",
-                time: cols[1] || mov.name,
-                len: cols[3] || "-",
-                type: cols.length >= 5 ? cols[4] : "-",
-                pilotReq: cols.length >= 6 ? cols[5] : "Hayır",
-                tug: cols.length >= 7 ? cols[6] : "Hayır"
-              });
-              count++;
-            }
-          }
+    // Mevcut history.json dosyasını yükle
+    let history = [];
+    if (fs.existsSync('history.json')) {
+        try {
+            history = JSON.parse(fs.readFileSync('history.json', 'utf8'));
+            if (!Array.isArray(history)) history = [];
+        } catch (e) {
+            history = [];
         }
-        console.log(`Sonuç: ${st.name} | ${dir.name} | ${mov.name} -> ${count} gemi`);
-      }
     }
-  }
 
-  // 1. Canlı anlık listeyi kaydet
-  fs.writeFileSync("ships.json", JSON.stringify(allShips, null, 2));
+    const now = Date.now();
 
-  // 2. Kılavuzlu Geçiş Geçmişi (Log) Yönetimi
-  let history = [];
-  if (fs.existsSync("history.json")) {
-    try {
-      history = JSON.parse(fs.readFileSync("history.json", "utf-8"));
-    } catch (e) {
-      history = [];
+    for (const b of BOGAZLAR) {
+        for (const y of YONLER) {
+            for (const h of HAREKETLER) {
+                try {
+                    const url = `https://kiyiemniyeti.gov.tr/gemi_trafiği?b=${b.val}&y=${y.val}&h=${h.val}`;
+                    const res = await axios.get(url, {
+                        timeout: 12000,
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                        }
+                    });
+
+                    const $ = cheerio.load(res.data);
+                    let rowCount = 0;
+
+                    $('table tbody tr').each((_, elem) => {
+                        const cols = $(elem).find('td');
+                        if (cols.length >= 7) {
+                            const name = cleanText($(cols[0]).text());
+                            const len = cleanText($(cols[1]).text());
+                            const type = cleanText($(cols[2]).text());
+                            const pilotReq = cleanText($(cols[3]).text());
+                            const tug = cleanText($(cols[4]).text());
+                            const time = cleanText($(cols[5]).text());
+                            const imo = cleanText($(cols[6]).text());
+
+                            if (name && name !== 'Gemi Adı') {
+                                const shipObj = {
+                                    bogaz: b.name,
+                                    yon: y.name,
+                                    hareket: h.name,
+                                    name,
+                                    len,
+                                    type,
+                                    pilotReq,
+                                    tug,
+                                    time,
+                                    imo,
+                                    entryTimestamp: parseCustomDate(time) || now
+                                };
+
+                                liveShips.push(shipObj);
+                                rowCount++;
+
+                                // Log Arşivi: Yalnızca kılavuzlu gemiler ('E' veya 'KILAVUZLU')
+                                const isPiloted = pilotReq.toUpperCase().includes('E') || pilotReq.toUpperCase().includes('KILAVUZ');
+                                if (isPiloted) {
+                                    const exists = history.some(item => 
+                                        item.name === shipObj.name && 
+                                        item.time === shipObj.time && 
+                                        item.bogaz === shipObj.bogaz
+                                    );
+                                    if (!exists) {
+                                        history.push(shipObj);
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    console.log(`Sonuç: ${b.name} | ${y.name} | ${h.name} -> ${rowCount} gemi`);
+                } catch (err) {
+                    console.error(`Hata (${b.name} - ${y.name} - ${h.name}): ${err.message}`);
+                }
+            }
+        }
     }
-  }
 
-  const now = Date.now();
-  const oneYearAgo = now - (365 * 24 * 60 * 60 * 1000);
-  history = history.filter(h => (h.entryTimestamp || 0) > oneYearAgo);
+    // 1 YILLIK LOG KORUMA (365 GÜN)
+    const oneYearAgo = now - (365 * 24 * 60 * 60 * 1000);
+    history = history.filter(h => (h.entryTimestamp || 0) > oneYearAgo);
 
-  // Sadece "BOĞAZDA" olan ve kılavuz talebi "Evet" olan gemileri filtrele
-  const inStraitWithPilot = allShips.filter(s => 
-    s.hareket === "BOĞAZDA" && 
-    (s.pilotReq.toLowerCase().includes("evet") || s.pilotReq.toLowerCase().includes("yes"))
-  );
+    // Dosyaları Kaydet
+    fs.writeFileSync('ships.json', JSON.stringify(liveShips, null, 2), 'utf8');
+    fs.writeFileSync('history.json', JSON.stringify(history, null, 2), 'utf8');
 
-  for (const ship of inStraitWithPilot) {
-    const uniqueKey = `${ship.name}_${ship.time}_${ship.bogaz}_${ship.yon}`;
-    const exists = history.some(h => `${h.name}_${h.time}_${h.bogaz}_${h.yon}` === uniqueKey);
-
-    if (!exists) {
-      history.push({
-        ...ship,
-        entryTimestamp: now
-      });
-    }
-  }
-
-  // 48 saatten eski kayıtları temizle
-  history = history.filter(h => (h.entryTimestamp || 0) > twoDaysAgo);
-
-  fs.writeFileSync("history.json", JSON.stringify(history, null, 2));
-  console.log(`Log güncellendi. Toplam kayıtlı kılavuzlu gemi: ${history.length}`);
+    console.log(`Tamamlandı. Aktif: ${liveShips.length} | Arşiv: ${history.length} gemi.`);
 }
 
 scrape();
