@@ -973,5 +973,57 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1789004596400
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "HAI JIANG WAN YANG 1",
+    "imo": "9933822",
+    "time": "BOĞAZDA 10.09.26 04:55",
+    "len": "228",
+    "type": "RORO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789007417544
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "VOLZHSKIY-50",
+    "imo": "8873324",
+    "time": "BOĞAZDA 10.09.26 05:59",
+    "len": "138,9",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789007417544
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "SEVEN PACIFIC",
+    "imo": "9518311",
+    "time": "BOĞAZDA 10.09.26 05:40",
+    "len": "133,15",
+    "type": "OTHER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789007417544
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "JANEX",
+    "imo": "9014664",
+    "time": "BOĞAZDA 10.09.26 05:50",
+    "len": "87,77",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789007417544
   }
 ]
