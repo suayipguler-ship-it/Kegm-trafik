@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BOĞAZ GEÇİŞ PLANLAMA</title>
     <style>
@@ -98,12 +99,12 @@
             font-weight: 700;
         }
 
-        /* Modal Pencereler */
+        /* Modal Tabanı */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.8);
             z-index: 999;
             align-items: flex-end;
         }
@@ -146,22 +147,70 @@
             cursor: pointer;
         }
         .btn-pilot-item:active { background: #0284c7; }
-        .btn-pilot-clear {
-            background: #7f1d1d;
-            border-color: #dc2626;
-            color: #fecaca;
-            text-align: center;
-            font-weight: 700;
-        }
+        .btn-pilot-clear { background: #7f1d1d; border-color: #dc2626; color: #fecaca; text-align: center; font-weight: 700; }
 
         /* Ayar Modalı */
-        .settings-content {
+        .settings-content { border-radius: 12px; margin: auto; width: 90%; max-width: 400px; border-top: none; border: 1px solid #334155; }
+
+        /* Sahte Hata Modalı Stili */
+        .fake-error-content {
             border-radius: 12px;
             margin: auto;
             width: 90%;
-            max-width: 400px;
-            border-top: none;
-            border: 1px solid #334155;
+            max-width: 420px;
+            border: 1px solid #dc2626;
+            background: #090202;
+            font-family: monospace;
+        }
+        .fake-error-title { color: #ef4444; font-size: 0.95rem; font-weight: 700; }
+
+        /* Gizli İstatistik Paneli Stili */
+        .stats-content {
+            max-height: 90vh;
+            background: #090f1d;
+            border-top: 3px solid #22c55e;
+        }
+        .stats-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .stat-box {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 10px 6px;
+            text-align: center;
+        }
+        .stat-val { font-size: 1.3rem; font-weight: 800; color: #38bdf8; }
+        .stat-lbl { font-size: 0.72rem; color: #94a3b8; font-weight: 600; margin-top: 2px; }
+
+        .stats-table-box {
+            overflow-y: auto;
+            max-height: 45vh;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+        }
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+        .stats-table th { background: #0f172a; padding: 8px 6px; color: #94a3b8; text-align: left; border-bottom: 1px solid #334155; position: sticky; top: 0; }
+        .stats-table td { padding: 8px 6px; border-bottom: 1px solid #1e293b; color: #f8fafc; }
+        .stats-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+        /* Alt Teşhis Kamuflaj Yazısı */
+        .telemetry-footer {
+            text-align: center;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-size: 0.7rem;
+            color: #334155;
+            font-family: monospace;
+            cursor: pointer;
+            user-select: none;
         }
 
         .status-msg { text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: 24px; }
@@ -216,6 +265,11 @@
         <div class="status-msg">Veriler yükleniyor...</div>
     </div>
 
+    <!-- KAMUFLAJ TEŞHİS METNİ (GİZLİ TETİKLEYİCİ) -->
+    <div class="telemetry-footer" onclick="triggerSecretDiagnosis()">
+        ● NMEA-0183 Telemetri Aktif [v2.4.1] | Port: 4001
+    </div>
+
     <!-- Pilot Seçim Modalı -->
     <div id="pilotModal" class="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -249,9 +303,85 @@
         </div>
     </div>
 
+    <!-- SAHTE HATA MODALI (TERMETRİ TERMINAL) -->
+    <div id="fakeErrorModal" class="modal-overlay" onclick="closeFakeErrorModal(event)">
+        <div class="modal-content fake-error-content" onclick="event.stopPropagation()">
+            <div class="modal-header" style="border-bottom-color: #7f1d1d;">
+                <span class="fake-error-title">⚠️ SYSTEM EXCEPTION: 0x800403</span>
+                <button class="btn-close" style="color:#ef4444;" onclick="closeFakeErrorModal()">✕</button>
+            </div>
+            <div style="font-size:0.75rem; color:#f87171; line-height:1.4; font-family: monospace;">
+                ERR_TELEMETRY_ACCESS_RESTRICTED<br>
+                Yetkisiz telemetri terminali engellendi. SysAdmin Key giriniz:
+            </div>
+            <input type="password" id="txtSecretPin" placeholder="Key / PIN..." style="background:#180606; border-color:#991b1b; color:#fca5a5; font-family:monospace; margin-top:4px;">
+            <button class="btn-search" style="background:#dc2626;" onclick="verifySecretPin()">Terminal Doğrula</button>
+        </div>
+    </div>
+
+    <!-- GİZLİ İSTATİSTİK & DÖKÜM PANELİ -->
+    <div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
+        <div class="modal-content stats-content" onclick="event.stopPropagation()">
+            <div class="modal-header" style="border-bottom-color:#22c55e;">
+                <h3 style="color:#4ade80;">📊 Kılavuz Geçiş İstatistik & Döküm</h3>
+                <button class="btn-close" onclick="closeStatsModal()">✕</button>
+            </div>
+
+            <!-- Filtreler -->
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="display:flex; gap:6px;">
+                    <select id="statFilterPeriod" onchange="calcStats()">
+                        <option value="12h">Bu Vardiya (12 Saat)</option>
+                        <option value="24h">Son 24 Saat</option>
+                        <option value="month">Bu Ay</option>
+                        <option value="year">Bu Yıl (1 Yıllık)</option>
+                        <option value="all">Tüm Geçmiş</option>
+                    </select>
+                    <select id="statFilterPilot" onchange="calcStats()">
+                        <option value="ALL">Tüm Pilotlar</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Özet Kartlar -->
+            <div class="stats-summary-grid">
+                <div class="stat-box">
+                    <div id="statTotalCount" class="stat-val">0</div>
+                    <div class="stat-lbl">Toplam Gemi</div>
+                </div>
+                <div class="stat-box">
+                    <div id="statNsCount" class="stat-val" style="color:#a78bfa;">0</div>
+                    <div class="stat-lbl">K ➔ G</div>
+                </div>
+                <div class="stat-box">
+                    <div id="statSnCount" class="stat-val" style="color:#fbbf24;">0</div>
+                    <div class="stat-lbl">G ➔ K</div>
+                </div>
+            </div>
+
+            <!-- Döküm Tablosu -->
+            <div class="stats-table-box">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Tarih/Saat</th>
+                            <th>Gemi Adı</th>
+                            <th>Yön</th>
+                            <th>Kılavuz Kaptan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsTableBody"></tbody>
+                </table>
+            </div>
+
+            <button class="btn-search" style="background:#15803d; margin-top:4px;" onclick="exportStatsToCSV()">📥 Excel (CSV) İndir</button>
+        </div>
+    </div>
+
     <script>
         const REPO_OWNER = "suayipguler-ship-it";
         const REPO_NAME = "Kegm-trafik";
+        const SECRET_PIN = "1915"; // Gizli panel şifresi
 
         const VARDIYALAR = {
             1: [
@@ -271,7 +401,7 @@
                 "ERÇİN GÖNÜLCAN", "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK",
                 "GÖKHAN KARSLI", "KEREM GÜL", "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ",
                 "MERT ATAYILMAZ", "MERTOL AKOĞLAN", "SUNAY IRMAK", "ŞUAYİP GÜLER",
-                "ŞÜKRÜ KURUN", "VEHBİ DEMİR", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
+                "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
             ],
             3: [
                 "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
@@ -291,11 +421,12 @@
         let allShips = [];
         let historyShips = [];
         let globalAssignments = {};
-        let assignmentsSha = ""; // GitHub dosya SHA kontrolü
+        let assignmentsSha = "";
+        let clickCount = 0;
+        let clickTimer = null;
+        let currentFilteredStats = [];
 
-        function getStoredToken() {
-            return localStorage.getItem("kegm_gh_token") || "";
-        }
+        function getStoredToken() { return localStorage.getItem("kegm_gh_token") || ""; }
 
         function updateCloudStatus(status) {
             const el = document.getElementById("cloudStatus");
@@ -317,13 +448,161 @@
 
         function saveSettings() {
             const token = document.getElementById("txtGithubToken").value.trim();
-            if (token) {
-                localStorage.setItem("kegm_gh_token", token);
-            } else {
-                localStorage.removeItem("kegm_gh_token");
-            }
+            if (token) localStorage.setItem("kegm_gh_token", token);
+            else localStorage.removeItem("kegm_gh_token");
             document.getElementById("settingsModal").style.display = "none";
             loadAllData();
+        }
+
+        // KAMUFLAJ VE GİZLİ ŞİFRE İŞLEMLERİ
+        function triggerSecretDiagnosis() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+
+            if (clickCount >= 3) {
+                clickCount = 0;
+                document.getElementById("txtSecretPin").value = "";
+                document.getElementById("fakeErrorModal").style.display = "flex";
+            }
+        }
+
+        function closeFakeErrorModal(e) {
+            if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+            document.getElementById("fakeErrorModal").style.display = "none";
+        }
+
+        function verifySecretPin() {
+            const pin = document.getElementById("txtSecretPin").value.trim();
+            if (pin === SECRET_PIN) {
+                document.getElementById("fakeErrorModal").style.display = "none";
+                openStatsModal();
+            } else {
+                alert("HATA: GEÇERSİZ SYSADMIN KEY.");
+            }
+        }
+
+        function openStatsModal() {
+            populatePilotDropdown();
+            document.getElementById("secretStatsModal").style.display = "flex";
+            calcStats();
+        }
+
+        function closeStatsModal(e) {
+            if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+            document.getElementById("secretStatsModal").style.display = "none";
+        }
+
+        function populatePilotDropdown() {
+            const sel = document.getElementById("statFilterPilot");
+            sel.innerHTML = '<option value="ALL">Tüm Pilotlar</option>';
+            
+            let pilotSet = new Set();
+            for (let v in VARDIYALAR) {
+                VARDIYALAR[v].forEach(p => pilotSet.add(p));
+            }
+            Array.from(pilotSet).sort().forEach(p => {
+                const opt = document.createElement("option");
+                opt.value = p;
+                opt.textContent = p;
+                sel.appendChild(opt);
+            });
+        }
+
+        function calcStats() {
+            const period = document.getElementById("statFilterPeriod").value;
+            const targetPilot = document.getElementById("statFilterPilot").value;
+            const now = Date.now();
+
+            let cutoff = 0;
+            if (period === "12h") cutoff = now - (12 * 60 * 60 * 1000);
+            else if (period === "24h") cutoff = now - (24 * 60 * 60 * 1000);
+            else if (period === "month") {
+                const d = new Date();
+                cutoff = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+            } else if (period === "year") {
+                const d = new Date();
+                cutoff = new Date(d.getFullYear(), 0, 1).getTime();
+            }
+
+            // Sadece kılavuz atanmış geçmiş kayıtlar
+            currentFilteredStats = historyShips.filter(s => {
+                const t = s.entryTimestamp || parseTimeString(s.time);
+                if (t < cutoff) return false;
+
+                const key = `${s.name}_${s.time}`;
+                const pilot = globalAssignments[key] || globalAssignments[s.name] || "";
+                if (!pilot) return false; // Sadece atanmışları say
+
+                if (targetPilot !== "ALL" && pilot !== targetPilot) return false;
+                return true;
+            });
+
+            // En yeniden eskiye
+            currentFilteredStats.sort((a, b) => (b.entryTimestamp || parseTimeString(b.time)) - (a.entryTimestamp || parseTimeString(a.time)));
+
+            const total = currentFilteredStats.length;
+            const ns = currentFilteredStats.filter(s => s.yon === "KUZEY-GÜNEY").length;
+            const sn = currentFilteredStats.filter(s => s.yon === "GÜNEY-KUZEY").length;
+
+            document.getElementById("statTotalCount").innerText = total;
+            document.getElementById("statNsCount").innerText = ns;
+            document.getElementById("statSnCount").innerText = sn;
+
+            const tbody = document.getElementById("statsTableBody");
+            let html = "";
+            currentFilteredStats.forEach(s => {
+                const key = `${s.name}_${s.time}`;
+                const pilot = globalAssignments[key] || globalAssignments[s.name] || "";
+                html += `
+                    <tr>
+                        <td>${formatDisplayTime(s.time)}</td>
+                        <td style="font-weight:700;">${s.name}</td>
+                        <td>${s.yon === "KUZEY-GÜNEY" ? "K-G" : "G-K"}</td>
+                        <td style="color:#4ade80; font-weight:600;">${pilot}</td>
+                    </tr>
+                `;
+            });
+
+            if (currentFilteredStats.length === 0) {
+                html = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:16px;">Kayıt bulunamadı.</td></tr>`;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        function exportStatsToCSV() {
+            if (currentFilteredStats.length === 0) {
+                alert("Dışa aktarılacak kayıt yok.");
+                return;
+            }
+
+            let csvContent = "\uFEFF"; // UTF-8 BOM (Türkçe karakterlerin Excel'de düzgün görünmesi için)
+            csvContent += "Tarih/Saat;Gemi Adi;Bogaz;Yon;Boy;Tip;Kilavuz Kaptan\n";
+
+            currentFilteredStats.forEach(s => {
+                const key = `${s.name}_${s.time}`;
+                const pilot = globalAssignments[key] || globalAssignments[s.name] || "";
+                const row = [
+                    `"${formatDisplayTime(s.time)}"`,
+                    `"${s.name}"`,
+                    `"${s.bogaz || ''}"`,
+                    `"${s.yon}"`,
+                    `"${s.len || ''}"`,
+                    `"${s.type || ''}"`,
+                    `"${pilot}"`
+                ];
+                csvContent += row.join(";") + "\n";
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Kilavuz_Gecis_Raporu_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function switchMode(mode) {
@@ -408,25 +687,18 @@
             container.innerHTML = html;
         }
 
-        // Buluta ve Belleğe Kaydetme Motoru
         async function assignPilot(pilotName) {
-            if (pilotName) {
-                globalAssignments[selectedShipKey] = pilotName;
-            } else {
-                delete globalAssignments[selectedShipKey];
-            }
+            if (pilotName) globalAssignments[selectedShipKey] = pilotName;
+            else delete globalAssignments[selectedShipKey];
 
-            // 1. Yerel belleği hemen güncelle (hızlı tepki için)
             localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
             document.getElementById("pilotModal").style.display = "none";
             renderCurrentView();
 
-            // 2. GitHub Bulutuna Commit Gönder
             const token = getStoredToken();
             if (token) {
                 updateCloudStatus("syncing");
                 try {
-                    // En güncel dosya SHA bilgisini al
                     const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/assignments.json`, {
                         headers: { "Authorization": `Bearer ${token}` }
                     });
@@ -471,7 +743,6 @@
             container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
             
             try {
-                // Yerel hafızayı yedek olarak oku
                 try {
                     globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
                 } catch (e) { globalAssignments = {}; }
@@ -485,7 +756,6 @@
                 if (liveRes.ok) allShips = await liveRes.json();
                 if (histRes.ok) historyShips = await histRes.json();
                 
-                // Buluttaki kalıcı atamalar varsa yerel olanla harmanla
                 if (assignRes.ok) {
                     const cloudAssignments = await assignRes.json();
                     globalAssignments = { ...globalAssignments, ...cloudAssignments };
@@ -500,11 +770,8 @@
         }
 
         function renderCurrentView() {
-            if (currentMode === "live") {
-                renderLiveList();
-            } else {
-                renderHistoryList();
-            }
+            if (currentMode === "live") renderLiveList();
+            else renderHistoryList();
         }
 
         function renderLiveList() {
@@ -529,7 +796,7 @@
             filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
 
             let html = "";
-            filtered.forEach((ship, index) => {
+            filtered.forEach(ship => {
                 const uniqueKey = `${ship.name}_${ship.time}`;
                 const assignedPilot = globalAssignments[uniqueKey] || globalAssignments[ship.name] || "";
                 const isAssigned = assignedPilot.length > 0;
@@ -625,7 +892,7 @@
             if (snList.length === 0) {
                 html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
-                snList.forEach(ship => {
+                nsList.forEach(ship => {
                     html += buildCompactLogRow(ship);
                 });
             }
