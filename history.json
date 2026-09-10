@@ -1077,5 +1077,83 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1789010933657
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "ORUBA",
+    "imo": "9430624",
+    "time": "BOĞAZDA 10.09.26 06:30",
+    "len": "131,55",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789013731208
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "PAUL",
+    "imo": "9005819",
+    "time": "BOĞAZDA 10.09.26 06:30",
+    "len": "31,27",
+    "type": "TUG",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789013731208
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "ATARAKTOS",
+    "imo": "1052880",
+    "time": "BOĞAZDA 10.09.26 06:45",
+    "len": "263,83",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789013731208
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "DENAK D",
+    "imo": "9336036",
+    "time": "BOĞAZDA 10.09.26 07:15",
+    "len": "224,94",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789013731208
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "OKOLCHITSA",
+    "imo": "9841653",
+    "time": "BOĞAZDA 10.09.26 06:55",
+    "len": "190",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789013731208
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "BARYON",
+    "imo": "9151412",
+    "time": "BOĞAZDA 10.09.26 07:20",
+    "len": "159,59",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789013731208
   }
 ]
