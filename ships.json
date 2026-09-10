@@ -207,12 +207,12 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "BOĞAZDA",
-    "name": "NS PRIDE",
-    "imo": "8815293",
-    "time": "BOĞAZDA 10.09.26 03:25",
-    "len": "94,5",
+    "name": "NEW LEONIDAS",
+    "imo": "9260641",
+    "time": "BOĞAZDA 10.09.26 08:15",
+    "len": "289",
     "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -297,6 +297,18 @@
     "len": "117,6",
     "type": "CHEMICAL TANKER",
     "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MIRCEA",
+    "imo": "",
+    "time": "BOĞAZDA 10.09.26 08:00",
+    "len": "81,28",
+    "type": "NAVAL",
+    "pilotReq": "Evet",
     "tug": "Hayır"
   },
   {
@@ -506,6 +518,18 @@
   {
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "AEGINA STAR",
+    "imo": "9128415",
+    "time": "GE&#199;İŞE HAZIR 10.09.26 06:30",
+    "len": "115,39",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
     "name": "NEW RANGER",
     "imo": "9328326",
@@ -612,6 +636,30 @@
     "tug": "Hayır"
   },
   {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "ADMIRAL MARS",
+    "imo": "9360984",
+    "time": "BOĞAZDA 10.09.26 08:05",
+    "len": "125,16",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "BARABULKA",
+    "imo": "8887296",
+    "time": "BOĞAZDA 10.09.26 08:16",
+    "len": "117,5",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
@@ -687,11 +735,11 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "NORWEGIAN SKY",
-    "imo": "9128532",
-    "time": "GE&#199;İŞE HAZIR 10.09.26 07:41",
-    "len": "258,6",
-    "type": "PASSENGER",
+    "name": "NEPTUNE THELISIS",
+    "imo": "9306718",
+    "time": "GE&#199;İŞE HAZIR 09.09.26 21:29",
+    "len": "164,4",
+    "type": "VEHICLE CARRIER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -699,11 +747,11 @@
     "bogaz": "ISTANBUL",
     "yon": "GÜNEY-KUZEY",
     "hareket": "GEÇİŞE HAZIR",
-    "name": "NEPTUNE THELISIS",
-    "imo": "9306718",
-    "time": "GE&#199;İŞE HAZIR 09.09.26 21:29",
-    "len": "164,4",
-    "type": "VEHICLE CARRIER",
+    "name": "MSC ELBE III",
+    "imo": "9236688",
+    "time": "GE&#199;İŞE HAZIR 10.09.26 07:57",
+    "len": "208,31",
+    "type": "CONTAINER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -729,18 +777,6 @@
     "len": "100,31",
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "ARTVIN",
-    "imo": "8917869",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 08:20",
-    "len": "79,62",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
     "tug": "Hayır"
   },
   {
@@ -848,6 +884,18 @@
     "time": "BOĞAZDA 10.09.26 06:58",
     "len": "49,49",
     "type": "YACHT",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "ARTVIN",
+    "imo": "8917869",
+    "time": "BOĞAZDA 10.09.26 08:13",
+    "len": "79,62",
+    "type": "GENERAL CARGO",
     "pilotReq": "Hayır",
     "tug": "Hayır"
   }

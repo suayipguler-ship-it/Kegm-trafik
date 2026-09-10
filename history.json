@@ -1194,5 +1194,57 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1789016135909
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "NEW LEONIDAS",
+    "imo": "9260641",
+    "time": "BOĞAZDA 10.09.26 08:15",
+    "len": "289",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789018018544
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MIRCEA",
+    "imo": "",
+    "time": "BOĞAZDA 10.09.26 08:00",
+    "len": "81,28",
+    "type": "NAVAL",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789018018544
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "ADMIRAL MARS",
+    "imo": "9360984",
+    "time": "BOĞAZDA 10.09.26 08:05",
+    "len": "125,16",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789018018544
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "BARABULKA",
+    "imo": "8887296",
+    "time": "BOĞAZDA 10.09.26 08:16",
+    "len": "117,5",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789018018544
   }
 ]
