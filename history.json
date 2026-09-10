@@ -1584,5 +1584,31 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1789036143113
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "TOLMI",
+    "imo": "9467782",
+    "time": "BOĞAZDA 10.09.26 13:20",
+    "len": "81",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789037121258
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "PIROP",
+    "imo": "9257022",
+    "time": "BOĞAZDA 10.09.26 13:25",
+    "len": "239",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789037121258
   }
 ]
