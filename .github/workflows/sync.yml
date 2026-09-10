@@ -33,10 +33,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout package.json package-lock.json || true
           git add ships.json history.json || true
-          if [ -n "$(git status --porcelain)" ]; then
+          if git diff --staged --quiet; then
+            echo "Kayıtlarda değişiklik yok."
+          else
             git commit -m "Oto-Trafik Güncellemesi [skip ci]"
             git push origin HEAD:main --force
-          else
-            echo "Değişiklik yok."
           fi
