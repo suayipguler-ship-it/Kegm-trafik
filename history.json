@@ -1337,5 +1337,57 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1789023437055
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "FAYZE K",
+    "imo": "8884555",
+    "time": "BOĞAZDA 10.09.26 09:39",
+    "len": "120,65",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789024583603
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "VENTO DI MAESTRALE",
+    "imo": "9985021",
+    "time": "BOĞAZDA 10.09.26 09:30",
+    "len": "171,9",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789024583603
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "SALI",
+    "imo": "9412086",
+    "time": "BOĞAZDA 10.09.26 09:40",
+    "len": "173,7",
+    "type": "LPG TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789024583603
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "ANMIRO",
+    "imo": "9434577",
+    "time": "BOĞAZDA 10.09.26 10:00",
+    "len": "87,97",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789024583603
   }
 ]
