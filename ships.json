@@ -289,6 +289,18 @@
   },
   {
     "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "AQUALIBRUM 1",
+    "imo": "",
+    "time": "BOĞAZDA 10.09.26 12:10",
+    "len": "450",
+    "type": "YACHT",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "PLAN. GEÇİŞ",
     "name": "NISSOS IOS",
@@ -411,6 +423,30 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "GEÇİŞE HAZIR",
+    "name": "UNISUN",
+    "imo": "9448451",
+    "time": "GE&#199;İŞE HAZIR 10.09.26 11:33",
+    "len": "132,2",
+    "type": "CONTAINER",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "name": "SEVEN PACIFIC",
+    "imo": "9518311",
+    "time": "GE&#199;İŞE HAZIR 10.09.26 11:31",
+    "len": "133,15",
+    "type": "OTHER",
+    "pilotReq": "Evet",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "GEÇİŞE HAZIR",
     "name": "OPTIMUS PRIME",
     "imo": "8501098",
     "time": "GE&#199;İŞE HAZIR 10.09.26 10:36",
@@ -447,18 +483,6 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
-    "name": "MSC TALIA F",
-    "imo": "9308601",
-    "time": "BOĞAZDA 10.09.26 09:12",
-    "len": "139,1",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
     "name": "TOURAN",
     "imo": "9577410",
     "time": "BOĞAZDA 10.09.26 11:14",
@@ -483,6 +507,18 @@
     "bogaz": "CANAKKALE",
     "yon": "KUZEY-GÜNEY",
     "hareket": "BOĞAZDA",
+    "name": "HALIX",
+    "imo": "9374870",
+    "time": "BOĞAZDA 10.09.26 11:48",
+    "len": "81",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "tug": "Hayır"
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
     "name": "VIKING QUEEN",
     "imo": "9318462",
     "time": "BOĞAZDA 10.09.26 10:57",
@@ -500,18 +536,6 @@
     "time": "BOĞAZDA 10.09.26 09:39",
     "len": "120,65",
     "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "name": "VENTO DI MAESTRALE",
-    "imo": "9985021",
-    "time": "BOĞAZDA 10.09.26 09:30",
-    "len": "171,9",
-    "type": "CONTAINER",
     "pilotReq": "Evet",
     "tug": "Hayır"
   },
@@ -730,17 +754,5 @@
     "type": "CHEMICAL TANKER",
     "pilotReq": "Evet",
     "tug": "Evet"
-  },
-  {
-    "bogaz": "ISTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "name": "ANMIRO",
-    "imo": "9434577",
-    "time": "BOĞAZDA 10.09.26 10:00",
-    "len": "87,97",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
   }
 ]
