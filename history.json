@@ -1467,5 +1467,70 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1789026881012
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "NS EVE",
+    "imo": "9512525",
+    "time": "BOĞAZDA 10.09.26 11:06",
+    "len": "92",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789029083545
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "LDR SAKINE",
+    "imo": "9067582",
+    "time": "BOĞAZDA 10.09.26 11:13",
+    "len": "111,1",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789029083545
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "TOURAN",
+    "imo": "9577410",
+    "time": "BOĞAZDA 10.09.26 11:14",
+    "len": "196",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789029083545
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "VIKING QUEEN",
+    "imo": "9318462",
+    "time": "BOĞAZDA 10.09.26 10:57",
+    "len": "199,9",
+    "type": "VEHICLE CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789029083545
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "SADALSUUD",
+    "imo": "9360996",
+    "time": "BOĞAZDA 10.09.26 11:25",
+    "len": "138,15",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789029083545
   }
 ]
