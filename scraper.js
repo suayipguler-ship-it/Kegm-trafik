@@ -44,7 +44,7 @@ function parseCustomDate(str) {
 }
 
 async function scrape() {
-    console.log('KEGM Trafik POST Oturumu Başlatılıyor...');
+    console.log('KEGM Klasik HTTP POST Oturumu Başlatılıyor...');
     const liveShips = [];
 
     let history = [];
@@ -62,19 +62,16 @@ async function scrape() {
 
     const targetUrl = 'https://kiyiemniyeti.gov.tr/gemi_trafi%C4%9Fi';
 
-    // 1. ADIM: İlk GET ile Çerez ve Form State Değerlerini Al
     let cookies = '';
     let formAction = targetUrl;
-    let viewState = '';
-    let viewStateGen = '';
-    let eventValidation = '';
-    let reqToken = '';
 
+    // 1. ADIM: İlk GET ile FORM etiketini, çerezleri ve gizli alanları yakala
+    let baseFields = {};
     try {
         const initRes = await axios.get(targetUrl, {
             timeout: 15000,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
         });
@@ -84,43 +81,50 @@ async function scrape() {
         }
 
         const $init = cheerio.load(initRes.data);
-        viewState = $init('input[name="__VIEWSTATE"]').val() || '';
-        viewStateGen = $init('input[name="__VIEWSTATEGENERATOR"]').val() || '';
-        eventValidation = $init('input[name="__EVENTVALIDATION"]').val() || '';
-        reqToken = $init('input[name="__RequestVerificationToken"]').val() || '';
 
-        const formElem = $init('form, FORM');
-        if (formElem.attr('action')) {
-            const act = formElem.attr('action');
+        // ASP.NET büyük harfli <FORM> etiketini ve action URL'sini çöz
+        const formTag = $init('form, FORM');
+        const act = formTag.attr('action') || formTag.attr('ACTION');
+        if (act) {
             formAction = act.startsWith('http') ? act : `https://kiyiemniyeti.gov.tr${act.startsWith('/') ? '' : '/'}${act}`;
         }
-        console.log('Oturum hazırlandı.');
-    } catch (e) {
-        console.error('İlk bağlantı hatası:', e.message);
+
+        // Formdaki tüm gizli inputları (VIEWSTATE, token vb.) topla
+        $init('input[type="hidden"], INPUT[type="hidden"]').each((_, el) => {
+            const name = $init(el).attr('name') || $init(el).attr('NAME');
+            const val = $init(el).val() || '';
+            if (name) baseFields[name] = val;
+        });
+
+        console.log(`Form Action: ${formAction} | Gizli alan sayısı: ${Object.keys(baseFields).length}`);
+    } catch (err) {
+        console.error('İlk sayfa yüklenemedi:', err.message);
     }
 
-    // 2. ADIM: Her Parametre İçin HTTP POST İsteği Gönder
+    // 2. ADIM: Her kombinasyon için resmi parametrelerle Klasik HTTP POST gönder
     for (const b of BOGAZLAR) {
         for (const y of YONLER) {
             for (const h of HAREKETLER) {
                 try {
                     const postData = new URLSearchParams();
-                    if (viewState) postData.append('__VIEWSTATE', viewState);
-                    if (viewStateGen) postData.append('__VIEWSTATEGENERATOR', viewStateGen);
-                    if (eventValidation) postData.append('__EVENTVALIDATION', eventValidation);
-                    if (reqToken) postData.append('__RequestVerificationToken', reqToken);
 
-                    // Resmi Form Alanları
+                    // Gizli alanları ekle (__VIEWSTATE, __RequestVerificationToken vs.)
+                    for (const [key, val] of Object.entries(baseFields)) {
+                        postData.append(key, val);
+                    }
+
+                    // Ekran görüntünüzdeki resmi POST parametreleri:
                     postData.append('Strait', b.code);
                     postData.append('Direction', y.code);
                     postData.append('Movement', h.code);
 
                     const res = await axios.post(formAction, postData.toString(), {
-                        timeout: 12000,
+                        timeout: 15000,
                         headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
                             'Content-Type': 'application/x-www-form-urlencoded',
                             'Referer': targetUrl,
+                            'Origin': 'https://kiyiemniyeti.gov.tr',
                             'Cookie': cookies
                         }
                     });
@@ -128,8 +132,8 @@ async function scrape() {
                     const $ = cheerio.load(res.data);
                     let rowCount = 0;
 
-                    $('table tbody tr, table tr').each((_, elem) => {
-                        const cols = $(elem).find('td');
+                    $('table tr, TABLE tr').each((_, elem) => {
+                        const cols = $(elem).find('td, TD');
                         if (cols.length >= 6) {
                             const name = cleanText($(cols[0]).text());
                             const len = cleanText($(cols[1]).text());
@@ -139,7 +143,7 @@ async function scrape() {
                             const time = cleanText($(cols[5]).text());
                             const imo = cols.length >= 7 ? cleanText($(cols[6]).text()) : '';
 
-                            if (name && !name.toLowerCase().includes('gemi') && time) {
+                            if (name && !name.toLowerCase().includes('gemi') && !name.toLowerCase().includes('adı') && time) {
                                 const shipObj = {
                                     bogaz: b.name,
                                     yon: y.name,
@@ -180,7 +184,6 @@ async function scrape() {
         }
     }
 
-    // 1 YILLIK LOG KORUMA
     history = history.filter(h => (h.entryTimestamp || 0) > oneYearAgo);
 
     fs.writeFileSync('ships.json', JSON.stringify(liveShips, null, 2), 'utf8');
