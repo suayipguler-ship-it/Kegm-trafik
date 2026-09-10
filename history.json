@@ -1038,5 +1038,44 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1789008359946
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "TC VICTORY",
+    "imo": "9167344",
+    "time": "BOĞAZDA 10.09.26 06:25",
+    "len": "84,98",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789010933657
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "TITTERI",
+    "imo": "9685085",
+    "time": "BOĞAZDA 10.09.26 06:15",
+    "len": "138,64",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789010933657
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "KRITI KING",
+    "imo": "9887255",
+    "time": "BOĞAZDA 10.09.26 06:40",
+    "len": "274,1",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789010933657
   }
 ]
