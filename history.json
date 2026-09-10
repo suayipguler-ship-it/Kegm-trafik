@@ -1714,5 +1714,31 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1789043905329
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "NISSOS IOS",
+    "imo": "9886770",
+    "time": "BOĞAZDA 10.09.26 15:40",
+    "len": "274,09",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789045018760
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MSC SARAH V",
+    "imo": "9181675",
+    "time": "BOĞAZDA 10.09.26 15:30",
+    "len": "294,07",
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789045018760
   }
 ]
