@@ -3,30 +3,6 @@
     "bogaz": "CANAKKALE",
     "yon": "GÜNEY-KUZEY",
     "hareket": "PLAN. GEÇİŞ",
-    "name": "MEDIVER",
-    "imo": "8136556",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 13:00",
-    "len": "113,84",
-    "type": "GENERAL CARGO",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "name": "OCEAN DREAM",
-    "imo": "9519511",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 18:00",
-    "len": "116,99",
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "tug": "Hayır"
-  },
-  {
-    "bogaz": "CANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "PLAN. GEÇİŞ",
     "name": "AL BIDDA",
     "imo": "9415997",
     "time": "PLAN. GE&#199;İŞ 10.09.26 18:30",
@@ -77,7 +53,7 @@
     "hareket": "PLAN. GEÇİŞ",
     "name": "MSC SARAH V",
     "imo": "9181675",
-    "time": "PLAN. GE&#199;İŞ 10.09.26 17:30",
+    "time": "PLAN. GE&#199;İŞ 10.09.26 15:30",
     "len": "294,07",
     "type": "CONTAINER",
     "pilotReq": "Evet",
@@ -730,6 +706,18 @@
     "type": "GENERAL CARGO",
     "pilotReq": "Evet",
     "tug": "Hayır"
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "MARAN HERMIONE",
+    "imo": "9779379",
+    "time": "BOĞAZDA 10.09.26 13:30",
+    "len": "274",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet"
   },
   {
     "bogaz": "ISTANBUL",
