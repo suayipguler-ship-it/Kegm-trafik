@@ -1662,5 +1662,31 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1789039638562
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "BARRA",
+    "imo": "9142992",
+    "time": "BOĞAZDA 10.09.26 14:25",
+    "len": "181,5",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789041290624
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "CHIOS",
+    "imo": "9772113",
+    "time": "BOĞAZDA 10.09.26 14:41",
+    "len": "274",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789041290624
   }
 ]
