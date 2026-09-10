@@ -160,7 +160,8 @@ async function scrape() {
   }
 
   const now = Date.now();
-  const twoDaysAgo = now - (48 * 60 * 60 * 1000);
+  const oneYearAgo = now - (365 * 24 * 60 * 60 * 1000);
+  history = history.filter(h => (h.entryTimestamp || 0) > oneYearAgo);
 
   // Sadece "BOĞAZDA" olan ve kılavuz talebi "Evet" olan gemileri filtrele
   const inStraitWithPilot = allShips.filter(s => 
