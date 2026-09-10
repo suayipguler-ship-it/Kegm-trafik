@@ -1,3 +1,5 @@
+const twoDaysAgo = Date.now() - (365 * 24 * 60 * 60 * 1000);
+const oneYearAgo = twoDaysAgo;
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
