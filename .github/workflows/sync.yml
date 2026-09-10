@@ -1,26 +1,35 @@
-name: KEGM Veri Senkronizasyonu
+name: KEGM Trafik Senkronizasyonu
 
 on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   scrape-and-update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
-      - name: Depoyu Klonla
+      - name: Kodu Çek
         uses: actions/checkout@v4
 
-      - name: Verileri Çek
+      - name: Node.js Kurulumu
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bağımlılıkları Yükle
+        run: npm install axios cheerio
+
+      - name: Kazıyıcıyı Çalıştır
         run: node scraper.js
 
-      - name: Veriyi Kaydet
+      - name: Değişiklikleri Kaydet ve Gönder
         run: |
-          git config --global user.name "KEGM Bot"
-          git config --global user.email "bot@github.com"
-          git add ships.json history.json
-          git commit -m "Otomatik gemi ve log listesi" || exit 0
-          git push origin main || exit 0
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ships.json history.json || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Oto-Trafik Güncellemesi [skip ci]" && git push)
