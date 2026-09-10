@@ -1155,5 +1155,44 @@
     "pilotReq": "Evet",
     "tug": "Evet",
     "entryTimestamp": 1789013731208
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "TUTUS",
+    "imo": "9275763",
+    "time": "BOĞAZDA 10.09.26 07:45",
+    "len": "228",
+    "type": "TANKER",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789016135909
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "LADY MARIE CHRISTINE",
+    "imo": "9904326",
+    "time": "BOĞAZDA 10.09.26 07:40",
+    "len": "115,2",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789016135909
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "TELERIG",
+    "imo": "9452854",
+    "time": "BOĞAZDA 10.09.26 08:00",
+    "len": "189,99",
+    "type": "BULK CARRIER",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789016135909
   }
 ]
