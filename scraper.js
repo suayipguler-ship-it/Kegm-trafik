@@ -47,7 +47,7 @@ async function scrape() {
     console.log('KEGM Trafik Verileri Çekiliyor...');
     const liveShips = [];
 
-    // Mevcut history.json dosyasını yükle
+    // Mevcut history.json dosyasını oku
     let history = [];
     if (fs.existsSync('history.json')) {
         try {
@@ -58,7 +58,7 @@ async function scrape() {
         }
     }
 
-    const now = Date.now();
+    const currentTimestamp = Date.now();
 
     for (const b of BOGAZLAR) {
         for (const y of YONLER) {
@@ -98,7 +98,7 @@ async function scrape() {
                                     tug,
                                     time,
                                     imo,
-                                    entryTimestamp: parseCustomDate(time) || now
+                                    entryTimestamp: parseCustomDate(time) || currentTimestamp
                                 };
 
                                 liveShips.push(shipObj);
@@ -129,10 +129,10 @@ async function scrape() {
     }
 
     // 1 YILLIK LOG KORUMA (365 GÜN)
-    const oneYearAgo = now - (365 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = currentTimestamp - (365 * 24 * 60 * 60 * 1000);
     history = history.filter(h => (h.entryTimestamp || 0) > oneYearAgo);
 
-    // Dosyaları Kaydet
+    // Dosyaları Diske Yaz
     fs.writeFileSync('ships.json', JSON.stringify(liveShips, null, 2), 'utf8');
     fs.writeFileSync('history.json', JSON.stringify(history, null, 2), 'utf8');
 
