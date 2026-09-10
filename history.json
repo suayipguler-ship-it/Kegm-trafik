@@ -1246,5 +1246,31 @@
     "pilotReq": "Evet",
     "tug": "Hayır",
     "entryTimestamp": 1789018018544
+  },
+  {
+    "bogaz": "CANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "name": "VEGA CHRISTINA",
+    "imo": "1108110",
+    "time": "BOĞAZDA 10.09.26 09:00",
+    "len": "84,99",
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "tug": "Hayır",
+    "entryTimestamp": 1789020920206
+  },
+  {
+    "bogaz": "ISTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "name": "TOPAZ DIGNITY",
+    "imo": "9654983",
+    "time": "BOĞAZDA 10.09.26 08:40",
+    "len": "67,4",
+    "type": "SPECIAL SERVICE",
+    "pilotReq": "Evet",
+    "tug": "Evet",
+    "entryTimestamp": 1789020920206
   }
 ]
