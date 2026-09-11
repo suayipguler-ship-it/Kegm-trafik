@@ -6478,5 +6478,25 @@
     "time": "2026-09-12T04:00:00.000Z",
     "timestamp": 1789185600000,
     "scrapedAt": "2026-09-11T20:28:14.388Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "ÇANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "planlama": "BOĞAZDA 11.09.26 23:27",
+    "name": "AROYA",
+    "len": "335,2",
+    "length": 335.2,
+    "type": "PASSENGER",
+    "pilotReq": "Evet",
+    "pilotRequired": true,
+    "tug": "Evet",
+    "tugRequired": true,
+    "sp2": "11.09.26",
+    "sp1": "08.09.26",
+    "time": "2026-09-11T23:27:00.000Z",
+    "timestamp": 1789169220000,
+    "scrapedAt": "2026-09-11T20:43:12.897Z"
   }
 ]
