@@ -508,7 +508,7 @@
 
             currentFilteredStats = historyShips.filter(s => {
                 const t = s.timestamp || s.entryTimestamp || parseTimeString(s.time);
-                if (t < cutoff) return false;
+                if (cutoff > 0 && t > 0 && t < cutoff) return false;
 
                 const key = `${s.name}_${s.time}`;
                 const pilot = globalAssignments[key] || globalAssignments[s.name] || "";
@@ -608,7 +608,6 @@
             renderCurrentView();
         }
 
-        // Net ve kesin yön kontrolleri (Birbirini ezmez)
         function isNorthSouth(yonStr) {
             if (!yonStr) return false;
             const norm = normalizeStr(yonStr);
@@ -866,26 +865,29 @@
 
             const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
 
-            // Log: Doğru Boğaz + Sadece fiilen boğaza girmiş (BOĞAZDA) + Süre Aralığı
+            // Log: Doğru Boğaz + (Kılavuz Atanmış VEYA Boğazda) + Seçilen Süre Aralığı
             let baseList = historyShips.filter(s => {
                 if (normalizeStr(s.bogaz) !== normalizeStr(bogaz)) return false;
-                
-                // Yalnızca "BOĞAZDA" statüsündeki giriş yapmış gemiler
-                const hareketNorm = normalizeStr(s.hareket);
-                if (!hareketNorm.includes("BOGAZDA")) return false;
 
-                const timeVal = s.timestamp || s.entryTimestamp || parseTimeString(s.time) || 0;
-                if (timeVal < cutoffTime) return false;
+                const uniqueKey = `${s.name}_${s.time}`;
+                const hasAssignedPilot = !!(globalAssignments[uniqueKey] || globalAssignments[s.name]);
+                const isBogazda = normalizeStr(s.hareket).includes("BOGAZDA");
+
+                // Kılavuz atanmışsa veya fiilen boğazdaysa loga al
+                if (!hasAssignedPilot && !isBogazda) return false;
+
+                let timeVal = s.timestamp || s.entryTimestamp || parseTimeString(s.time) || 0;
+                if (cutoffTime > 0 && timeVal > 0 && timeVal < cutoffTime) return false;
+
                 if (searchQuery.length > 0) return (s.name || "").toLowerCase().includes(searchQuery);
                 return true;
             });
 
             if (baseList.length === 0) {
-                container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde boğaza giriş yapmış kayıtlı kılavuzlu gemi yok.</div>`;
+                container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde atanmış veya geçiş yapmış kılavuzlu gemi yok.</div>`;
                 return;
             }
 
-            // Ayrıştırma: K-G ve G-K kesin ayrımı
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
             const snList = baseList.filter(s => isSouthNorth(s.yon));
 
@@ -903,11 +905,11 @@
             // KUZEY - GÜNEY LİSTESİ
             html += `<div class="direction-section">
                 <div class="direction-title">
-                    <span>🧭 KUZEY - GÜNEY (Boğazda)</span>
+                    <span>🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)</span>
                     <span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span>
                 </div>`;
             if (nsList.length === 0) {
-                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Giriş yapan gemi yok.</div>`;
+                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
                 nsList.forEach(ship => {
                     html += buildCompactLogRow(ship);
@@ -918,11 +920,11 @@
             // GÜNEY - KUZEY LİSTESİ
             html += `<div class="direction-section">
                 <div class="direction-title">
-                    <span>🧭 GÜNEY - KUZEY (Boğazda)</span>
+                    <span>🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)</span>
                     <span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span>
                 </div>`;
             if (snList.length === 0) {
-                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Giriş yapan gemi yok.</div>`;
+                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             } else {
                 snList.forEach(ship => {
                     html += buildCompactLogRow(ship);
@@ -957,3 +959,4 @@
     </script>
 </body>
 </html>
+
