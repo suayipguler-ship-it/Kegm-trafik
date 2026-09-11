@@ -394,7 +394,6 @@
         let clickTimer = null;
         let currentFilteredStats = [];
 
-        // Karakter duyarsız karşılaştırma için normalizasyon
         function normalizeStr(str) {
             if (!str) return "";
             return String(str)
@@ -609,27 +608,27 @@
             renderCurrentView();
         }
 
+        // Net ve kesin yön kontrolleri (Birbirini ezmez)
         function isNorthSouth(yonStr) {
             if (!yonStr) return false;
             const norm = normalizeStr(yonStr);
-            return norm.startsWith("K") || norm.includes("KUZEY");
+            return norm.startsWith("KUZEY") || norm === "NS" || norm.startsWith("K-G");
         }
 
         function isSouthNorth(yonStr) {
             if (!yonStr) return false;
             const norm = normalizeStr(yonStr);
-            return norm.startsWith("G") || norm.includes("GUNEY");
+            return norm.startsWith("GUNEY") || norm === "SN" || norm.startsWith("G-K");
         }
 
         function parseTimeString(timeStr) {
             if (!timeStr) return 0;
-            // ISO Date Kontrolü
             const isoTime = new Date(timeStr).getTime();
-            if (!isNaN(isoTime) && isoTime > 0 && timeStr.includes("T")) {
+            if (!isNaN(isoTime) && isoTime > 0 && String(timeStr).includes("T")) {
                 return isoTime;
             }
 
-            const dateMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
+            const dateMatch = String(timeStr).match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
             if (dateMatch) {
                 const day = parseInt(dateMatch[1], 10);
                 const month = parseInt(dateMatch[2], 10) - 1;
@@ -640,7 +639,7 @@
                 return new Date(year, month, day, hour, minute).getTime();
             }
 
-            const timeOnlyMatch = timeStr.match(/(\d{2}):(\d{2})/);
+            const timeOnlyMatch = String(timeStr).match(/(\d{2}):(\d{2})/);
             if (timeOnlyMatch) {
                 const now = new Date();
                 return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(timeOnlyMatch[1], 10), parseInt(timeOnlyMatch[2], 10)).getTime();
@@ -650,7 +649,6 @@
         }
 
         function formatDisplayTime(timeStr, planlamaStr) {
-            // Eğer planlama metninde saat varsa oradan al (Örn: "PLAN. GEÇİŞ 11.09.26 12:45")
             if (planlamaStr) {
                 const pMatch = planlamaStr.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s+(\d{1,2}:\d{2})/);
                 if (pMatch) return `${pMatch[1]}.${pMatch[2]} - ${pMatch[4]}`;
@@ -658,8 +656,7 @@
 
             if (!timeStr) return "-";
 
-            // ISO String ise (2026-09-11T12:45:00.000Z)
-            if (timeStr.includes("T")) {
+            if (String(timeStr).includes("T")) {
                 const d = new Date(timeStr);
                 if (!isNaN(d.getTime())) {
                     const day = String(d.getDate()).padStart(2, "0");
@@ -670,9 +667,9 @@
                 }
             }
 
-            const match = timeStr.match(/(\d{2})[./](\d{2})[./]\d{2,4}\s+(\d{2}:\d{2})/);
+            const match = String(timeStr).match(/(\d{2})[./](\d{2})[./]\d{2,4}\s+(\d{2}:\d{2})/);
             if (match) return `${match[1]}.${match[2]} - ${match[3]}`;
-            const timeOnly = timeStr.match(/(\d{2}:\d{2})/);
+            const timeOnly = String(timeStr).match(/(\d{2}:\d{2})/);
             if (timeOnly) return timeOnly[1];
             return timeStr;
         }
@@ -802,7 +799,6 @@
             const hareket = document.getElementById("selHareket").value;
             const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
 
-            // Normalizasyon ile Türkçe karakter duyarsız filtreleme
             let filtered = allShips.filter(s => {
                 const matchBogaz = normalizeStr(s.bogaz) === normalizeStr(bogaz);
                 const matchYon = normalizeStr(s.yon) === normalizeStr(yon);
@@ -870,9 +866,14 @@
 
             const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
 
-            // Boğaz ve süre filtresi (Normalizasyon ile)
+            // Log: Doğru Boğaz + Sadece fiilen boğaza girmiş (BOĞAZDA) + Süre Aralığı
             let baseList = historyShips.filter(s => {
                 if (normalizeStr(s.bogaz) !== normalizeStr(bogaz)) return false;
+                
+                // Yalnızca "BOĞAZDA" statüsündeki giriş yapmış gemiler
+                const hareketNorm = normalizeStr(s.hareket);
+                if (!hareketNorm.includes("BOGAZDA")) return false;
+
                 const timeVal = s.timestamp || s.entryTimestamp || parseTimeString(s.time) || 0;
                 if (timeVal < cutoffTime) return false;
                 if (searchQuery.length > 0) return (s.name || "").toLowerCase().includes(searchQuery);
@@ -880,10 +881,11 @@
             });
 
             if (baseList.length === 0) {
-                container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde girmiş kayıtlı kılavuzlu gemi yok.</div>`;
+                container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde boğaza giriş yapmış kayıtlı kılavuzlu gemi yok.</div>`;
                 return;
             }
 
+            // Ayrıştırma: K-G ve G-K kesin ayrımı
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
             const snList = baseList.filter(s => isSouthNorth(s.yon));
 
@@ -901,11 +903,11 @@
             // KUZEY - GÜNEY LİSTESİ
             html += `<div class="direction-section">
                 <div class="direction-title">
-                    <span>🧭 KUZEY - GÜNEY</span>
+                    <span>🧭 KUZEY - GÜNEY (Boğazda)</span>
                     <span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span>
                 </div>`;
             if (nsList.length === 0) {
-                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Giriş yapan gemi yok.</div>`;
             } else {
                 nsList.forEach(ship => {
                     html += buildCompactLogRow(ship);
@@ -916,11 +918,11 @@
             // GÜNEY - KUZEY LİSTESİ
             html += `<div class="direction-section">
                 <div class="direction-title">
-                    <span>🧭 GÜNEY - KUZEY</span>
+                    <span>🧭 GÜNEY - KUZEY (Boğazda)</span>
                     <span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span>
                 </div>`;
             if (snList.length === 0) {
-                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+                html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Giriş yapan gemi yok.</div>`;
             } else {
                 snList.forEach(ship => {
                     html += buildCompactLogRow(ship);
