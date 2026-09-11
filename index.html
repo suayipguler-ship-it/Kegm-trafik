@@ -369,7 +369,7 @@
                 "ERÇİN GÖNÜLCAN", "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK",
                 "GÖKHAN KARSLI", "KEREM GÜL", "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ",
                 "MERT ATAYILMAZ", "MERTOL AKOĞLAN", "SUNAY IRMAK", "ŞUAYİP GÜLER",
-                "ŞÜKRÜ KURUN", "VEHBİ DEMİR", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
+                "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
             ],
             3: [
                 "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
@@ -506,7 +506,8 @@
                 cutoff = new Date(d.getFullYear(), 0, 1).getTime();
             }
 
-            currentFilteredStats = historyShips.filter(s => {
+            // 1. Ham Filtreleme
+            let rawFiltered = historyShips.filter(s => {
                 const t = s.timestamp || s.entryTimestamp || parseTimeString(s.time);
                 if (cutoff > 0 && t > 0 && t < cutoff) return false;
 
@@ -518,12 +519,28 @@
                 return true;
             });
 
-            currentFilteredStats.sort((a, b) => {
+            // 2. Yeniden Eskiye Sıralama
+            rawFiltered.sort((a, b) => {
                 const timeA = a.timestamp || a.entryTimestamp || parseTimeString(a.time);
                 const timeB = b.timestamp || b.entryTimestamp || parseTimeString(b.time);
                 return timeB - timeA;
             });
 
+            // 3. Dublike / Çift Kayıtları Tekilleştirme (Aynı gemi ve yön için tek satır)
+            const uniqueMap = new Map();
+            rawFiltered.forEach(ship => {
+                const cleanName = normalizeStr(ship.name);
+                const dirKey = isNorthSouth(ship.yon) ? "NS" : "SN";
+                const dedupKey = `${cleanName}_${dirKey}`;
+
+                if (!uniqueMap.has(dedupKey)) {
+                    uniqueMap.set(dedupKey, ship);
+                }
+            });
+
+            currentFilteredStats = Array.from(uniqueMap.values());
+
+            // Sayaçları Güncelle
             const total = currentFilteredStats.length;
             const ns = currentFilteredStats.filter(s => isNorthSouth(s.yon)).length;
             const sn = currentFilteredStats.filter(s => isSouthNorth(s.yon)).length;
@@ -882,7 +899,7 @@
                 return true;
             });
 
-            // 2. Çift Kayıtları Temizleme (Aynı gemi ve yön için en güncel olanı ve atanmış kılavuzu korur)
+            // 2. Çift Kayıtları Temizleme (En güncel olanı ve kılavuz atamasını korur)
             const uniqueMap = new Map();
             rawList.sort((a, b) => {
                 const timeA = a.timestamp || a.entryTimestamp || parseTimeString(a.time) || 0;
