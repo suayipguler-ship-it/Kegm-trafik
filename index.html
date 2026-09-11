@@ -369,7 +369,7 @@
                 "ERÇİN GÖNÜLCAN", "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK",
                 "GÖKHAN KARSLI", "KEREM GÜL", "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ",
                 "MERT ATAYILMAZ", "MERTOL AKOĞLAN", "SUNAY IRMAK", "ŞUAYİP GÜLER",
-                "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
+                "ŞÜKRÜ KURUN", "VEHBİ DEMİR", "TAYFUN GÜR", "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR"
             ],
             3: [
                 "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
@@ -865,15 +865,14 @@
 
             const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
 
-            // Log: Doğru Boğaz + (Kılavuz Atanmış VEYA Boğazda) + Seçilen Süre Aralığı
-            let baseList = historyShips.filter(s => {
+            // 1. Temel Filtre: Doğru Boğaz + (Kılavuz Atanmış VEYA Boğazda) + Süre Aralığı
+            let rawList = historyShips.filter(s => {
                 if (normalizeStr(s.bogaz) !== normalizeStr(bogaz)) return false;
 
                 const uniqueKey = `${s.name}_${s.time}`;
                 const hasAssignedPilot = !!(globalAssignments[uniqueKey] || globalAssignments[s.name]);
                 const isBogazda = normalizeStr(s.hareket).includes("BOGAZDA");
 
-                // Kılavuz atanmışsa veya fiilen boğazdaysa loga al
                 if (!hasAssignedPilot && !isBogazda) return false;
 
                 let timeVal = s.timestamp || s.entryTimestamp || parseTimeString(s.time) || 0;
@@ -883,22 +882,44 @@
                 return true;
             });
 
+            // 2. Çift Kayıtları Temizleme (Aynı gemi ve yön için en güncel olanı ve atanmış kılavuzu korur)
+            const uniqueMap = new Map();
+            rawList.sort((a, b) => {
+                const timeA = a.timestamp || a.entryTimestamp || parseTimeString(a.time) || 0;
+                const timeB = b.timestamp || b.entryTimestamp || parseTimeString(b.time) || 0;
+                return timeB - timeA;
+            });
+
+            rawList.forEach(ship => {
+                const cleanName = normalizeStr(ship.name);
+                const dirKey = isNorthSouth(ship.yon) ? "NS" : "SN";
+                const dedupKey = `${cleanName}_${dirKey}`;
+
+                if (!uniqueMap.has(dedupKey)) {
+                    uniqueMap.set(dedupKey, ship);
+                } else {
+                    const existing = uniqueMap.get(dedupKey);
+                    const existingKey = `${existing.name}_${existing.time}`;
+                    const currentKey = `${ship.name}_${ship.time}`;
+                    const existingHasPilot = !!(globalAssignments[existingKey] || globalAssignments[existing.name]);
+                    const currentHasPilot = !!(globalAssignments[currentKey] || globalAssignments[ship.name]);
+
+                    if (!existingHasPilot && currentHasPilot) {
+                        uniqueMap.set(dedupKey, ship);
+                    }
+                }
+            });
+
+            const baseList = Array.from(uniqueMap.values());
+
             if (baseList.length === 0) {
                 container.innerHTML = `<div class="status-msg">Son ${logHours} saat içinde atanmış veya geçiş yapmış kılavuzlu gemi yok.</div>`;
                 return;
             }
 
+            // 3. Yön Ayrımı
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
             const snList = baseList.filter(s => isSouthNorth(s.yon));
-
-            const sorter = (a, b) => {
-                const timeA = a.timestamp || a.entryTimestamp || parseTimeString(a.time) || 0;
-                const timeB = b.timestamp || b.entryTimestamp || parseTimeString(b.time) || 0;
-                return timeB - timeA;
-            };
-            
-            nsList.sort(sorter);
-            snList.sort(sorter);
 
             let html = "";
 
@@ -959,4 +980,3 @@
     </script>
 </body>
 </html>
-
