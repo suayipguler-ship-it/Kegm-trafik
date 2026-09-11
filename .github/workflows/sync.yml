@@ -23,8 +23,10 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Bağımlılıkları Yükle
-        run: npm install axios cheerio
+      - name: Playwright ve Chromium Kurulumu
+        run: |
+          npm install playwright
+          npx playwright install --with-deps chromium
 
       - name: Kazıyıcıyı Çalıştır
         run: node scraper.js
