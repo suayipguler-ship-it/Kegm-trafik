@@ -208,8 +208,8 @@
 
         <div class="filter-row">
             <select id="selBogaz" onchange="renderCurrentView()">
-                <option value="CANAKKALE">CANAKKALE</option>
-                <option value="ISTANBUL">ISTANBUL</option>
+                <option value="ÇANAKKALE">ÇANAKKALE</option>
+                <option value="İSTANBUL">İSTANBUL</option>
             </select>
 
             <select id="selYon" onchange="renderCurrentView()">
@@ -394,6 +394,21 @@
         let clickTimer = null;
         let currentFilteredStats = [];
 
+        // Karakter duyarsız karşılaştırma için normalizasyon
+        function normalizeStr(str) {
+            if (!str) return "";
+            return String(str)
+                .toLocaleUpperCase("tr-TR")
+                .replace(/İ/g, "I")
+                .replace(/Ş/g, "S")
+                .replace(/Ğ/g, "G")
+                .replace(/Ü/g, "U")
+                .replace(/Ö/g, "O")
+                .replace(/Ç/g, "C")
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
         function getStoredToken() { return localStorage.getItem("kegm_gh_token") || ""; }
 
         function updateCloudStatus(status) {
@@ -493,7 +508,7 @@
             }
 
             currentFilteredStats = historyShips.filter(s => {
-                const t = s.entryTimestamp || parseTimeString(s.time);
+                const t = s.timestamp || s.entryTimestamp || parseTimeString(s.time);
                 if (t < cutoff) return false;
 
                 const key = `${s.name}_${s.time}`;
@@ -504,7 +519,11 @@
                 return true;
             });
 
-            currentFilteredStats.sort((a, b) => (b.entryTimestamp || parseTimeString(b.time)) - (a.entryTimestamp || parseTimeString(a.time)));
+            currentFilteredStats.sort((a, b) => {
+                const timeA = a.timestamp || a.entryTimestamp || parseTimeString(a.time);
+                const timeB = b.timestamp || b.entryTimestamp || parseTimeString(b.time);
+                return timeB - timeA;
+            });
 
             const total = currentFilteredStats.length;
             const ns = currentFilteredStats.filter(s => isNorthSouth(s.yon)).length;
@@ -521,7 +540,7 @@
                 const pilot = globalAssignments[key] || globalAssignments[s.name] || "";
                 html += `
                     <tr>
-                        <td>${formatDisplayTime(s.time)}</td>
+                        <td>${formatDisplayTime(s.time, s.planlama)}</td>
                         <td style="font-weight:700;">${s.name}</td>
                         <td>${isNorthSouth(s.yon) ? "K-G" : "G-K"}</td>
                         <td style="color:#4ade80; font-weight:600;">${pilot}</td>
@@ -549,7 +568,7 @@
                 const key = `${s.name}_${s.time}`;
                 const pilot = globalAssignments[key] || globalAssignments[s.name] || "";
                 const row = [
-                    `"${formatDisplayTime(s.time)}"`,
+                    `"${formatDisplayTime(s.time, s.planlama)}"`,
                     `"${s.name}"`,
                     `"${s.bogaz || ''}"`,
                     `"${s.yon}"`,
@@ -590,21 +609,26 @@
             renderCurrentView();
         }
 
-        // Kesin Yön Normalleştirme Yardımcıları
         function isNorthSouth(yonStr) {
             if (!yonStr) return false;
-            const norm = yonStr.toString().trim().toUpperCase().replace(/İ/g, 'I').replace(/Ü/g, 'U');
+            const norm = normalizeStr(yonStr);
             return norm.startsWith("K") || norm.includes("KUZEY");
         }
 
         function isSouthNorth(yonStr) {
             if (!yonStr) return false;
-            const norm = yonStr.toString().trim().toUpperCase().replace(/İ/g, 'I').replace(/Ü/g, 'U');
+            const norm = normalizeStr(yonStr);
             return norm.startsWith("G") || norm.includes("GUNEY");
         }
 
         function parseTimeString(timeStr) {
             if (!timeStr) return 0;
+            // ISO Date Kontrolü
+            const isoTime = new Date(timeStr).getTime();
+            if (!isNaN(isoTime) && isoTime > 0 && timeStr.includes("T")) {
+                return isoTime;
+            }
+
             const dateMatch = timeStr.match(/(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/);
             if (dateMatch) {
                 const day = parseInt(dateMatch[1], 10);
@@ -625,10 +649,29 @@
             return 0;
         }
 
-        function formatDisplayTime(timeStr) {
+        function formatDisplayTime(timeStr, planlamaStr) {
+            // Eğer planlama metninde saat varsa oradan al (Örn: "PLAN. GEÇİŞ 11.09.26 12:45")
+            if (planlamaStr) {
+                const pMatch = planlamaStr.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s+(\d{1,2}:\d{2})/);
+                if (pMatch) return `${pMatch[1]}.${pMatch[2]} - ${pMatch[4]}`;
+            }
+
             if (!timeStr) return "-";
+
+            // ISO String ise (2026-09-11T12:45:00.000Z)
+            if (timeStr.includes("T")) {
+                const d = new Date(timeStr);
+                if (!isNaN(d.getTime())) {
+                    const day = String(d.getDate()).padStart(2, "0");
+                    const month = String(d.getMonth() + 1).padStart(2, "0");
+                    const hour = String(d.getHours()).padStart(2, "0");
+                    const min = String(d.getMinutes()).padStart(2, "0");
+                    return `${day}.${month} - ${hour}:${min}`;
+                }
+            }
+
             const match = timeStr.match(/(\d{2})[./](\d{2})[./]\d{2,4}\s+(\d{2}:\d{2})/);
-            if (match) return `${match[1]}/ ${match[3]}`;
+            if (match) return `${match[1]}.${match[2]} - ${match[3]}`;
             const timeOnly = timeStr.match(/(\d{2}:\d{2})/);
             if (timeOnly) return timeOnly[1];
             return timeStr;
@@ -759,10 +802,14 @@
             const hareket = document.getElementById("selHareket").value;
             const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
 
+            // Normalizasyon ile Türkçe karakter duyarsız filtreleme
             let filtered = allShips.filter(s => {
-                const match = s.bogaz === bogaz && s.yon === yon && s.hareket === hareket;
-                if (!match) return false;
-                if (searchQuery.length > 0) return s.name.toLowerCase().includes(searchQuery);
+                const matchBogaz = normalizeStr(s.bogaz) === normalizeStr(bogaz);
+                const matchYon = normalizeStr(s.yon) === normalizeStr(yon);
+                const matchHareket = normalizeStr(s.hareket) === normalizeStr(hareket);
+                
+                if (!matchBogaz || !matchYon || !matchHareket) return false;
+                if (searchQuery.length > 0) return (s.name || "").toLowerCase().includes(searchQuery);
                 return true;
             });
 
@@ -771,7 +818,11 @@
                 return;
             }
 
-            filtered.sort((a, b) => parseTimeString(a.time) - parseTimeString(b.time));
+            filtered.sort((a, b) => {
+                const timeA = a.timestamp || parseTimeString(a.time) || 0;
+                const timeB = b.timestamp || parseTimeString(b.time) || 0;
+                return timeA - timeB;
+            });
 
             let html = "";
             filtered.forEach(ship => {
@@ -783,7 +834,7 @@
                     ? `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`
                     : `https://www.google.com/search?q=${encodeURIComponent(ship.name + ' ' + ship.len + 'm marinetraffic')}&btnI=1`;
 
-                const displayTime = formatDisplayTime(ship.time);
+                const displayTime = formatDisplayTime(ship.time, ship.planlama);
 
                 html += `
                     <div class="ship-card ${isAssigned ? 'assigned' : ''}">
@@ -797,8 +848,8 @@
                             </div>
                         </div>
                         <div class="ship-details">
-                            Boy: <span>${ship.len}</span> | Tip: <span>${ship.type}</span><br>
-                            Kılavuz: <span>${ship.pilotReq}</span> | Römorkör: <span>${ship.tug}</span>
+                            Boy: <span>${ship.len || '-'} m</span> | Tip: <span>${ship.type || '-'}</span><br>
+                            Kılavuz: <span>${ship.pilotReq || '-'}</span> | Römorkör: <span>${ship.tug || '-'}</span>
                         </div>
                         <div class="pilot-row">
                             <button class="btn-assign-badge ${isAssigned ? 'saved' : ''}" 
@@ -819,12 +870,12 @@
 
             const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
 
-            // Boğaz ve süre filtresi
+            // Boğaz ve süre filtresi (Normalizasyon ile)
             let baseList = historyShips.filter(s => {
-                if (s.bogaz !== bogaz) return false;
-                const timeVal = parseTimeString(s.time) || s.entryTimestamp || 0;
+                if (normalizeStr(s.bogaz) !== normalizeStr(bogaz)) return false;
+                const timeVal = s.timestamp || s.entryTimestamp || parseTimeString(s.time) || 0;
                 if (timeVal < cutoffTime) return false;
-                if (searchQuery.length > 0) return s.name.toLowerCase().includes(searchQuery);
+                if (searchQuery.length > 0) return (s.name || "").toLowerCase().includes(searchQuery);
                 return true;
             });
 
@@ -833,13 +884,12 @@
                 return;
             }
 
-            // KUZEY - GÜNEY ve GÜNEY - KUZEY Ayrımı (Kesin kontrol)
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
             const snList = baseList.filter(s => isSouthNorth(s.yon));
 
             const sorter = (a, b) => {
-                const timeA = parseTimeString(a.time) || a.entryTimestamp || 0;
-                const timeB = parseTimeString(b.time) || b.entryTimestamp || 0;
+                const timeA = a.timestamp || a.entryTimestamp || parseTimeString(a.time) || 0;
+                const timeB = b.timestamp || b.entryTimestamp || parseTimeString(b.time) || 0;
                 return timeB - timeA;
             };
             
@@ -885,7 +935,7 @@
             const uniqueKey = `${ship.name}_${ship.time}`;
             const assignedPilot = globalAssignments[uniqueKey] || globalAssignments[ship.name] || "";
             const isAssigned = assignedPilot.length > 0;
-            const displayTime = formatDisplayTime(ship.time);
+            const displayTime = formatDisplayTime(ship.time, ship.planlama);
 
             return `
                 <div class="log-row-compact ${isAssigned ? 'assigned' : ''}">
