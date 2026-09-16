@@ -17,7 +17,7 @@
     "sp1": "30.08.26",
     "time": "2026-09-13T03:08:00.000Z",
     "timestamp": 1789268880000,
-    "scrapedAt": "2026-09-16T11:56:44.268Z"
+    "scrapedAt": "2026-09-16T12:17:37.794Z"
   },
   {
     "source": "KEGM",
@@ -37,7 +37,7 @@
     "sp1": "12.09.26",
     "time": "2026-09-16T03:39:00.000Z",
     "timestamp": 1789529940000,
-    "scrapedAt": "2026-09-16T11:56:44.271Z"
+    "scrapedAt": "2026-09-16T12:17:37.797Z"
   },
   {
     "source": "KEGM",
@@ -57,7 +57,7 @@
     "sp1": "11.09.26",
     "time": "2026-09-16T08:20:00.000Z",
     "timestamp": 1789546800000,
-    "scrapedAt": "2026-09-16T11:56:44.273Z"
+    "scrapedAt": "2026-09-16T12:17:37.800Z"
   },
   {
     "source": "KEGM",
@@ -77,7 +77,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T11:14:00.000Z",
     "timestamp": 1789557240000,
-    "scrapedAt": "2026-09-16T11:56:44.275Z"
+    "scrapedAt": "2026-09-16T12:17:37.803Z"
   },
   {
     "source": "KEGM",
@@ -97,7 +97,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T11:38:00.000Z",
     "timestamp": 1789558680000,
-    "scrapedAt": "2026-09-16T11:56:44.277Z"
+    "scrapedAt": "2026-09-16T12:17:37.806Z"
   },
   {
     "source": "KEGM",
@@ -117,7 +117,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T12:14:00.000Z",
     "timestamp": 1789560840000,
-    "scrapedAt": "2026-09-16T11:56:44.279Z"
+    "scrapedAt": "2026-09-16T12:17:37.809Z"
   },
   {
     "source": "KEGM",
@@ -137,7 +137,7 @@
     "sp1": "09.09.26",
     "time": "2026-09-16T12:42:00.000Z",
     "timestamp": 1789562520000,
-    "scrapedAt": "2026-09-16T11:56:44.283Z"
+    "scrapedAt": "2026-09-16T12:17:37.813Z"
   },
   {
     "source": "KEGM",
@@ -157,7 +157,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T13:42:00.000Z",
     "timestamp": 1789566120000,
-    "scrapedAt": "2026-09-16T11:56:44.284Z"
+    "scrapedAt": "2026-09-16T12:17:37.815Z"
   },
   {
     "source": "KEGM",
@@ -177,7 +177,27 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T13:56:00.000Z",
     "timestamp": 1789566960000,
-    "scrapedAt": "2026-09-16T11:56:44.286Z"
+    "scrapedAt": "2026-09-16T12:17:37.818Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "ÇANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "planlama": "GEÇİŞE HAZIR 16.09.26 14:50",
+    "name": "UNIWIND",
+    "len": "92,25",
+    "length": 92.25,
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "pilotRequired": false,
+    "tug": "Hayır",
+    "tugRequired": false,
+    "sp2": "16.09.26",
+    "sp1": "15.09.26",
+    "time": "2026-09-16T14:50:00.000Z",
+    "timestamp": 1789570200000,
+    "scrapedAt": "2026-09-16T12:17:37.820Z"
   },
   {
     "source": "KEGM",
@@ -197,27 +217,7 @@
     "sp1": "13.09.26",
     "time": "2026-09-15T10:15:00.000Z",
     "timestamp": 1789467300000,
-    "scrapedAt": "2026-09-16T11:56:46.539Z"
-  },
-  {
-    "source": "KEGM",
-    "bogaz": "ÇANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "planlama": "BOĞAZDA 16.09.26 10:30",
-    "name": "GURONI",
-    "len": "117,6",
-    "length": 117.6,
-    "type": "CHEMICAL TANKER",
-    "pilotReq": "Hayır",
-    "pilotRequired": false,
-    "tug": "Hayır",
-    "tugRequired": false,
-    "sp2": "16.09.26",
-    "sp1": "15.09.26",
-    "time": "2026-09-16T10:30:00.000Z",
-    "timestamp": 1789554600000,
-    "scrapedAt": "2026-09-16T11:56:46.541Z"
+    "scrapedAt": "2026-09-16T12:17:41.328Z"
   },
   {
     "source": "KEGM",
@@ -237,27 +237,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T11:30:00.000Z",
     "timestamp": 1789558200000,
-    "scrapedAt": "2026-09-16T11:56:46.543Z"
-  },
-  {
-    "source": "KEGM",
-    "bogaz": "ÇANAKKALE",
-    "yon": "GÜNEY-KUZEY",
-    "hareket": "BOĞAZDA",
-    "planlama": "BOĞAZDA 16.09.26 13:00",
-    "name": "CLIAS 7",
-    "len": "78,6",
-    "length": 78.6,
-    "type": "BARGE",
-    "pilotReq": "Evet",
-    "pilotRequired": true,
-    "tug": "Hayır",
-    "tugRequired": false,
-    "sp2": "16.09.26",
-    "sp1": "16.09.26",
-    "time": "2026-09-16T13:00:00.000Z",
-    "timestamp": 1789563600000,
-    "scrapedAt": "2026-09-16T11:56:46.545Z"
+    "scrapedAt": "2026-09-16T12:17:41.330Z"
   },
   {
     "source": "KEGM",
@@ -277,7 +257,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T14:20:00.000Z",
     "timestamp": 1789568400000,
-    "scrapedAt": "2026-09-16T11:56:46.546Z"
+    "scrapedAt": "2026-09-16T12:17:41.333Z"
   },
   {
     "source": "KEGM",
@@ -297,27 +277,7 @@
     "sp1": "06.09.26",
     "time": "2026-09-15T16:30:00.000Z",
     "timestamp": 1789489800000,
-    "scrapedAt": "2026-09-16T11:56:48.809Z"
-  },
-  {
-    "source": "KEGM",
-    "bogaz": "ÇANAKKALE",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "PLAN. GEÇİŞ",
-    "planlama": "PLAN. GEÇİŞ 16.09.26 14:45",
-    "name": "SOFULAR 1",
-    "len": "88,8",
-    "length": 88.8,
-    "type": "GENERAL CARGO",
-    "pilotReq": "Hayır",
-    "pilotRequired": false,
-    "tug": "Hayır",
-    "tugRequired": false,
-    "sp2": "16.09.26",
-    "sp1": "16.09.26",
-    "time": "2026-09-16T14:45:00.000Z",
-    "timestamp": 1789569900000,
-    "scrapedAt": "2026-09-16T11:56:48.811Z"
+    "scrapedAt": "2026-09-16T12:17:43.584Z"
   },
   {
     "source": "KEGM",
@@ -337,7 +297,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T15:00:00.000Z",
     "timestamp": 1789570800000,
-    "scrapedAt": "2026-09-16T11:56:48.812Z"
+    "scrapedAt": "2026-09-16T12:17:43.586Z"
   },
   {
     "source": "KEGM",
@@ -357,7 +317,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T15:30:00.000Z",
     "timestamp": 1789572600000,
-    "scrapedAt": "2026-09-16T11:56:48.814Z"
+    "scrapedAt": "2026-09-16T12:17:43.589Z"
   },
   {
     "source": "KEGM",
@@ -377,7 +337,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T16:30:00.000Z",
     "timestamp": 1789576200000,
-    "scrapedAt": "2026-09-16T11:56:48.816Z"
+    "scrapedAt": "2026-09-16T12:17:43.592Z"
   },
   {
     "source": "KEGM",
@@ -397,7 +357,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T17:15:00.000Z",
     "timestamp": 1789578900000,
-    "scrapedAt": "2026-09-16T11:56:48.817Z"
+    "scrapedAt": "2026-09-16T12:17:43.595Z"
   },
   {
     "source": "KEGM",
@@ -417,7 +377,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T17:45:00.000Z",
     "timestamp": 1789580700000,
-    "scrapedAt": "2026-09-16T11:56:48.819Z"
+    "scrapedAt": "2026-09-16T12:17:43.597Z"
   },
   {
     "source": "KEGM",
@@ -437,7 +397,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T18:00:00.000Z",
     "timestamp": 1789581600000,
-    "scrapedAt": "2026-09-16T11:56:48.821Z"
+    "scrapedAt": "2026-09-16T12:17:43.599Z"
   },
   {
     "source": "KEGM",
@@ -457,7 +417,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T18:30:00.000Z",
     "timestamp": 1789583400000,
-    "scrapedAt": "2026-09-16T11:56:48.822Z"
+    "scrapedAt": "2026-09-16T12:17:43.602Z"
   },
   {
     "source": "KEGM",
@@ -477,7 +437,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-15T13:06:00.000Z",
     "timestamp": 1789477560000,
-    "scrapedAt": "2026-09-16T11:56:51.094Z"
+    "scrapedAt": "2026-09-16T12:17:47.874Z"
   },
   {
     "source": "KEGM",
@@ -497,7 +457,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-15T13:15:00.000Z",
     "timestamp": 1789478100000,
-    "scrapedAt": "2026-09-16T11:56:51.098Z"
+    "scrapedAt": "2026-09-16T12:17:47.877Z"
   },
   {
     "source": "KEGM",
@@ -517,7 +477,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-15T15:57:00.000Z",
     "timestamp": 1789487820000,
-    "scrapedAt": "2026-09-16T11:56:51.099Z"
+    "scrapedAt": "2026-09-16T12:17:47.881Z"
   },
   {
     "source": "KEGM",
@@ -537,7 +497,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-15T21:58:00.000Z",
     "timestamp": 1789509480000,
-    "scrapedAt": "2026-09-16T11:56:51.101Z"
+    "scrapedAt": "2026-09-16T12:17:47.884Z"
   },
   {
     "source": "KEGM",
@@ -557,7 +517,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-15T23:13:00.000Z",
     "timestamp": 1789513980000,
-    "scrapedAt": "2026-09-16T11:56:51.103Z"
+    "scrapedAt": "2026-09-16T12:17:47.886Z"
   },
   {
     "source": "KEGM",
@@ -577,7 +537,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T01:20:00.000Z",
     "timestamp": 1789521600000,
-    "scrapedAt": "2026-09-16T11:56:51.104Z"
+    "scrapedAt": "2026-09-16T12:17:47.888Z"
   },
   {
     "source": "KEGM",
@@ -597,7 +557,7 @@
     "sp1": "27.08.26",
     "time": "2026-09-16T13:44:00.000Z",
     "timestamp": 1789566240000,
-    "scrapedAt": "2026-09-16T11:56:51.106Z"
+    "scrapedAt": "2026-09-16T12:17:47.890Z"
   },
   {
     "source": "KEGM",
@@ -617,7 +577,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T14:22:00.000Z",
     "timestamp": 1789568520000,
-    "scrapedAt": "2026-09-16T11:56:51.107Z"
+    "scrapedAt": "2026-09-16T12:17:47.893Z"
   },
   {
     "source": "KEGM",
@@ -637,7 +597,7 @@
     "sp1": "04.09.26",
     "time": "2026-09-04T11:00:00.000Z",
     "timestamp": 1788519600000,
-    "scrapedAt": "2026-09-16T11:56:53.391Z"
+    "scrapedAt": "2026-09-16T12:17:50.152Z"
   },
   {
     "source": "KEGM",
@@ -657,7 +617,7 @@
     "sp1": "08.09.26",
     "time": "2026-09-08T07:40:00.000Z",
     "timestamp": 1788853200000,
-    "scrapedAt": "2026-09-16T11:56:53.393Z"
+    "scrapedAt": "2026-09-16T12:17:50.155Z"
   },
   {
     "source": "KEGM",
@@ -677,7 +637,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T11:20:00.000Z",
     "timestamp": 1789557600000,
-    "scrapedAt": "2026-09-16T11:56:53.395Z"
+    "scrapedAt": "2026-09-16T12:17:50.158Z"
   },
   {
     "source": "KEGM",
@@ -697,7 +657,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T11:45:00.000Z",
     "timestamp": 1789559100000,
-    "scrapedAt": "2026-09-16T11:56:53.397Z"
+    "scrapedAt": "2026-09-16T12:17:50.160Z"
   },
   {
     "source": "KEGM",
@@ -717,7 +677,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T12:15:00.000Z",
     "timestamp": 1789560900000,
-    "scrapedAt": "2026-09-16T11:56:53.398Z"
+    "scrapedAt": "2026-09-16T12:17:50.162Z"
   },
   {
     "source": "KEGM",
@@ -737,7 +697,7 @@
     "sp1": "11.09.26",
     "time": "2026-09-16T12:25:00.000Z",
     "timestamp": 1789561500000,
-    "scrapedAt": "2026-09-16T11:56:53.400Z"
+    "scrapedAt": "2026-09-16T12:17:50.164Z"
   },
   {
     "source": "KEGM",
@@ -757,7 +717,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T12:29:00.000Z",
     "timestamp": 1789561740000,
-    "scrapedAt": "2026-09-16T11:56:53.402Z"
+    "scrapedAt": "2026-09-16T12:17:50.166Z"
   },
   {
     "source": "KEGM",
@@ -777,7 +737,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T13:00:00.000Z",
     "timestamp": 1789563600000,
-    "scrapedAt": "2026-09-16T11:56:53.403Z"
+    "scrapedAt": "2026-09-16T12:17:50.169Z"
   },
   {
     "source": "KEGM",
@@ -797,7 +757,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T13:15:00.000Z",
     "timestamp": 1789564500000,
-    "scrapedAt": "2026-09-16T11:56:53.405Z"
+    "scrapedAt": "2026-09-16T12:17:50.171Z"
   },
   {
     "source": "KEGM",
@@ -817,7 +777,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T13:30:00.000Z",
     "timestamp": 1789565400000,
-    "scrapedAt": "2026-09-16T11:56:53.407Z"
+    "scrapedAt": "2026-09-16T12:17:50.173Z"
   },
   {
     "source": "KEGM",
@@ -837,7 +797,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T13:45:00.000Z",
     "timestamp": 1789566300000,
-    "scrapedAt": "2026-09-16T11:56:53.409Z"
+    "scrapedAt": "2026-09-16T12:17:50.176Z"
   },
   {
     "source": "KEGM",
@@ -857,7 +817,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T13:55:00.000Z",
     "timestamp": 1789566900000,
-    "scrapedAt": "2026-09-16T11:56:53.411Z"
+    "scrapedAt": "2026-09-16T12:17:50.178Z"
   },
   {
     "source": "KEGM",
@@ -877,7 +837,7 @@
     "sp1": "12.09.26",
     "time": "2026-09-16T14:15:00.000Z",
     "timestamp": 1789568100000,
-    "scrapedAt": "2026-09-16T11:56:53.412Z"
+    "scrapedAt": "2026-09-16T12:17:50.180Z"
   },
   {
     "source": "KEGM",
@@ -897,7 +857,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T14:20:00.000Z",
     "timestamp": 1789568400000,
-    "scrapedAt": "2026-09-16T11:56:53.414Z"
+    "scrapedAt": "2026-09-16T12:17:50.183Z"
   },
   {
     "source": "KEGM",
@@ -917,7 +877,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T14:45:00.000Z",
     "timestamp": 1789569900000,
-    "scrapedAt": "2026-09-16T11:56:53.416Z"
+    "scrapedAt": "2026-09-16T12:17:50.185Z"
   },
   {
     "source": "KEGM",
@@ -937,7 +897,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T18:40:00.000Z",
     "timestamp": 1789584000000,
-    "scrapedAt": "2026-09-16T11:56:55.740Z"
+    "scrapedAt": "2026-09-16T12:17:52.439Z"
   },
   {
     "source": "KEGM",
@@ -957,7 +917,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T19:00:00.000Z",
     "timestamp": 1789585200000,
-    "scrapedAt": "2026-09-16T11:56:55.742Z"
+    "scrapedAt": "2026-09-16T12:17:52.442Z"
   },
   {
     "source": "KEGM",
@@ -977,7 +937,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T19:20:00.000Z",
     "timestamp": 1789586400000,
-    "scrapedAt": "2026-09-16T11:56:55.744Z"
+    "scrapedAt": "2026-09-16T12:17:52.444Z"
   },
   {
     "source": "KEGM",
@@ -997,7 +957,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T19:40:00.000Z",
     "timestamp": 1789587600000,
-    "scrapedAt": "2026-09-16T11:56:55.746Z"
+    "scrapedAt": "2026-09-16T12:17:52.446Z"
   },
   {
     "source": "KEGM",
@@ -1017,7 +977,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T20:00:00.000Z",
     "timestamp": 1789588800000,
-    "scrapedAt": "2026-09-16T11:56:55.747Z"
+    "scrapedAt": "2026-09-16T12:17:52.449Z"
   },
   {
     "source": "KEGM",
@@ -1037,7 +997,7 @@
     "sp1": "12.09.26",
     "time": "2026-09-13T23:32:00.000Z",
     "timestamp": 1789342320000,
-    "scrapedAt": "2026-09-16T11:57:01.414Z"
+    "scrapedAt": "2026-09-16T12:17:56.950Z"
   },
   {
     "source": "KEGM",
@@ -1057,7 +1017,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-14T20:26:00.000Z",
     "timestamp": 1789417560000,
-    "scrapedAt": "2026-09-16T11:57:01.415Z"
+    "scrapedAt": "2026-09-16T12:17:56.952Z"
   },
   {
     "source": "KEGM",
@@ -1077,7 +1037,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T05:50:00.000Z",
     "timestamp": 1789537800000,
-    "scrapedAt": "2026-09-16T11:57:01.417Z"
+    "scrapedAt": "2026-09-16T12:17:56.954Z"
   },
   {
     "source": "KEGM",
@@ -1097,7 +1057,7 @@
     "sp1": "05.09.26",
     "time": "2026-09-16T15:10:00.000Z",
     "timestamp": 1789571400000,
-    "scrapedAt": "2026-09-16T11:57:03.670Z"
+    "scrapedAt": "2026-09-16T12:17:59.411Z"
   },
   {
     "source": "KEGM",
@@ -1117,7 +1077,7 @@
     "sp1": "15.09.26",
     "time": "2026-09-16T15:50:00.000Z",
     "timestamp": 1789573800000,
-    "scrapedAt": "2026-09-16T11:57:03.672Z"
+    "scrapedAt": "2026-09-16T12:17:59.413Z"
   },
   {
     "source": "KEGM",
@@ -1137,7 +1097,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T16:10:00.000Z",
     "timestamp": 1789575000000,
-    "scrapedAt": "2026-09-16T11:57:03.674Z"
+    "scrapedAt": "2026-09-16T12:17:59.416Z"
   },
   {
     "source": "KEGM",
@@ -1157,7 +1117,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T16:40:00.000Z",
     "timestamp": 1789576800000,
-    "scrapedAt": "2026-09-16T11:57:03.676Z"
+    "scrapedAt": "2026-09-16T12:17:59.418Z"
   },
   {
     "source": "KEGM",
@@ -1177,7 +1137,7 @@
     "sp1": "07.09.26",
     "time": "2026-09-16T09:26:00.000Z",
     "timestamp": 1789550760000,
-    "scrapedAt": "2026-09-16T11:57:05.936Z"
+    "scrapedAt": "2026-09-16T12:18:01.662Z"
   },
   {
     "source": "KEGM",
@@ -1197,7 +1157,7 @@
     "sp1": "01.09.26",
     "time": "2026-09-16T09:28:00.000Z",
     "timestamp": 1789550880000,
-    "scrapedAt": "2026-09-16T11:57:05.938Z"
+    "scrapedAt": "2026-09-16T12:18:01.665Z"
   },
   {
     "source": "KEGM",
@@ -1217,7 +1177,7 @@
     "sp1": "14.09.26",
     "time": "2026-09-16T11:46:00.000Z",
     "timestamp": 1789559160000,
-    "scrapedAt": "2026-09-16T11:57:05.941Z"
+    "scrapedAt": "2026-09-16T12:18:01.667Z"
   },
   {
     "source": "KEGM",
@@ -1237,67 +1197,7 @@
     "sp1": "12.09.26",
     "time": "2026-09-13T02:35:00.000Z",
     "timestamp": 1789266900000,
-    "scrapedAt": "2026-09-16T11:57:08.216Z"
-  },
-  {
-    "source": "KEGM",
-    "bogaz": "İSTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "planlama": "BOĞAZDA 16.09.26 13:05",
-    "name": "CHRYSTAL ARCTIC",
-    "len": "228,5",
-    "length": 228.5,
-    "type": "TANKER",
-    "pilotReq": "Evet",
-    "pilotRequired": true,
-    "tug": "Evet",
-    "tugRequired": true,
-    "sp2": "16.09.26",
-    "sp1": "16.09.26",
-    "time": "2026-09-16T13:05:00.000Z",
-    "timestamp": 1789563900000,
-    "scrapedAt": "2026-09-16T11:57:08.217Z"
-  },
-  {
-    "source": "KEGM",
-    "bogaz": "İSTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "planlama": "BOĞAZDA 16.09.26 13:13",
-    "name": "BRITTA K",
-    "len": "73,7",
-    "length": 73.7,
-    "type": "LIVESTOCK CARRIER",
-    "pilotReq": "Hayır",
-    "pilotRequired": false,
-    "tug": "Hayır",
-    "tugRequired": false,
-    "sp2": "16.09.26",
-    "sp1": "15.09.26",
-    "time": "2026-09-16T13:13:00.000Z",
-    "timestamp": 1789564380000,
-    "scrapedAt": "2026-09-16T11:57:08.219Z"
-  },
-  {
-    "source": "KEGM",
-    "bogaz": "İSTANBUL",
-    "yon": "KUZEY-GÜNEY",
-    "hareket": "BOĞAZDA",
-    "planlama": "BOĞAZDA 16.09.26 13:53",
-    "name": "CMA CGM BLOSSOM",
-    "len": "141,93",
-    "length": 141.93,
-    "type": "CONTAINER",
-    "pilotReq": "Evet",
-    "pilotRequired": true,
-    "tug": "Hayır",
-    "tugRequired": false,
-    "sp2": "16.09.26",
-    "sp1": "13.09.26",
-    "time": "2026-09-16T13:53:00.000Z",
-    "timestamp": 1789566780000,
-    "scrapedAt": "2026-09-16T11:57:08.221Z"
+    "scrapedAt": "2026-09-16T12:18:04.071Z"
   },
   {
     "source": "KEGM",
@@ -1317,7 +1217,7 @@
     "sp1": "16.09.26",
     "time": "2026-09-16T14:05:00.000Z",
     "timestamp": 1789567500000,
-    "scrapedAt": "2026-09-16T11:57:08.222Z"
+    "scrapedAt": "2026-09-16T12:18:04.074Z"
   },
   {
     "source": "KEGM",
@@ -1337,6 +1237,46 @@
     "sp1": "12.09.26",
     "time": "2026-09-16T14:20:00.000Z",
     "timestamp": 1789568400000,
-    "scrapedAt": "2026-09-16T11:57:08.224Z"
+    "scrapedAt": "2026-09-16T12:18:04.076Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "İSTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "planlama": "BOĞAZDA 16.09.26 14:40",
+    "name": "SITHONIA II",
+    "len": "111,89",
+    "length": 111.89,
+    "type": "GENERAL CARGO",
+    "pilotReq": "Hayır",
+    "pilotRequired": false,
+    "tug": "Hayır",
+    "tugRequired": false,
+    "sp2": "16.09.26",
+    "sp1": "14.09.26",
+    "time": "2026-09-16T14:40:00.000Z",
+    "timestamp": 1789569600000,
+    "scrapedAt": "2026-09-16T12:18:04.078Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "İSTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "planlama": "BOĞAZDA 16.09.26 15:00",
+    "name": "TQ TRABZON",
+    "len": "125",
+    "length": 125,
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "pilotRequired": true,
+    "tug": "Evet",
+    "tugRequired": true,
+    "sp2": "06.09.26",
+    "sp1": "05.09.26",
+    "time": "2026-09-16T15:00:00.000Z",
+    "timestamp": 1789570800000,
+    "scrapedAt": "2026-09-16T12:18:04.080Z"
   }
 ]
