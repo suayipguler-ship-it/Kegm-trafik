@@ -60078,5 +60078,25 @@
     "time": "2026-09-20T16:00:00.000Z",
     "timestamp": 1789920000000,
     "scrapedAt": "2026-09-20T08:11:39.708Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "İSTANBUL",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "BOĞAZDA",
+    "planlama": "BOĞAZDA 20.09.26 10:51",
+    "name": "SOLO",
+    "len": "63,71",
+    "length": 63.71,
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "pilotRequired": true,
+    "tug": "Hayır",
+    "tugRequired": false,
+    "sp2": "20.09.26",
+    "sp1": "19.09.26",
+    "time": "2026-09-20T10:51:00.000Z",
+    "timestamp": 1789901460000,
+    "scrapedAt": "2026-09-20T08:28:05.441Z"
   }
 ]
