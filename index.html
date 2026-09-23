@@ -530,7 +530,7 @@
         }
 
         /* =====================================================
-           TAKVİYE MODALI VE ÇOKLU SEÇİM LİSTESİ (KESİN ÇÖZÜM)
+           TAKVİYE MODALI VE ÇOKLU SEÇİM LİSTESİ
            ===================================================== */
 
         .support-modal-content {
@@ -617,14 +617,16 @@
             font-weight: 800;
         }
 
-        .support-count-badge {
+        .support-count-badge-editable {
             background: #1e293b;
-            border: 1px solid #475569;
-            color: #f8fafc;
-            border-radius: 20px;
-            padding: 2px 8px;
-            font-size: 0.7rem;
+            border: 1px solid #f59e0b;
+            color: #fbbf24;
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-size: 0.8rem;
             font-weight: 800;
+            width: 75px;
+            text-align: center;
         }
 
         .support-info-line {
@@ -1125,7 +1127,7 @@
         <div class="modal-header">
 
             <h3 style="color:#fbbf24;">
-                🚐 TAKVİYE ANALİZİ VE KAYDI
+                🚐 ANLIK TAKVİYE DURUMU
             </h3>
 
             <button class="btn-close"
@@ -1140,13 +1142,7 @@
         <!-- ANALİZ PANELİ VE 5 GÜNLÜK GEÇMİŞ (MODAL İÇİNDE) -->
         <div id="modalSupportAnalysisContainer"></div>
 
-        <hr style="border:0; border-top:1px solid #334155; margin:4px 0;">
-
-        <div style="font-size:0.85rem; font-weight:800; color:#38bdf8; margin-top:2px;">
-            + Yeni Takviye Kaydı Ekle
-        </div>
-
-        <div class="support-form-label">
+        <div class="support-form-label" style="margin-top:6px;">
             Yön
         </div>
 
@@ -1162,18 +1158,6 @@
 
         <input type="time"
                id="supportTime">
-
-
-        <div class="support-form-label">
-            Aktif Vardiya Personel Sayısı (Manuel Düzenle)
-        </div>
-
-        <input type="number"
-               id="supportActiveVardiyaCount"
-               value="29"
-               min="1"
-               max="50"
-               style="font-weight:700; color:#fbbf24;">
 
 
         <div class="support-form-label">
@@ -2086,7 +2070,6 @@
         const hh = String(now.getHours()).padStart(2, "0");
         const mm = String(now.getMinutes()).padStart(2, "0");
         document.getElementById("supportTime").value = `${hh}:${mm}`;
-        document.getElementById("supportActiveVardiyaCount").value = getActiveVardiyaPilotCount();
 
         renderModalSupportAnalysis();
         switchSupportVardiya(1);
@@ -2132,10 +2115,27 @@
         document.getElementById("supportSelectedCount").innerText = `${count} kılavuz seçildi.`;
     }
 
+    // Sağ üst rozetten manuel aktif pilot sayısı değiştirildiğinde çalışır
+    function updateManualCapacity(val) {
+        const num = parseInt(val, 10);
+        if (!isNaN(num) && num > 0) {
+            localStorage.setItem("kegm_manual_capacity", num);
+            renderModalSupportAnalysis();
+        }
+    }
+
+    function getActiveVardiyaPilotCount() {
+        const saved = localStorage.getItem("kegm_manual_capacity");
+        if (saved !== null && !isNaN(parseInt(saved, 10))) {
+            return parseInt(saved, 10);
+        }
+        return (VARDIYALAR[activeVardiya] || []).length;
+    }
+
     async function saveSupportRecord() {
         const direction = document.getElementById("supportDirection").value;
         const time = document.getElementById("supportTime").value;
-        const activeCountInput = parseInt(document.getElementById("supportActiveVardiyaCount").value, 10) || getActiveVardiyaPilotCount();
+        const activeCountInput = getActiveVardiyaPilotCount();
         const pilots = getSelectedSupportPilots();
 
         if (!time) { alert("Lütfen takviye saatini seçin."); return; }
@@ -2204,10 +2204,6 @@
         }
     }
 
-    function getActiveVardiyaPilotCount() {
-        return (VARDIYALAR[activeVardiya] || []).length;
-    }
-
     function getDirectionLabel(direction) {
         return direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY";
     }
@@ -2269,9 +2265,6 @@
         });
 
         let totalCapacity = getActiveVardiyaPilotCount();
-        if (supportRecords.length > 0 && supportRecords[0].activeCount) {
-            totalCapacity = Number(supportRecords[0].activeCount);
-        }
 
         const availablePilots = Math.max(0, totalCapacity - activeBogazdaCount + Math.max(returnedFromKG, returnedFromGK));
         const totalDemand = demandKG + demandGK;
@@ -2307,7 +2300,16 @@
             <div class="${panelClass}">
                 <div class="support-header-row">
                     <div class="support-title-text">🚐 ANLIK TAKVİYE & DÖNÜŞ SÜRELİ ANALİZ</div>
-                    <div class="support-count-badge">${calc.activeBogazdaCount} Boğazda</div>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <input type="number" 
+                               id="modalManualCapacityInput" 
+                               value="${calc.totalCapacity}" 
+                               min="1" max="50" 
+                               class="support-count-badge-editable"
+                               onchange="updateManualCapacity(this.value)"
+                               title="Aktif Pilot Sayısını Düzenle">
+                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Aktif</span>
+                    </div>
                 </div>
         `;
 
