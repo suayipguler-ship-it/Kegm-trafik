@@ -549,9 +549,33 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            max-height: 40vh;
+            max-height: 38vh;
             overflow-y: auto;
             padding: 3px;
+        }
+
+        .support-pilot-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .support-pilot-check input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: #f59e0b;
+        }
+
+        .support-pilot-check span {
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            font-weight: 600;
         }
 
         .support-panel {
@@ -1705,7 +1729,7 @@
     let currentMode = "live";
     let logHours = 6;
     let activeVardiya = 1;
-    let supportActiveVardiya = 1; // Takviye modalı içindeki 3 vardiya seçimi için
+    let supportActiveVardiya = 1; 
     let selectedShipKey = "";
     let allShips = [];
     let historyShips = [];
@@ -2057,7 +2081,7 @@
         document.getElementById("supportActiveVardiyaCount").value = getActiveVardiyaPilotCount();
 
         renderModalSupportAnalysis();
-        renderSupportPilotList();
+        switchSupportVardiya(1);
     }
 
     function closeSupportModal(e) {
@@ -2182,16 +2206,26 @@
 
 
     /* =========================================================
-       2 SAATLİK PENCERE & ANALİZ (GEÇİŞE HAZIR HARİÇ)
+       2 SAATLİK PENCERE & DÖNÜŞ SÜRELİ AKILLI KAPASİTE ANALİZİ
        ========================================================= */
 
     function calculateDynamicSupportNeeds(bogaz) {
         const now = Date.now();
         const twoHoursMs = 2 * 60 * 60 * 1000;
+        
+        // Kaptanların dönüş süreleri:
+        // K→G inen bir kaptanın G→K için boşa çıkma süresi = 3 saat (180 dk)
+        // G→K çıkan bir kaptanın K→G için boşa çıkma süresi = 3 saat 45 dk (225 dk)
+        const returnTimeKG_to_GK = 3 * 60 * 60 * 1000; 
+        const returnTimeGK_to_KG = (3 * 60 + 45) * 60 * 1000;
 
         let activeBogazdaCount = 0;
         let demandKG = 0;
         let demandGK = 0;
+
+        // Anlık boğazdaki görevlerden yeni boşa çıkmış (dönüş süresini tamamlamış) kaptanları hesaplıyoruz
+        let returnedFromKG = 0; // G→K yönü için taze güç
+        let returnedFromGK = 0; // K→G yönü için taze güç
 
         allShips.forEach(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return;
@@ -2219,6 +2253,16 @@
                 if (isKG) demandKG++;
                 if (isGK) demandGK++;
             }
+
+            // Dönüş süresi hesabı: Geçmişte (veya biten seferlerde) yola çıkanlar şu an boşa çıktı mı?
+            if (shipTime > 0 && shipTime < now) {
+                const elapsed = now - shipTime;
+                if (isKG && elapsed >= returnTimeKG_to_GK) {
+                    returnedFromKG++; // K→G biteli 3 saat oldu, G→K için hazır
+                } else if (isGK && elapsed >= returnTimeGK_to_KG) {
+                    returnedFromGK++; // G→K biteli 3 saat 45 dk oldu, K→G için hazır
+                }
+            }
         });
 
         let totalCapacity = getActiveVardiyaPilotCount();
@@ -2226,7 +2270,9 @@
             totalCapacity = Number(supportRecords[0].activeCount);
         }
 
-        const availablePilots = Math.max(0, totalCapacity - activeBogazdaCount);
+        // Kullanılabilir kapasite: Toplam - Boğazda olanlar + Dönüş süresini tamamlayıp boşa çıkanlar
+        // (Yön bazlı daha hassas denge için toplam havuzdan türetilir)
+        const availablePilots = Math.max(0, totalCapacity - activeBogazdaCount + Math.max(returnedFromKG, returnedFromGK));
         const totalDemand = demandKG + demandGK;
         const shortage = Math.max(0, totalDemand - availablePilots);
         const warning = shortage > 0 || availablePilots === 0;
@@ -2260,7 +2306,7 @@
         let html = `
             <div class="${panelClass}">
                 <div class="support-header-row">
-                    <div class="support-title-text">🚐 ANLIK TAKVİYE & KAPASİTE ANALİZİ</div>
+                    <div class="support-title-text">🚐 ANLIK TAKVİYE & DÖNÜŞ SÜRELİ ANALİZ</div>
                     <div class="support-count-badge">${calc.activeBogazdaCount} Boğazda</div>
                 </div>
         `;
@@ -2268,12 +2314,12 @@
         if (calc.warning) {
             html += `
                 <div style="color:#fca5a5; font-size:0.8rem; font-weight:800; margin-bottom:4px;">
-                    ⚠️ TAKVİYE İHTİYACI OLABİLİR (YÜKSEK TALEP)
+                    ⚠️ TAKVİYE İHTİYACI OLABİLİR (DÖNÜŞ SÜRELERİ DAHİL)
                 </div>
                 <div class="support-info-line">
                     Aktif Vardiya Kapasite: <strong>${calc.totalCapacity}</strong> | 
                     Boğazda: <strong>${calc.activeBogazdaCount}</strong> | 
-                    Boşta: <strong>${calc.availablePilots}</strong><br>
+                    Net Müsait: <strong>${calc.availablePilots}</strong><br>
                     2 Saatlik Talep (K→G: <strong>${calc.demandKG}</strong> | G→K: <strong>${calc.demandGK}</strong>)
                     ${calc.shortage > 0 ? ` | Açık: <strong style="color:#fca5a5;">${calc.shortage}</strong>` : ""}
                 </div>
@@ -2284,7 +2330,7 @@
                     ✅ Kılavuz Kapasitesi Yeterli
                 </div>
                 <div class="support-info-line">
-                    Kapasite: <strong>${calc.totalCapacity}</strong> | Boğazda: <strong>${calc.activeBogazdaCount}</strong> | Boşta: <strong>${calc.availablePilots}</strong>
+                    Kapasite: <strong>${calc.totalCapacity}</strong> | Boğazda: <strong>${calc.activeBogazdaCount}</strong> | Net Müsait: <strong>${calc.availablePilots}</strong>
                 </div>
             `;
         }
