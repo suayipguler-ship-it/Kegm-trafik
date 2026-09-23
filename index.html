@@ -549,58 +549,9 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-            max-height: 43vh;
+            max-height: 40vh;
             overflow-y: auto;
             padding: 3px;
-        }
-
-        .support-shift-title {
-            color: #fbbf24;
-            background: #1e293b;
-            border-radius: 6px;
-            padding: 6px 8px;
-            font-size: 0.76rem;
-            font-weight: 800;
-            margin-top: 4px;
-        }
-
-        .support-pilot-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #0b1329;
-            border: 1px solid #1e293b;
-            border-radius: 6px;
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .support-pilot-check input {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            accent-color: #f59e0b;
-        }
-
-        .support-pilot-check span {
-            font-size: 0.8rem;
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-
-        .support-selected-count {
-            text-align: center;
-            color: #fbbf24;
-            font-size: 0.76rem;
-            font-weight: 800;
-        }
-
-        /* Aktif Takviye Kartları Listesi (Ana Sayfa) */
-        .active-support-section {
-            margin-bottom: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
 
         .support-panel {
@@ -609,6 +560,7 @@
             border-left: 5px solid #f59e0b;
             border-radius: 10px;
             padding: 10px 12px;
+            margin-bottom: 12px;
         }
 
         .support-panel.warning {
@@ -857,19 +809,15 @@
         }
 
         @media (max-width: 380px) {
-
             .ship-header {
                 flex-direction: column;
             }
-
             .ship-time-badge {
                 align-self: flex-start;
             }
-
             .stats-summary-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-
         }
     </style>
 </head>
@@ -884,7 +832,7 @@
 
         <button class="btn-header-support"
                 onclick="openSupportModal()"
-                title="Takviye Kaydı Ekle">
+                title="Takviye Analiz ve Kayıt">
             🚐
         </button>
 
@@ -1025,10 +973,6 @@
 </div>
 
 
-<!-- AKTİF TAKVİYE BİLDİRİM & LİSTE ALANI (Yukarıda) -->
-<div id="activeSupportContainer"></div>
-
-
 <div id="shipContainer"
      class="ship-list">
 
@@ -1137,7 +1081,7 @@
 
 
 <!-- =========================================================
-     TAKVİYE MODALI
+     TAKVİYE MODALI (ANALİZ + 5 GÜNLÜK LİSTE + SEÇİM)
      ========================================================= -->
 
 <div id="supportModal"
@@ -1150,7 +1094,7 @@
         <div class="modal-header">
 
             <h3 style="color:#fbbf24;">
-                🚐 TAKVİYE KAYDI
+                🚐 TAKVİYE ANALİZİ VE KAYDI
             </h3>
 
             <button class="btn-close"
@@ -1162,21 +1106,22 @@
 
         </div>
 
+        <!-- ANALİZ PANELİ VE 5 GÜNLÜK GEÇMİŞ (MODAL İÇİNDE) -->
+        <div id="modalSupportAnalysisContainer"></div>
+
+        <hr style="border:0; border-top:1px solid #334155; margin:4px 0;">
+
+        <div style="font-size:0.85rem; font-weight:800; color:#38bdf8; margin-top:2px;">
+            + Yeni Takviye Kaydı Ekle
+        </div>
 
         <div class="support-form-label">
             Yön
         </div>
 
         <select id="supportDirection">
-
-            <option value="K-G">
-                KUZEY → GÜNEY
-            </option>
-
-            <option value="G-K">
-                GÜNEY → KUZEY
-            </option>
-
+            <option value="K-G">KUZEY → GÜNEY</option>
+            <option value="G-K">GÜNEY → KUZEY</option>
         </select>
 
 
@@ -1201,7 +1146,13 @@
 
 
         <div class="support-form-label">
-            Takviye için giden kılavuz kaptanlar
+            Vardiya Seçimi (Takviye Giden Kaptanlar İçin)
+        </div>
+
+        <div class="vardiya-tabs">
+            <button id="supportTabV1" class="btn-v-tab active" onclick="switchSupportVardiya(1)">Vardiya-1</button>
+            <button id="supportTabV2" class="btn-v-tab" onclick="switchSupportVardiya(2)">Vardiya-2</button>
+            <button id="supportTabV3" class="btn-v-tab" onclick="switchSupportVardiya(3)">Vardiya-3</button>
         </div>
 
 
@@ -1212,17 +1163,13 @@
 
         <div id="supportSelectedCount"
              class="support-selected-count">
-
             0 kılavuz seçildi.
-
         </div>
 
 
         <button class="btn-search btn-support"
                 onclick="saveSupportRecord()">
-
             🚐 TAKVİYEYİ KAYDET
-
         </button>
 
     </div>
@@ -1758,6 +1705,7 @@
     let currentMode = "live";
     let logHours = 6;
     let activeVardiya = 1;
+    let supportActiveVardiya = 1; // Takviye modalı içindeki 3 vardiya seçimi için
     let selectedShipKey = "";
     let allShips = [];
     let historyShips = [];
@@ -1977,7 +1925,7 @@
 
 
     /* =========================================================
-       PİLOT MODALI
+       PİLOT MODALI (CANLI LİSTE İÇİN)
        ========================================================= */
 
     function openPilotModal(uniqueKey, shipName) {
@@ -2107,6 +2055,8 @@
         const mm = String(now.getMinutes()).padStart(2, "0");
         document.getElementById("supportTime").value = `${hh}:${mm}`;
         document.getElementById("supportActiveVardiyaCount").value = getActiveVardiyaPilotCount();
+
+        renderModalSupportAnalysis();
         renderSupportPilotList();
     }
 
@@ -2115,20 +2065,26 @@
         document.getElementById("supportModal").style.display = "none";
     }
 
+    function switchSupportVardiya(vNum) {
+        supportActiveVardiya = vNum;
+        document.getElementById("supportTabV1").classList.toggle("active", vNum === 1);
+        document.getElementById("supportTabV2").classList.toggle("active", vNum === 2);
+        document.getElementById("supportTabV3").classList.toggle("active", vNum === 3);
+        renderSupportPilotList();
+    }
+
     function renderSupportPilotList() {
         const container = document.getElementById("supportPilotList");
+        const list = VARDIYALAR[supportActiveVardiya] || [];
         let html = "";
-        Object.keys(VARDIYALAR).forEach(v => {
-            html += `<div class="support-shift-title">VARDİYA ${v}</div>`;
-            VARDIYALAR[v].forEach((pilot, index) => {
-                const id = `supportPilot_${v}_${index}`;
-                html += `
-                    <label class="support-pilot-check">
-                        <input type="checkbox" value="${pilot.replace(/"/g, "&quot;")}" onchange="updateSupportSelectedCount()" id="${id}">
-                        <span>${pilot}</span>
-                    </label>
-                `;
-            });
+        list.forEach((pilot, index) => {
+            const id = `supportPilot_${supportActiveVardiya}_${index}`;
+            html += `
+                <label class="support-pilot-check">
+                    <input type="checkbox" value="${pilot.replace(/"/g, "&quot;")}" onchange="updateSupportSelectedCount()" id="${id}">
+                    <span>${pilot}</span>
+                </label>
+            `;
         });
         container.innerHTML = html;
         updateSupportSelectedCount();
@@ -2243,7 +2199,6 @@
             if (isShipPilotless(ship)) return;
 
             const hareketNorm = normalizeStr(ship.hareket);
-            // Geçişe hazır gemilerin hesaba katılması istenmiyor
             if (hareketNorm.includes("HAZIR")) return;
 
             const pilotReqVal = normalizeStr(ship.pilotReq);
@@ -2266,7 +2221,6 @@
             }
         });
 
-        // Kullanıcı manuel girdiyse son kayıttaki sayıyı baz alabiliriz ya da varsayılan
         let totalCapacity = getActiveVardiyaPilotCount();
         if (supportRecords.length > 0 && supportRecords[0].activeCount) {
             totalCapacity = Number(supportRecords[0].activeCount);
@@ -2289,12 +2243,12 @@
         };
     }
 
-    /* 5 Günlük Gösterim Filtresi (120 Saat) */
-    function buildActiveSupportSection(bogaz) {
+    /* 5 Günlük Gösterim Filtresi (120 Saat) ve Modal İçi Render */
+    function renderModalSupportAnalysis() {
+        const bogaz = document.getElementById("selBogaz").value;
         const fiveDaysMs = 5 * 24 * 60 * 60 * 1000;
         const now = Date.now();
 
-        // 5 günden eski olmayan kayıtlar ana sayfada gösterilir
         const recentRecords = supportRecords.filter(r => {
             const t = Number(r.timestamp || 0);
             return (now - t) <= fiveDaysMs;
@@ -2304,12 +2258,11 @@
         const panelClass = calc.warning ? "support-panel warning" : "support-panel ok";
 
         let html = `
-            <div class="active-support-section">
-                <div class="${panelClass}">
-                    <div class="support-header-row">
-                        <div class="support-title-text">🚐 ANLIK TAKVİYE & KAPASİTE ANALİZİ</div>
-                        <div class="support-count-badge">${calc.activeBogazdaCount} Boğazda</div>
-                    </div>
+            <div class="${panelClass}">
+                <div class="support-header-row">
+                    <div class="support-title-text">🚐 ANLIK TAKVİYE & KAPASİTE ANALİZİ</div>
+                    <div class="support-count-badge">${calc.activeBogazdaCount} Boğazda</div>
+                </div>
         `;
 
         if (calc.warning) {
@@ -2356,8 +2309,8 @@
             html += `<div style="color:#64748b; font-size:0.75rem; text-align:center; padding:4px;">Son 5 gün içinde aktif takviye kaydı yok.</div>`;
         }
 
-        html += `</div></div>`;
-        return html;
+        html += `</div>`;
+        document.getElementById("modalSupportAnalysisContainer").innerHTML = html;
     }
 
 
@@ -2419,14 +2372,10 @@
 
     function renderLiveList() {
         const container = document.getElementById("shipContainer");
-        const supportContainer = document.getElementById("activeSupportContainer");
         const bogaz = document.getElementById("selBogaz").value;
         const yon = document.getElementById("selYon").value;
         const hareket = document.getElementById("selHareket").value;
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-
-        // Takviye paneli artık yukarıda render ediliyor
-        supportContainer.innerHTML = buildActiveSupportSection(bogaz);
 
         let filtered = allShips.filter(ship => {
             if (isShipTooOldForLive(ship)) return false;
@@ -2495,12 +2444,9 @@
 
     function renderHistoryList() {
         const container = document.getElementById("shipContainer");
-        const supportContainer = document.getElementById("activeSupportContainer");
         const bogaz = document.getElementById("selBogaz").value;
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
         const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
-
-        supportContainer.innerHTML = buildActiveSupportSection(bogaz);
 
         let rawList = historyShips.filter(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
