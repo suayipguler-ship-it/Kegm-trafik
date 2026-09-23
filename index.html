@@ -163,7 +163,9 @@
             gap: 10px;
         }
 
-        /* CANLI PLANLAMA */
+        /* =====================================================
+           CANLI PLANLAMA
+           ===================================================== */
 
         .ship-card {
             background-color: #0f172a;
@@ -288,8 +290,6 @@
             font-weight: 700;
         }
 
-        /* PİLOTSUZ UYARI */
-
         .pilotless-info {
             display: none;
             padding: 7px 9px;
@@ -307,7 +307,135 @@
             display: block;
         }
 
-        /* LOG */
+        /* =====================================================
+           TAKVİYE
+           ===================================================== */
+
+        .support-panel {
+            background: #101827;
+            border: 1px solid #334155;
+            border-left: 5px solid #f59e0b;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .support-panel.warning {
+            border-left-color: #ef4444;
+            background: #21100d;
+        }
+
+        .support-panel.ok {
+            border-left-color: #22c55e;
+        }
+
+        .support-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .support-title {
+            color: #fbbf24;
+            font-size: 0.98rem;
+            font-weight: 800;
+        }
+
+        .support-count {
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: #f8fafc;
+            border-radius: 20px;
+            padding: 3px 9px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .support-warning {
+            color: #fca5a5;
+            font-size: 0.82rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .support-ok {
+            color: #86efac;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .support-detail {
+            color: #94a3b8;
+            font-size: 0.76rem;
+            line-height: 1.45;
+            margin-bottom: 9px;
+        }
+
+        .btn-support {
+            background: #92400e;
+            border-color: #f59e0b;
+            color: #fef3c7;
+            font-weight: 800;
+        }
+
+        .btn-support:active {
+            background: #b45309;
+        }
+
+        .support-records {
+            margin-top: 9px;
+            border-top: 1px solid #334155;
+            padding-top: 8px;
+        }
+
+        .support-record {
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 7px;
+            padding: 7px 8px;
+            margin-bottom: 5px;
+        }
+
+        .support-record:last-child {
+            margin-bottom: 0;
+        }
+
+        .support-record-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .support-record-direction {
+            color: #38bdf8;
+        }
+
+        .support-record-time {
+            color: #fbbf24;
+        }
+
+        .support-record-pilots {
+            color: #cbd5e1;
+            font-size: 0.73rem;
+            margin-top: 4px;
+            line-height: 1.35;
+        }
+
+        .support-empty {
+            color: #64748b;
+            font-size: 0.76rem;
+            text-align: center;
+            padding: 5px;
+        }
+
+        /* =====================================================
+           LOG
+           ===================================================== */
 
         .direction-section {
             margin-bottom: 16px;
@@ -388,7 +516,9 @@
             font-weight: 700;
         }
 
-        /* MODALLAR */
+        /* =====================================================
+           MODALLAR
+           ===================================================== */
 
         .modal-overlay {
             display: none;
@@ -404,7 +534,8 @@
 
         .modal-content {
             width: 100%;
-            max-height: 80vh;
+            max-height: 85vh;
+            overflow-y: auto;
             background: #0f172a;
             border-top: 2px solid #0284c7;
             border-radius: 16px 16px 0 0;
@@ -486,8 +617,6 @@
             background: #0284c7;
         }
 
-        /* PİLOTSUZ BUTONU */
-
         .btn-pilotless {
             background: #450a0a;
             border: 1px solid #ef4444;
@@ -495,7 +624,6 @@
             text-align: center;
             font-weight: 800;
             padding: 11px 12px;
-            box-shadow: 0 0 0 1px rgba(239,68,68,0.08);
         }
 
         .btn-pilotless:active {
@@ -515,6 +643,76 @@
             text-align: center;
             font-weight: 700;
         }
+
+        /* =====================================================
+           TAKVİYE MODALI
+           ===================================================== */
+
+        .support-modal-content {
+            max-height: 92vh;
+            border-top-color: #f59e0b;
+        }
+
+        .support-form-label {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: -4px;
+        }
+
+        .support-pilot-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 43vh;
+            overflow-y: auto;
+            padding: 3px;
+        }
+
+        .support-shift-title {
+            color: #fbbf24;
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .support-pilot-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .support-pilot-check input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: #f59e0b;
+        }
+
+        .support-pilot-check span {
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .support-selected-count {
+            text-align: center;
+            color: #fbbf24;
+            font-size: 0.76rem;
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           AYAR
+           ===================================================== */
 
         .settings-content {
             border-radius: 12px;
@@ -542,7 +740,7 @@
         }
 
         .stats-content {
-            max-height: 90vh;
+            max-height: 94vh;
             background: #090f1d;
             border-top: 3px solid #22c55e;
         }
@@ -608,6 +806,66 @@
             background: rgba(255,255,255,0.02);
         }
 
+        .support-stats-box {
+            margin-top: 12px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .support-stats-header {
+            background: #172033;
+            color: #fbbf24;
+            font-weight: 800;
+            padding: 9px;
+            font-size: 0.82rem;
+        }
+
+        .support-stats-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            padding: 7px;
+        }
+
+        .support-mini-stat {
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            text-align: center;
+            padding: 7px 4px;
+        }
+
+        .support-mini-val {
+            color: #fbbf24;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .support-mini-label {
+            color: #64748b;
+            font-size: 0.65rem;
+            margin-top: 2px;
+        }
+
+        .support-pilot-stat-list {
+            padding: 0 7px 7px;
+        }
+
+        .support-pilot-stat-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 6px 7px;
+            border-top: 1px solid #1e293b;
+            color: #cbd5e1;
+            font-size: 0.74rem;
+        }
+
+        .support-pilot-stat-row strong {
+            color: #fbbf24;
+        }
+
         .telemetry-footer {
             text-align: center;
             margin-top: 32px;
@@ -625,38 +883,70 @@
             font-size: 0.9rem;
             margin-top: 24px;
         }
+
+        @media (max-width: 380px) {
+
+            .ship-header {
+                flex-direction: column;
+            }
+
+            .ship-time-badge {
+                align-self: flex-start;
+            }
+
+            .stats-summary-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
     </style>
 </head>
 
 <body>
 
 <div class="header">
+
     <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
 
     <div style="display:flex; align-items:center;">
+
         <span id="cloudStatus"
               class="cloud-status"
-              title="Senkronizasyon Durumu">☁️</span>
+              title="Senkronizasyon Durumu">
+            ☁️
+        </span>
 
         <button class="btn-settings"
                 onclick="openSettingsModal()"
-                title="Ayarlar">⚙️</button>
+                title="Ayarlar">
+            ⚙️
+        </button>
+
     </div>
+
 </div>
 
+
 <div class="nav-tabs">
+
     <button id="tabLive"
             class="btn-tab active"
             onclick="switchMode('live')">
+
         📋 Canlı Planlama
+
     </button>
 
     <button id="tabHistory"
             class="btn-tab"
             onclick="switchMode('history')">
+
         📜 Kılavuzlu Geçiş Logu
+
     </button>
+
 </div>
+
 
 <div class="filter-card">
 
@@ -666,34 +956,56 @@
            placeholder="🔍 Gemi Adı Ara..."
            oninput="renderCurrentView()">
 
+
     <div class="filter-row">
 
         <select id="selBogaz"
                 onchange="renderCurrentView()">
 
-            <option value="ÇANAKKALE">ÇANAKKALE</option>
-            <option value="İSTANBUL">İSTANBUL</option>
+            <option value="ÇANAKKALE">
+                ÇANAKKALE
+            </option>
+
+            <option value="İSTANBUL">
+                İSTANBUL
+            </option>
 
         </select>
+
 
         <select id="selYon"
                 onchange="renderCurrentView()">
 
-            <option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
-            <option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
+            <option value="GÜNEY-KUZEY">
+                GÜNEY-KUZEY
+            </option>
+
+            <option value="KUZEY-GÜNEY">
+                KUZEY-GÜNEY
+            </option>
 
         </select>
 
     </div>
 
+
     <select id="selHareket"
             onchange="renderCurrentView()">
 
-        <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
-        <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
-        <option value="BOĞAZDA">BOĞAZDA</option>
+        <option value="PLAN. GEÇİŞ">
+            PLAN. GEÇİŞ
+        </option>
+
+        <option value="GEÇİŞE HAZIR">
+            GEÇİŞE HAZIR
+        </option>
+
+        <option value="BOĞAZDA">
+            BOĞAZDA
+        </option>
 
     </select>
+
 
     <div id="logRangeBox"
          class="log-range-row">
@@ -701,29 +1013,39 @@
         <button class="btn-range active"
                 id="btnRange6"
                 onclick="setLogHours(6)">
+
             Son 6 Saat
+
         </button>
 
         <button class="btn-range"
                 id="btnRange12"
                 onclick="setLogHours(12)">
+
             Son 12 Saat
+
         </button>
 
         <button class="btn-range"
                 id="btnRange24"
                 onclick="setLogHours(24)">
+
             Son 24 Saat
+
         </button>
 
     </div>
 
+
     <button class="btn-search"
             onclick="loadAllData()">
+
         Listeyi Yenile
+
     </button>
 
 </div>
+
 
 <div id="shipContainer"
      class="ship-list">
@@ -734,6 +1056,7 @@
 
 </div>
 
+
 <div class="telemetry-footer"
      onclick="triggerSecretDiagnosis()">
 
@@ -742,9 +1065,9 @@
 </div>
 
 
-<!-- ========================================================= -->
-<!-- PİLOT SEÇİM MODALI -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     PİLOT SEÇİM MODALI
+     ========================================================= -->
 
 <div id="pilotModal"
      class="modal-overlay"
@@ -761,12 +1084,13 @@
 
             <button class="btn-close"
                     onclick="closeModal()">
+
                 ✕
+
             </button>
 
         </div>
 
-        <!-- YENİ: PİLOTSUZ SEÇENEĞİ -->
 
         <button id="btnPilotless"
                 class="btn-pilot-item btn-pilotless"
@@ -776,6 +1100,7 @@
 
         </button>
 
+
         <div style="
             font-size:0.72rem;
             color:#94a3b8;
@@ -784,43 +1109,136 @@
             margin-top:-3px;
             margin-bottom:2px;
         ">
-            Pilotsuz işaretlenen gemi kılavuzlu geçiş logunda ve
-            istatistiklerde gösterilmez.
+
+            Pilotsuz işaretlenen gemi kılavuzlu geçiş
+            logunda ve istatistiklerde gösterilmez.
+
         </div>
+
 
         <div class="vardiya-tabs">
 
             <button id="tabV1"
                     class="btn-v-tab active"
                     onclick="switchVardiya(1)">
+
                 Çanakkale-1
+
             </button>
 
             <button id="tabV2"
                     class="btn-v-tab"
                     onclick="switchVardiya(2)">
+
                 Çanakkale-2
+
             </button>
 
             <button id="tabV3"
                     class="btn-v-tab"
                     onclick="switchVardiya(3)">
+
                 Çanakkale-3
+
             </button>
 
         </div>
+
 
         <div id="pilotListContainer"
              class="pilot-list-box">
         </div>
 
     </div>
+
 </div>
 
 
-<!-- ========================================================= -->
-<!-- AYAR / GITHUB TOKEN MODALI -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     TAKVİYE MODALI
+     ========================================================= -->
+
+<div id="supportModal"
+     class="modal-overlay"
+     onclick="closeSupportModal(event)">
+
+    <div class="modal-content support-modal-content"
+         onclick="event.stopPropagation()">
+
+        <div class="modal-header">
+
+            <h3 style="color:#fbbf24;">
+                🚐 TAKVİYE KAYDI
+            </h3>
+
+            <button class="btn-close"
+                    onclick="closeSupportModal()">
+
+                ✕
+
+            </button>
+
+        </div>
+
+
+        <div class="support-form-label">
+            Yön
+        </div>
+
+        <select id="supportDirection">
+
+            <option value="K-G">
+                KUZEY → GÜNEY
+            </option>
+
+            <option value="G-K">
+                GÜNEY → KUZEY
+            </option>
+
+        </select>
+
+
+        <div class="support-form-label">
+            Saat
+        </div>
+
+        <input type="time"
+               id="supportTime">
+
+
+        <div class="support-form-label">
+            Takviye için giden kılavuz kaptanlar
+        </div>
+
+
+        <div id="supportPilotList"
+             class="support-pilot-list">
+        </div>
+
+
+        <div id="supportSelectedCount"
+             class="support-selected-count">
+
+            0 kılavuz seçildi.
+
+        </div>
+
+
+        <button class="btn-search btn-support"
+                onclick="saveSupportRecord()">
+
+            🚐 TAKVİYEYİ KAYDET
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     AYAR / GITHUB TOKEN MODALI
+     ========================================================= -->
 
 <div id="settingsModal"
      class="modal-overlay"
@@ -837,10 +1255,13 @@
 
             <button class="btn-close"
                     onclick="closeSettingsModal()">
+
                 ✕
+
             </button>
 
         </div>
+
 
         <div style="
             font-size:0.8rem;
@@ -848,29 +1269,34 @@
             line-height:1.4;
         ">
 
-            Atamaların en az 1 yıl boyunca tüm cihazlarda
-            kalıcı olması için oluşturduğunuz GitHub Token
+            Atamaların ve TAKVİYE kayıtlarının tüm
+            cihazlarda kalıcı olması için GitHub Token
             kodunu kaydedin:
 
         </div>
+
 
         <input type="password"
                id="txtGithubToken"
                placeholder="github_pat_..."
                style="margin-top:6px;">
 
+
         <button class="btn-search"
                 onclick="saveSettings()">
+
             Kaydet ve Bağlan
+
         </button>
 
     </div>
+
 </div>
 
 
-<!-- ========================================================= -->
-<!-- SAHTE HATA MODALI -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     SAHTE HATA MODALI
+     ========================================================= -->
 
 <div id="fakeErrorModal"
      class="modal-overlay"
@@ -889,10 +1315,13 @@
             <button class="btn-close"
                     style="color:#ef4444;"
                     onclick="closeFakeErrorModal()">
+
                 ✕
+
             </button>
 
         </div>
+
 
         <div style="
             font-size:0.75rem;
@@ -902,10 +1331,12 @@
         ">
 
             ERR_TELEMETRY_ACCESS_RESTRICTED<br>
+
             Yetkisiz telemetri terminali engellendi.
             SysAdmin Key giriniz:
 
         </div>
+
 
         <input type="password"
                id="txtSecretPin"
@@ -918,6 +1349,7 @@
                    margin-top:4px;
                ">
 
+
         <button class="btn-search"
                 style="background:#dc2626;"
                 onclick="verifySecretPin()">
@@ -927,12 +1359,13 @@
         </button>
 
     </div>
+
 </div>
 
 
-<!-- ========================================================= -->
-<!-- GİZLİ İSTATİSTİK PANELİ -->
-<!-- ========================================================= -->
+<!-- =========================================================
+     GİZLİ İSTATİSTİK PANELİ
+     ========================================================= -->
 
 <div id="secretStatsModal"
      class="modal-overlay"
@@ -950,10 +1383,13 @@
 
             <button class="btn-close"
                     onclick="closeStatsModal()">
+
                 ✕
+
             </button>
 
         </div>
+
 
         <div style="
             display:flex;
@@ -979,7 +1415,7 @@
                     </option>
 
                     <option value="year">
-                        Bu Yıl (1 Yıllık)
+                        Bu Yıl
                     </option>
 
                     <option value="all">
@@ -987,6 +1423,7 @@
                     </option>
 
                 </select>
+
 
                 <select id="statFilterPilot"
                         onchange="calcStats()">
@@ -1000,6 +1437,7 @@
             </div>
 
         </div>
+
 
         <div class="stats-summary-grid">
 
@@ -1016,6 +1454,7 @@
 
             </div>
 
+
             <div class="stat-box">
 
                 <div id="statNsCount"
@@ -1029,6 +1468,7 @@
                 </div>
 
             </div>
+
 
             <div class="stat-box">
 
@@ -1046,6 +1486,7 @@
 
         </div>
 
+
         <div class="stats-table-box">
 
             <table class="stats-table">
@@ -1053,13 +1494,27 @@
                 <thead>
 
                     <tr>
-                        <th>Tarih/Saat</th>
-                        <th>Gemi Adı</th>
-                        <th>Yön</th>
-                        <th>Kılavuz Kaptan</th>
+
+                        <th>
+                            Tarih/Saat
+                        </th>
+
+                        <th>
+                            Gemi Adı
+                        </th>
+
+                        <th>
+                            Yön
+                        </th>
+
+                        <th>
+                            Kılavuz Kaptan
+                        </th>
+
                     </tr>
 
                 </thead>
+
 
                 <tbody id="statsTableBody"></tbody>
 
@@ -1067,15 +1522,103 @@
 
         </div>
 
+
         <button class="btn-search"
-                style="background:#15803d; margin-top:4px;"
+                style="
+                    background:#15803d;
+                    margin-top:4px;
+                "
                 onclick="exportStatsToCSV()">
 
-            📥 Excel (CSV) İndir
+            📥 Kılavuz Logu CSV
+
+        </button>
+
+
+        <!-- TAKVİYE İSTATİSTİĞİ -->
+
+        <div class="support-stats-box">
+
+            <div class="support-stats-header">
+
+                🚐 TAKVİYE İSTATİSTİKLERİ
+
+            </div>
+
+
+            <div class="support-stats-summary">
+
+                <div class="support-mini-stat">
+
+                    <div id="supportStatTotal"
+                         class="support-mini-val">
+
+                        0
+
+                    </div>
+
+                    <div class="support-mini-label">
+                        Toplam
+                    </div>
+
+                </div>
+
+
+                <div class="support-mini-stat">
+
+                    <div id="supportStatKG"
+                         class="support-mini-val">
+
+                        0
+
+                    </div>
+
+                    <div class="support-mini-label">
+                        K → G
+                    </div>
+
+                </div>
+
+
+                <div class="support-mini-stat">
+
+                    <div id="supportStatGK"
+                         class="support-mini-val">
+
+                        0
+
+                    </div>
+
+                    <div class="support-mini-label">
+                        G → K
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div id="supportPilotStats"
+                 class="support-pilot-stat-list">
+
+            </div>
+
+        </div>
+
+
+        <button class="btn-search"
+                style="
+                    background:#92400e;
+                    margin-top:6px;
+                "
+                onclick="exportSupportStatsToCSV()">
+
+            📥 TAKVİYE CSV İndir
 
         </button>
 
     </div>
+
 </div>
 
 
@@ -1085,18 +1628,44 @@
        TEMEL AYARLAR
        ========================================================= */
 
-    const REPO_OWNER = "suayipguler-ship-it";
-    const REPO_NAME = "Kegm-trafik";
+    const REPO_OWNER =
+        "suayipguler-ship-it";
 
-    const SECRET_PIN = "1915";
+    const REPO_NAME =
+        "Kegm-trafik";
+
+    const SECRET_PIN =
+        "1915";
+
 
     /*
-     * ÖZEL DEĞER:
-     *
-     * Bu değer bir geminin bilinçli olarak pilotsuz
-     * işaretlendiğini belirtir.
+     * PİLOTSUZ DEĞERİ
      */
-    const PILOTLESS_VALUE = "__PILOTSUZ__";
+
+    const PILOTLESS_VALUE =
+        "__PILOTSUZ__";
+
+
+    /*
+     * CANLI LİSTE ZAMAN SINIRLARI
+     *
+     * Normal kayıt: 48 saat
+     * BOĞAZDA kayıt: 9 saat
+     */
+
+    const MAX_LIVE_AGE_HOURS =
+        48;
+
+    const MAX_BOGAZDA_AGE_HOURS =
+        9;
+
+
+    /*
+     * TAKVİYE DOSYASI
+     */
+
+    const SUPPORT_FILE_NAME =
+        "takviye.json";
 
 
     /* =========================================================
@@ -1210,23 +1779,44 @@
        GLOBAL DEĞİŞKENLER
        ========================================================= */
 
-    let currentMode = "live";
-    let logHours = 6;
-    let activeVardiya = 1;
+    let currentMode =
+        "live";
 
-    let selectedShipKey = "";
+    let logHours =
+        6;
 
-    let allShips = [];
-    let historyShips = [];
+    let activeVardiya =
+        1;
 
-    let globalAssignments = {};
+    let selectedShipKey =
+        "";
 
-    let assignmentsSha = "";
+    let allShips =
+        [];
 
-    let clickCount = 0;
-    let clickTimer = null;
+    let historyShips =
+        [];
 
-    let currentFilteredStats = [];
+    let globalAssignments =
+        {};
+
+    let assignmentsSha =
+        "";
+
+    let supportRecords =
+        [];
+
+    let supportSha =
+        "";
+
+    let clickCount =
+        0;
+
+    let clickTimer =
+        null;
+
+    let currentFilteredStats =
+        [];
 
 
     /* =========================================================
@@ -1247,6 +1837,7 @@
             .replace(/Ç/g, "C")
             .replace(/\s+/g, " ")
             .trim();
+
     }
 
 
@@ -1256,7 +1847,9 @@
 
     function getStoredToken() {
 
-        return localStorage.getItem("kegm_gh_token") || "";
+        return localStorage.getItem(
+            "kegm_gh_token"
+        ) || "";
 
     }
 
@@ -1267,19 +1860,34 @@
 
     function updateCloudStatus(status) {
 
-        const el = document.getElementById("cloudStatus");
+        const el =
+            document.getElementById(
+                "cloudStatus"
+            );
 
         if (status === "syncing") {
-            el.innerText = "🔄";
+
+            el.innerText =
+                "🔄";
+
         }
         else if (status === "ok") {
-            el.innerText = "☁️✅";
+
+            el.innerText =
+                "☁️✅";
+
         }
         else if (status === "error") {
-            el.innerText = "⚠️";
+
+            el.innerText =
+                "⚠️";
+
         }
         else {
-            el.innerText = "☁️";
+
+            el.innerText =
+                "☁️";
+
         }
 
     }
@@ -1291,10 +1899,15 @@
 
     function openSettingsModal() {
 
-        document.getElementById("txtGithubToken").value =
+        document.getElementById(
+            "txtGithubToken"
+        ).value =
             getStoredToken();
 
-        document.getElementById("settingsModal").style.display = "flex";
+        document.getElementById(
+            "settingsModal"
+        ).style.display =
+            "flex";
 
     }
 
@@ -1309,7 +1922,10 @@
             return;
         }
 
-        document.getElementById("settingsModal").style.display = "none";
+        document.getElementById(
+            "settingsModal"
+        ).style.display =
+            "none";
 
     }
 
@@ -1317,16 +1933,33 @@
     function saveSettings() {
 
         const token =
-            document.getElementById("txtGithubToken").value.trim();
+            document.getElementById(
+                "txtGithubToken"
+            ).value.trim();
+
 
         if (token) {
-            localStorage.setItem("kegm_gh_token", token);
+
+            localStorage.setItem(
+                "kegm_gh_token",
+                token
+            );
+
         }
         else {
-            localStorage.removeItem("kegm_gh_token");
+
+            localStorage.removeItem(
+                "kegm_gh_token"
+            );
+
         }
 
-        document.getElementById("settingsModal").style.display = "none";
+
+        document.getElementById(
+            "settingsModal"
+        ).style.display =
+            "none";
+
 
         loadAllData();
 
@@ -1341,19 +1974,31 @@
 
         clickCount++;
 
-        clearTimeout(clickTimer);
+        clearTimeout(
+            clickTimer
+        );
 
-        clickTimer = setTimeout(() => {
-            clickCount = 0;
-        }, 1000);
+        clickTimer =
+            setTimeout(
+                () => {
+                    clickCount = 0;
+                },
+                1000
+            );
+
 
         if (clickCount >= 3) {
 
             clickCount = 0;
 
-            document.getElementById("txtSecretPin").value = "";
+            document.getElementById(
+                "txtSecretPin"
+            ).value = "";
 
-            document.getElementById("fakeErrorModal").style.display = "flex";
+            document.getElementById(
+                "fakeErrorModal"
+            ).style.display =
+                "flex";
 
         }
 
@@ -1370,7 +2015,10 @@
             return;
         }
 
-        document.getElementById("fakeErrorModal").style.display = "none";
+        document.getElementById(
+            "fakeErrorModal"
+        ).style.display =
+            "none";
 
     }
 
@@ -1378,18 +2026,26 @@
     function verifySecretPin() {
 
         const pin =
-            document.getElementById("txtSecretPin").value.trim();
+            document.getElementById(
+                "txtSecretPin"
+            ).value.trim();
+
 
         if (pin === SECRET_PIN) {
 
-            document.getElementById("fakeErrorModal").style.display = "none";
+            document.getElementById(
+                "fakeErrorModal"
+            ).style.display =
+                "none";
 
             openStatsModal();
 
         }
         else {
 
-            alert("HATA: GEÇERSİZ SYSADMIN KEY.");
+            alert(
+                "HATA: GEÇERSİZ SYSADMIN KEY."
+            );
 
         }
 
@@ -1397,587 +2053,76 @@
 
 
     /* =========================================================
-       İSTATİSTİK
+       ZAMAN FONKSİYONLARI
        ========================================================= */
 
-    function openStatsModal() {
+    function parseTimeString(timeStr) {
 
-        populatePilotDropdown();
-
-        document.getElementById("secretStatsModal").style.display = "flex";
-
-        calcStats();
-
-    }
-
-
-    function closeStatsModal(e) {
-
-        if (
-            e &&
-            e.target !== e.currentTarget &&
-            !e.target.classList.contains("btn-close")
-        ) {
-            return;
+        if (!timeStr) {
+            return 0;
         }
 
-        document.getElementById("secretStatsModal").style.display = "none";
 
-    }
-
-
-    function populatePilotDropdown() {
-
-        const sel =
-            document.getElementById("statFilterPilot");
-
-        sel.innerHTML =
-            '<option value="ALL">Tüm Pilotlar</option>';
-
-        let pilotSet = new Set();
-
-        for (let v in VARDIYALAR) {
-
-            VARDIYALAR[v].forEach(p => {
-
-                pilotSet.add(p);
-
-            });
-
-        }
-
-        Array.from(pilotSet)
-            .sort()
-            .forEach(p => {
-
-                const opt =
-                    document.createElement("option");
-
-                opt.value = p;
-                opt.textContent = p;
-
-                sel.appendChild(opt);
-
-            });
-
-    }
+        const str =
+            String(timeStr).trim();
 
 
-    function calcStats() {
+        /*
+         * ISO tarih
+         */
 
-        const period =
-            document.getElementById("statFilterPeriod").value;
+        if (str.includes("T")) {
 
-        const targetPilot =
-            document.getElementById("statFilterPilot").value;
+            const iso =
+                new Date(str).getTime();
 
-        const now = Date.now();
-
-        let cutoff = 0;
-
-        if (period === "12h") {
-
-            cutoff =
-                now - (12 * 60 * 60 * 1000);
-
-        }
-        else if (period === "24h") {
-
-            cutoff =
-                now - (24 * 60 * 60 * 1000);
-
-        }
-        else if (period === "month") {
-
-            const d = new Date();
-
-            cutoff =
-                new Date(
-                    d.getFullYear(),
-                    d.getMonth(),
-                    1
-                ).getTime();
-
-        }
-        else if (period === "year") {
-
-            const d = new Date();
-
-            cutoff =
-                new Date(
-                    d.getFullYear(),
-                    0,
-                    1
-                ).getTime();
+            if (
+                !isNaN(iso) &&
+                iso > 0
+            ) {
+                return iso;
+            }
 
         }
 
 
         /*
-         * PİLOTSUZ GEMİLER BURADA DA DOĞRUDAN ELENİYOR.
+         * dd.mm.yyyy hh:mm
          */
 
-        let rawFiltered =
-            historyShips.filter(s => {
-
-                const key =
-                    `${s.name}_${s.time}`;
-
-                const assignment =
-                    globalAssignments[key] ||
-                    globalAssignments[s.name] ||
-                    "";
-
-                if (assignment === PILOTLESS_VALUE) {
-                    return false;
-                }
-
-                const t =
-                    s.timestamp ||
-                    s.entryTimestamp ||
-                    parseTimeString(s.time);
-
-                if (
-                    cutoff > 0 &&
-                    t > 0 &&
-                    t < cutoff
-                ) {
-                    return false;
-                }
-
-                const pilot = assignment;
-
-                if (!pilot) {
-                    return false;
-                }
-
-                if (
-                    targetPilot !== "ALL" &&
-                    pilot !== targetPilot
-                ) {
-                    return false;
-                }
-
-                return true;
-
-            });
+        let match =
+            str.match(
+                /(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s*[- ]\s*(\d{1,2}):(\d{2})/
+            );
 
 
-        rawFiltered.sort((a, b) => {
+        if (!match) {
 
-            const timeA =
-                a.timestamp ||
-                a.entryTimestamp ||
-                parseTimeString(a.time);
-
-            const timeB =
-                b.timestamp ||
-                b.entryTimestamp ||
-                parseTimeString(b.time);
-
-            return timeB - timeA;
-
-        });
-
-
-        const uniqueMap = new Map();
-
-        rawFiltered.forEach(ship => {
-
-            const cleanName =
-                normalizeStr(ship.name);
-
-            const dirKey =
-                isNorthSouth(ship.yon)
-                    ? "NS"
-                    : "SN";
-
-            const dedupKey =
-                `${cleanName}_${dirKey}`;
-
-            if (!uniqueMap.has(dedupKey)) {
-
-                uniqueMap.set(
-                    dedupKey,
-                    ship
+            match =
+                str.match(
+                    /(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s+(\d{1,2}):(\d{2})/
                 );
 
-            }
-
-        });
-
-
-        currentFilteredStats =
-            Array.from(uniqueMap.values());
-
-
-        const total =
-            currentFilteredStats.length;
-
-        const ns =
-            currentFilteredStats.filter(
-                s => isNorthSouth(s.yon)
-            ).length;
-
-        const sn =
-            currentFilteredStats.filter(
-                s => isSouthNorth(s.yon)
-            ).length;
-
-
-        document.getElementById("statTotalCount").innerText =
-            total;
-
-        document.getElementById("statNsCount").innerText =
-            ns;
-
-        document.getElementById("statSnCount").innerText =
-            sn;
-
-
-        const tbody =
-            document.getElementById("statsTableBody");
-
-        let html = "";
-
-
-        currentFilteredStats.forEach(s => {
-
-            const key =
-                `${s.name}_${s.time}`;
-
-            const pilot =
-                globalAssignments[key] ||
-                globalAssignments[s.name] ||
-                "";
-
-            /*
-             * Güvenlik:
-             * Pilotsuz değer hiçbir şekilde tabloda görünmez.
-             */
-
-            if (
-                !pilot ||
-                pilot === PILOTLESS_VALUE
-            ) {
-                return;
-            }
-
-
-            html += `
-                <tr>
-
-                    <td>
-                        ${formatDisplayTime(
-                            s.time,
-                            s.planlama
-                        )}
-                    </td>
-
-                    <td style="font-weight:700;">
-                        ${s.name}
-                    </td>
-
-                    <td>
-                        ${
-                            isNorthSouth(s.yon)
-                                ? "K-G"
-                                : "G-K"
-                        }
-                    </td>
-
-                    <td style="
-                        color:#4ade80;
-                        font-weight:600;
-                    ">
-                        ${pilot}
-                    </td>
-
-                </tr>
-            `;
-
-        });
-
-
-        if (!html) {
-
-            html = `
-                <tr>
-                    <td colspan="4"
-                        style="
-                            text-align:center;
-                            color:#64748b;
-                            padding:16px;
-                        ">
-                        Kayıt bulunamadı.
-                    </td>
-                </tr>
-            `;
-
         }
 
 
-        tbody.innerHTML = html;
-
-    }
-
-
-    /* =========================================================
-       CSV
-       ========================================================= */
-
-    function exportStatsToCSV() {
-
-        if (currentFilteredStats.length === 0) {
-
-            alert("Dışa aktarılacak kayıt yok.");
-
-            return;
-        }
-
-
-        let csvContent = "\uFEFF";
-
-        csvContent +=
-            "Tarih/Saat;Gemi Adi;Bogaz;Yon;Boy;Tip;Kilavuz Kaptan\n";
-
-
-        currentFilteredStats.forEach(s => {
-
-            const key =
-                `${s.name}_${s.time}`;
-
-            const pilot =
-                globalAssignments[key] ||
-                globalAssignments[s.name] ||
-                "";
-
-
-            /*
-             * PİLOTSUZ CSV'YE GİRMEZ.
-             */
-
-            if (
-                !pilot ||
-                pilot === PILOTLESS_VALUE
-            ) {
-                return;
-            }
-
-
-            const row = [
-
-                `"${formatDisplayTime(
-                    s.time,
-                    s.planlama
-                )}"`,
-
-                `"${s.name}"`,
-
-                `"${s.bogaz || ''}"`,
-
-                `"${s.yon}"`,
-
-                `"${s.len || ''}"`,
-
-                `"${s.type || ''}"`,
-
-                `"${pilot}"`
-
-            ];
-
-
-            csvContent +=
-                row.join(";") + "\n";
-
-        });
-
-
-        const blob =
-            new Blob(
-                [csvContent],
-                {
-                    type:
-                        "text/csv;charset=utf-8;"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(blob);
-
-        const link =
-            document.createElement("a");
-
-        link.setAttribute("href", url);
-
-        link.setAttribute(
-            "download",
-            `Kilavuz_Gecis_Raporu_${Date.now()}.csv`
-        );
-
-        document.body.appendChild(link);
-
-        link.click();
-
-        document.body.removeChild(link);
-
-        URL.revokeObjectURL(url);
-
-    }
-
-
-    /* =========================================================
-       MOD DEĞİŞTİRME
-       ========================================================= */
-
-    function switchMode(mode) {
-
-        currentMode = mode;
-
-        document.getElementById("tabLive")
-            .classList.toggle(
-                "active",
-                mode === "live"
-            );
-
-        document.getElementById("tabHistory")
-            .classList.toggle(
-                "active",
-                mode === "history"
-            );
-
-
-        document.getElementById("selYon").style.display =
-            mode === "live"
-                ? "block"
-                : "none";
-
-
-        document.getElementById("selHareket").style.display =
-            mode === "live"
-                ? "block"
-                : "none";
-
-
-        document.getElementById("logRangeBox").style.display =
-            mode === "history"
-                ? "flex"
-                : "none";
-
-
-        renderCurrentView();
-
-    }
-
-
-    function setLogHours(hours) {
-
-        logHours = hours;
-
-        document.getElementById("btnRange6")
-            .classList.toggle(
-                "active",
-                hours === 6
-            );
-
-        document.getElementById("btnRange12")
-            .classList.toggle(
-                "active",
-                hours === 12
-            );
-
-        document.getElementById("btnRange24")
-            .classList.toggle(
-                "active",
-                hours === 24
-            );
-
-        renderCurrentView();
-
-    }
-
-
-    /* =========================================================
-       YÖN
-       ========================================================= */
-
-    function isNorthSouth(yonStr) {
-
-        if (!yonStr) return false;
-
-        const norm =
-            normalizeStr(yonStr);
-
-        return (
-            norm.startsWith("KUZEY") ||
-            norm === "NS" ||
-            norm.startsWith("K-G")
-        );
-
-    }
-
-
-    function isSouthNorth(yonStr) {
-
-        if (!yonStr) return false;
-
-        const norm =
-            normalizeStr(yonStr);
-
-        return (
-            norm.startsWith("GUNEY") ||
-            norm === "SN" ||
-            norm.startsWith("G-K")
-        );
-
-    }
-
-
-    /* =========================================================
-       ZAMAN
-       ========================================================= */
-
-    function parseTimeString(timeStr) {
-
-        if (!timeStr) return 0;
-
-        const isoTime =
-            new Date(timeStr).getTime();
-
-
-        if (
-            !isNaN(isoTime) &&
-            isoTime > 0 &&
-            String(timeStr).includes("T")
-        ) {
-            return isoTime;
-        }
-
-
-        const dateMatch =
-            String(timeStr).match(
-                /(\d{2})[./](\d{2})[./](\d{2,4})\s+(\d{2}):(\d{2})/
-            );
-
-
-        if (dateMatch) {
+        if (match) {
 
             const day =
                 parseInt(
-                    dateMatch[1],
+                    match[1],
                     10
                 );
 
             const month =
                 parseInt(
-                    dateMatch[2],
+                    match[2],
                     10
                 ) - 1;
 
             let year =
                 parseInt(
-                    dateMatch[3],
+                    match[3],
                     10
                 );
 
@@ -1987,13 +2132,13 @@
 
             const hour =
                 parseInt(
-                    dateMatch[4],
+                    match[4],
                     10
                 );
 
             const minute =
                 parseInt(
-                    dateMatch[5],
+                    match[5],
                     10
                 );
 
@@ -2009,9 +2154,99 @@
         }
 
 
+        /*
+         * dd.mm - hh:mm
+         *
+         * Örnek:
+         * 04.09 - 11:00
+         */
+
+        const shortMatch =
+            str.match(
+                /(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/
+            );
+
+
+        if (shortMatch) {
+
+            const day =
+                parseInt(
+                    shortMatch[1],
+                    10
+                );
+
+            const month =
+                parseInt(
+                    shortMatch[2],
+                    10
+                ) - 1;
+
+            const hour =
+                parseInt(
+                    shortMatch[3],
+                    10
+                );
+
+            const minute =
+                parseInt(
+                    shortMatch[4],
+                    10
+                );
+
+
+            const now =
+                new Date();
+
+            let year =
+                now.getFullYear();
+
+
+            let candidate =
+                new Date(
+                    year,
+                    month,
+                    day,
+                    hour,
+                    minute
+                );
+
+
+            /*
+             * Örneğin Ocak ayında
+             * Aralık kaydı gelirse
+             * bir önceki yılı kullan.
+             */
+
+            if (
+                candidate.getTime() -
+                now.getTime() >
+                36 * 60 * 60 * 1000
+            ) {
+
+                candidate =
+                    new Date(
+                        year - 1,
+                        month,
+                        day,
+                        hour,
+                        minute
+                    );
+
+            }
+
+
+            return candidate.getTime();
+
+        }
+
+
+        /*
+         * Sadece saat
+         */
+
         const timeOnlyMatch =
-            String(timeStr).match(
-                /(\d{2}):(\d{2})/
+            str.match(
+                /(\d{1,2}):(\d{2})/
             );
 
 
@@ -2042,6 +2277,138 @@
     }
 
 
+    function getShipTimestamp(ship) {
+
+        if (!ship) {
+            return 0;
+        }
+
+
+        const candidates = [
+
+            ship.timestamp,
+
+            ship.entryTimestamp,
+
+            ship.time,
+
+            ship.planlama
+
+        ];
+
+
+        for (const value of candidates) {
+
+            if (
+                value === undefined ||
+                value === null ||
+                value === ""
+            ) {
+                continue;
+            }
+
+
+            const numeric =
+                Number(value);
+
+
+            if (
+                !isNaN(numeric) &&
+                numeric > 1000000000
+            ) {
+                return numeric;
+            }
+
+
+            const parsed =
+                parseTimeString(
+                    value
+                );
+
+
+            if (
+                parsed &&
+                parsed > 0
+            ) {
+                return parsed;
+            }
+
+        }
+
+
+        return 0;
+
+    }
+
+
+    function isBogazdaShip(ship) {
+
+        return normalizeStr(
+            ship && ship.hareket
+        ).includes(
+            "BOGAZDA"
+        );
+
+    }
+
+
+    /*
+     * CANLI LİSTE YAŞ KONTROLÜ
+     *
+     * Normal: 48 saat
+     * BOĞAZDA: 9 saat
+     */
+
+    function isShipTooOldForLive(ship) {
+
+        const shipTime =
+            getShipTimestamp(ship);
+
+
+        /*
+         * Tarih okunamıyorsa
+         * eski kabul etmiyoruz.
+         */
+
+        if (!shipTime) {
+            return false;
+        }
+
+
+        const ageHours =
+            (
+                Date.now() -
+                shipTime
+            ) /
+            (
+                1000 *
+                60 *
+                60
+            );
+
+
+        /*
+         * Gelecek zamanlı planlar
+         * eski değildir.
+         */
+
+        if (ageHours < 0) {
+            return false;
+        }
+
+
+        const maxAge =
+            isBogazdaShip(ship)
+                ? MAX_BOGAZDA_AGE_HOURS
+                : MAX_LIVE_AGE_HOURS;
+
+
+        return ageHours >
+            maxAge;
+
+    }
+
+
     function formatDisplayTime(
         timeStr,
         planlamaStr
@@ -2050,69 +2417,119 @@
         if (planlamaStr) {
 
             const pMatch =
-                planlamaStr.match(
-                    /(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s+(\d{1,2}:\d{2})/
+                String(planlamaStr).match(
+                    /(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/
                 );
+
 
             if (pMatch) {
 
-                return `${pMatch[1]}.${pMatch[2]} - ${pMatch[4]}`;
+                return (
+                    `${pMatch[1]}.${pMatch[2]} - ${pMatch[3]}`
+                );
 
             }
 
         }
 
 
-        if (!timeStr) return "-";
+        if (!timeStr) {
+            return "-";
+        }
 
 
-        if (String(timeStr).includes("T")) {
+        if (
+            String(timeStr).includes("T")
+        ) {
 
             const d =
                 new Date(timeStr);
 
-            if (!isNaN(d.getTime())) {
+
+            if (
+                !isNaN(
+                    d.getTime()
+                )
+            ) {
 
                 const day =
-                    String(d.getDate())
-                        .padStart(2, "0");
+                    String(
+                        d.getDate()
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
 
                 const month =
-                    String(d.getMonth() + 1)
-                        .padStart(2, "0");
+                    String(
+                        d.getMonth() + 1
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
 
                 const hour =
-                    String(d.getHours())
-                        .padStart(2, "0");
+                    String(
+                        d.getHours()
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
 
                 const min =
-                    String(d.getMinutes())
-                        .padStart(2, "0");
+                    String(
+                        d.getMinutes()
+                    ).padStart(
+                        2,
+                        "0"
+                    );
 
 
-                return `${day}.${month} - ${hour}:${min}`;
+                return (
+                    `${day}.${month} - ${hour}:${min}`
+                );
 
             }
 
         }
 
 
-        const match =
+        const fullMatch =
             String(timeStr).match(
-                /(\d{2})[./](\d{2})[./]\d{2,4}\s+(\d{2}:\d{2})/
+                /(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/
             );
 
 
-        if (match) {
+        if (fullMatch) {
 
-            return `${match[1]}.${match[2]} - ${match[3]}`;
+            return (
+                `${fullMatch[1]}.${fullMatch[2]} - ${fullMatch[3]}`
+            );
+
+        }
+
+
+        const shortMatch =
+            String(timeStr).match(
+                /(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}:\d{2})/
+            );
+
+
+        if (shortMatch) {
+
+            return (
+                `${shortMatch[1]}.${shortMatch[2]} - ${shortMatch[3]}`
+            );
 
         }
 
 
         const timeOnly =
             String(timeStr).match(
-                /(\d{2}:\d{2})/
+                /(\d{1,2}:\d{2})/
             );
 
 
@@ -2127,49 +2544,115 @@
 
 
     /* =========================================================
-       GEMİ ANAHTARI
+       YÖN
        ========================================================= */
 
-    function getShipKey(ship) {
+    function isNorthSouth(yonStr) {
 
-        return `${ship.name}_${ship.time}`;
+        if (!yonStr) return false;
+
+        const norm =
+            normalizeStr(
+                yonStr
+            );
+
+
+        return (
+            norm.startsWith("KUZEY") ||
+            norm === "NS" ||
+            norm.startsWith("K-G")
+        );
 
     }
 
 
-    /*
-     * Geminin pilotsuz olup olmadığını tek merkezden
-     * kontrol ediyoruz.
-     */
+    function isSouthNorth(yonStr) {
 
-    function isShipPilotless(ship) {
+        if (!yonStr) return false;
 
-        if (!ship) return false;
+        const norm =
+            normalizeStr(
+                yonStr
+            );
 
-        const key =
-            getShipKey(ship);
 
-        const assignment =
-            globalAssignments[key] ||
-            globalAssignments[ship.name] ||
-            "";
+        return (
+            norm.startsWith("GUNEY") ||
+            norm === "SN" ||
+            norm.startsWith("G-K")
+        );
 
-        return assignment === PILOTLESS_VALUE;
+    }
+
+
+    /* =========================================================
+       GEMİ ANAHTARI / ATAMA
+       ========================================================= */
+
+    function getShipKey(ship) {
+
+        return (
+            `${ship.name}_${ship.time}`
+        );
 
     }
 
 
     function getShipAssignment(ship) {
 
-        if (!ship) return "";
+        if (!ship) {
+            return "";
+        }
+
 
         const key =
             getShipKey(ship);
 
+
+        /*
+         * hasOwnProperty kullanıyoruz.
+         *
+         * Böylece özel gemi anahtarı PİLOTSUZ
+         * ise gemi adı seviyesindeki eski atama
+         * üzerine yazamaz.
+         */
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                globalAssignments,
+                key
+            )
+        ) {
+
+            return globalAssignments[key];
+
+        }
+
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                globalAssignments,
+                ship.name
+            )
+        ) {
+
+            return globalAssignments[
+                ship.name
+            ];
+
+        }
+
+
+        return "";
+
+    }
+
+
+    function isShipPilotless(ship) {
+
         return (
-            globalAssignments[key] ||
-            globalAssignments[ship.name] ||
-            ""
+            getShipAssignment(ship) ===
+            PILOTLESS_VALUE
         );
 
     }
@@ -2184,22 +2667,32 @@
         shipName
     ) {
 
-        selectedShipKey = uniqueKey;
+        selectedShipKey =
+            uniqueKey;
 
-        document.getElementById("modalShipTitle")
-            .innerText =
+
+        document.getElementById(
+            "modalShipTitle"
+        ).innerText =
             `${shipName} - Kılavuz Ata`;
 
-        document.getElementById("pilotModal")
-            .style.display = "flex";
+
+        document.getElementById(
+            "pilotModal"
+        ).style.display =
+            "flex";
 
 
         const currentAssignment =
-            globalAssignments[uniqueKey] || "";
+            globalAssignments[
+                uniqueKey
+            ] || "";
 
 
         const pilotlessButton =
-            document.getElementById("btnPilotless");
+            document.getElementById(
+                "btnPilotless"
+            );
 
 
         if (
@@ -2207,7 +2700,10 @@
             PILOTLESS_VALUE
         ) {
 
-            pilotlessButton.classList.add("active");
+            pilotlessButton.classList.add(
+                "active"
+            );
+
 
             pilotlessButton.innerText =
                 "🚫 PİLOTSUZ OLARAK İŞARETLENDİ";
@@ -2215,7 +2711,10 @@
         }
         else {
 
-            pilotlessButton.classList.remove("active");
+            pilotlessButton.classList.remove(
+                "active"
+            );
+
 
             pilotlessButton.innerText =
                 "🚫 BU GEMİ PİLOTSUZ";
@@ -2233,38 +2732,51 @@
         if (
             e &&
             e.target !== e.currentTarget &&
-            !e.target.classList.contains("btn-close")
+            !e.target.classList.contains(
+                "btn-close"
+            )
         ) {
             return;
         }
 
-        document.getElementById("pilotModal")
-            .style.display = "none";
+
+        document.getElementById(
+            "pilotModal"
+        ).style.display =
+            "none";
 
     }
 
 
     function switchVardiya(vNum) {
 
-        activeVardiya = vNum;
+        activeVardiya =
+            vNum;
 
-        document.getElementById("tabV1")
-            .classList.toggle(
-                "active",
-                vNum === 1
-            );
 
-        document.getElementById("tabV2")
-            .classList.toggle(
-                "active",
-                vNum === 2
-            );
+        document.getElementById(
+            "tabV1"
+        ).classList.toggle(
+            "active",
+            vNum === 1
+        );
 
-        document.getElementById("tabV3")
-            .classList.toggle(
-                "active",
-                vNum === 3
-            );
+
+        document.getElementById(
+            "tabV2"
+        ).classList.toggle(
+            "active",
+            vNum === 2
+        );
+
+
+        document.getElementById(
+            "tabV3"
+        ).classList.toggle(
+            "active",
+            vNum === 3
+        );
+
 
         renderModalPilots();
 
@@ -2278,8 +2790,11 @@
                 "pilotListContainer"
             );
 
+
         const list =
-            VARDIYALAR[activeVardiya] || [];
+            VARDIYALAR[
+                activeVardiya
+            ] || [];
 
 
         let html = `
@@ -2297,11 +2812,18 @@
 
         list.forEach(p => {
 
+            const safePilot =
+                p.replace(
+                    /'/g,
+                    "\\'"
+                );
+
+
             html += `
 
                 <button
                     class="btn-pilot-item"
-                    onclick="assignPilot('${p.replace(/'/g, "\\'")}')">
+                    onclick="assignPilot('${safePilot}')">
 
                     ${p}
 
@@ -2312,13 +2834,14 @@
         });
 
 
-        container.innerHTML = html;
+        container.innerHTML =
+            html;
 
     }
 
 
     /* =========================================================
-       YENİ: PİLOTSUZ İŞARETLEME
+       PİLOTSUZ
        ========================================================= */
 
     async function markShipAsPilotless() {
@@ -2330,11 +2853,12 @@
 
         const confirmed =
             confirm(
+                "⚠️ EMİN MİSİNİZ?\n\n" +
                 "Bu gemi PİLOTSUZ olarak işaretlenecek.\n\n" +
                 "Gemi kılavuzlu geçiş logundan çıkarılacak " +
-                "ve istatistiklerde kılavuzlu gemi olarak " +
+                "ve kılavuzlu geçiş istatistiklerinde " +
                 "sayılmayacaktır.\n\n" +
-                "Emin misiniz?"
+                "Devam etmek istiyor musunuz?"
             );
 
 
@@ -2343,30 +2867,28 @@
         }
 
 
-        /*
-         * Özel pilotsuz değeri kaydediyoruz.
-         */
-
-        globalAssignments[selectedShipKey] =
+        globalAssignments[
+            selectedShipKey
+        ] =
             PILOTLESS_VALUE;
 
 
         localStorage.setItem(
             "kegm_pilot_store",
-            JSON.stringify(globalAssignments)
+            JSON.stringify(
+                globalAssignments
+            )
         );
 
 
-        document.getElementById("pilotModal")
-            .style.display = "none";
+        document.getElementById(
+            "pilotModal"
+        ).style.display =
+            "none";
 
 
         renderCurrentView();
 
-
-        /*
-         * GitHub'a da gönder.
-         */
 
         await syncAssignmentsToGitHub(
             `Pilotsuz İşaretlendi: ${selectedShipKey}`
@@ -2379,53 +2901,72 @@
        NORMAL PİLOT ATAMA
        ========================================================= */
 
-    async function assignPilot(pilotName) {
+    async function assignPilot(
+        pilotName
+    ) {
 
         if (pilotName) {
 
-            /*
-             * Normal pilot seçildiğinde daha önce
-             * pilotsuz işaretlenmişse otomatik olarak
-             * normal atamaya döner.
-             */
-
-            globalAssignments[selectedShipKey] =
+            globalAssignments[
+                selectedShipKey
+            ] =
                 pilotName;
 
         }
         else {
 
-            /*
-             * Temizle seçilirse kayıt tamamen silinir.
-             */
-
-            delete globalAssignments[selectedShipKey];
+            delete globalAssignments[
+                selectedShipKey
+            ];
 
         }
 
 
         localStorage.setItem(
             "kegm_pilot_store",
-            JSON.stringify(globalAssignments)
+            JSON.stringify(
+                globalAssignments
+            )
         );
 
 
-        document.getElementById("pilotModal")
-            .style.display = "none";
+        document.getElementById(
+            "pilotModal"
+        ).style.display =
+            "none";
 
 
         renderCurrentView();
 
 
         await syncAssignmentsToGitHub(
-            `Kılavuz Atama: ${selectedShipKey} -> ${pilotName || "Silindi"}`
+            `Kılavuz Atama: ${selectedShipKey} -> ${
+                pilotName || "Silindi"
+            }`
         );
 
     }
 
 
     /* =========================================================
-       GITHUB SENKRONİZASYONU
+       GITHUB YARDIMCI
+       ========================================================= */
+
+    function stringToBase64UTF8(str) {
+
+        return btoa(
+            unescape(
+                encodeURIComponent(
+                    str
+                )
+            )
+        );
+
+    }
+
+
+    /* =========================================================
+       ASSIGNMENTS GITHUB
        ========================================================= */
 
     async function syncAssignmentsToGitHub(
@@ -2436,19 +2977,20 @@
             getStoredToken();
 
 
-        /*
-         * Token yoksa sadece cihazda kayıtlı kalır.
-         */
-
         if (!token) {
             return;
         }
 
 
-        updateCloudStatus("syncing");
+        updateCloudStatus(
+            "syncing"
+        );
 
 
         try {
+
+            let sha = "";
+
 
             const getRes =
                 await fetch(
@@ -2467,49 +3009,49 @@
                 const fileData =
                     await getRes.json();
 
+                sha =
+                    fileData.sha;
+
                 assignmentsSha =
                     fileData.sha;
 
             }
-            else if (getRes.status !== 404) {
+            else if (
+                getRes.status !== 404
+            ) {
 
-                updateCloudStatus("error");
+                updateCloudStatus(
+                    "error"
+                );
 
                 return;
 
             }
 
 
-            const utf8Content =
-                unescape(
-                    encodeURIComponent(
-                        JSON.stringify(
-                            globalAssignments,
-                            null,
-                            2
-                        )
+            const content =
+                stringToBase64UTF8(
+                    JSON.stringify(
+                        globalAssignments,
+                        null,
+                        2
                     )
                 );
 
 
-            const base64Content =
-                btoa(utf8Content);
-
-
             const body = {
+
                 message:
                     commitMessage,
 
                 content:
-                    base64Content
+                    content
+
             };
 
 
-            if (assignmentsSha) {
-
-                body.sha =
-                    assignmentsSha;
-
+            if (sha) {
+                body.sha = sha;
             }
 
 
@@ -2517,18 +3059,24 @@
                 await fetch(
                     `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/assignments.json`,
                     {
-                        method: "PUT",
+                        method:
+                            "PUT",
 
                         headers: {
+
                             "Authorization":
                                 `Bearer ${token}`,
 
                             "Content-Type":
                                 "application/json"
+
                         },
 
                         body:
-                            JSON.stringify(body)
+                            JSON.stringify(
+                                body
+                            )
+
                     }
                 );
 
@@ -2537,6 +3085,7 @@
 
                 const putData =
                     await putRes.json();
+
 
                 if (
                     putData.content &&
@@ -2548,7 +3097,10 @@
 
                 }
 
-                updateCloudStatus("ok");
+
+                updateCloudStatus(
+                    "ok"
+                );
 
             }
             else {
@@ -2557,11 +3109,13 @@
                     await putRes.text();
 
                 console.error(
-                    "GitHub kayıt hatası:",
+                    "Assignments GitHub hatası:",
                     errorText
                 );
 
-                updateCloudStatus("error");
+                updateCloudStatus(
+                    "error"
+                );
 
             }
 
@@ -2569,13 +3123,1081 @@
         catch (e) {
 
             console.error(
-                "Bulut kayıt hatası:",
+                "Assignments bulut kayıt hatası:",
                 e
             );
 
-            updateCloudStatus("error");
+            updateCloudStatus(
+                "error"
+            );
 
         }
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE - YEREL VERİ
+       ========================================================= */
+
+    function loadLocalSupportRecords() {
+
+        try {
+
+            supportRecords =
+                JSON.parse(
+                    localStorage.getItem(
+                        "kegm_support_store"
+                    ) || "[]"
+                );
+
+
+            if (
+                !Array.isArray(
+                    supportRecords
+                )
+            ) {
+
+                supportRecords =
+                    [];
+
+            }
+
+        }
+        catch (e) {
+
+            supportRecords =
+                [];
+
+        }
+
+    }
+
+
+    function saveLocalSupportRecords() {
+
+        localStorage.setItem(
+            "kegm_support_store",
+            JSON.stringify(
+                supportRecords
+            )
+        );
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE MODALI
+       ========================================================= */
+
+    function openSupportModal(
+        direction
+    ) {
+
+        document.getElementById(
+            "supportModal"
+        ).style.display =
+            "flex";
+
+
+        document.getElementById(
+            "supportDirection"
+        ).value =
+            direction ||
+            (
+                isNorthSouth(
+                    document.getElementById(
+                        "selYon"
+                    ).value
+                )
+                    ? "K-G"
+                    : "G-K"
+            );
+
+
+        const now =
+            new Date();
+
+
+        const hh =
+            String(
+                now.getHours()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const mm =
+            String(
+                now.getMinutes()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        document.getElementById(
+            "supportTime"
+        ).value =
+            `${hh}:${mm}`;
+
+
+        renderSupportPilotList();
+
+    }
+
+
+    function closeSupportModal(e) {
+
+        if (
+            e &&
+            e.target !== e.currentTarget &&
+            !e.target.classList.contains(
+                "btn-close"
+            )
+        ) {
+            return;
+        }
+
+
+        document.getElementById(
+            "supportModal"
+        ).style.display =
+            "none";
+
+    }
+
+
+    function renderSupportPilotList() {
+
+        const container =
+            document.getElementById(
+                "supportPilotList"
+            );
+
+
+        let html = "";
+
+
+        Object.keys(
+            VARDIYALAR
+        ).forEach(v => {
+
+            html += `
+
+                <div class="support-shift-title">
+                    VARDİYA ${v}
+                </div>
+
+            `;
+
+
+            VARDIYALAR[v].forEach(
+                (pilot, index) => {
+
+                    const id =
+                        `supportPilot_${v}_${index}`;
+
+
+                    html += `
+
+                        <label
+                            class="support-pilot-check">
+
+                            <input
+                                type="checkbox"
+                                value="${pilot.replace(/"/g, "&quot;")}"
+                                onchange="updateSupportSelectedCount()"
+                                id="${id}">
+
+                            <span>
+                                ${pilot}
+                            </span>
+
+                        </label>
+
+                    `;
+
+                }
+            );
+
+        });
+
+
+        container.innerHTML =
+            html;
+
+
+        updateSupportSelectedCount();
+
+    }
+
+
+    function getSelectedSupportPilots() {
+
+        const checks =
+            document.querySelectorAll(
+                "#supportPilotList input[type='checkbox']:checked"
+            );
+
+
+        return Array.from(
+            checks
+        ).map(
+            el => el.value
+        );
+
+    }
+
+
+    function updateSupportSelectedCount() {
+
+        const count =
+            getSelectedSupportPilots()
+                .length;
+
+
+        document.getElementById(
+            "supportSelectedCount"
+        ).innerText =
+            `${count} kılavuz seçildi.`;
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE KAYDET
+       ========================================================= */
+
+    async function saveSupportRecord() {
+
+        const direction =
+            document.getElementById(
+                "supportDirection"
+            ).value;
+
+
+        const time =
+            document.getElementById(
+                "supportTime"
+            ).value;
+
+
+        const pilots =
+            getSelectedSupportPilots();
+
+
+        if (!time) {
+
+            alert(
+                "Lütfen takviye saatini seçin."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            pilots.length === 0
+        ) {
+
+            alert(
+                "En az bir giden kılavuz kaptan seçin."
+            );
+
+            return;
+
+        }
+
+
+        const now =
+            new Date();
+
+
+        const dateText =
+            `${String(
+                now.getDate()
+            ).padStart(2,"0")}.${String(
+                now.getMonth() + 1
+            ).padStart(2,"0")}.${now.getFullYear()}`;
+
+
+        const record = {
+
+            id:
+                `SUP-${Date.now()}`,
+
+            timestamp:
+                Date.now(),
+
+            date:
+                dateText,
+
+            time:
+                time,
+
+            direction:
+                direction,
+
+            pilots:
+                pilots
+
+        };
+
+
+        supportRecords.unshift(
+            record
+        );
+
+
+        /*
+         * En yeni kayıtlar başta.
+         */
+
+        supportRecords.sort(
+            (a, b) =>
+                Number(b.timestamp || 0) -
+                Number(a.timestamp || 0)
+        );
+
+
+        saveLocalSupportRecords();
+
+
+        document.getElementById(
+            "supportModal"
+        ).style.display =
+            "none";
+
+
+        renderCurrentView();
+
+
+        await syncSupportToGitHub(
+            `Takviye Kaydı: ${direction} ${dateText} ${time}`
+        );
+
+
+        /*
+         * İstatistik paneli açıksa
+         * anında güncelle.
+         */
+
+        if (
+            document.getElementById(
+                "secretStatsModal"
+            ).style.display === "flex"
+        ) {
+
+            renderSupportStats();
+
+        }
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE GITHUB
+       ========================================================= */
+
+    async function syncSupportToGitHub(
+        commitMessage
+    ) {
+
+        const token =
+            getStoredToken();
+
+
+        if (!token) {
+            return;
+        }
+
+
+        updateCloudStatus(
+            "syncing"
+        );
+
+
+        try {
+
+            let sha = "";
+
+
+            const getRes =
+                await fetch(
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SUPPORT_FILE_NAME}`,
+                    {
+                        headers: {
+
+                            "Authorization":
+                                `Bearer ${token}`
+
+                        }
+                    }
+                );
+
+
+            if (getRes.ok) {
+
+                const fileData =
+                    await getRes.json();
+
+                sha =
+                    fileData.sha;
+
+                supportSha =
+                    fileData.sha;
+
+            }
+            else if (
+                getRes.status !== 404
+            ) {
+
+                updateCloudStatus(
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const content =
+                stringToBase64UTF8(
+                    JSON.stringify(
+                        supportRecords,
+                        null,
+                        2
+                    )
+                );
+
+
+            const body = {
+
+                message:
+                    commitMessage,
+
+                content:
+                    content
+
+            };
+
+
+            if (sha) {
+                body.sha = sha;
+            }
+
+
+            const putRes =
+                await fetch(
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SUPPORT_FILE_NAME}`,
+                    {
+                        method:
+                            "PUT",
+
+                        headers: {
+
+                            "Authorization":
+                                `Bearer ${token}`,
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                body
+                            )
+
+                    }
+                );
+
+
+            if (putRes.ok) {
+
+                const putData =
+                    await putRes.json();
+
+
+                if (
+                    putData.content &&
+                    putData.content.sha
+                ) {
+
+                    supportSha =
+                        putData.content.sha;
+
+                }
+
+
+                updateCloudStatus(
+                    "ok"
+                );
+
+            }
+            else {
+
+                const errorText =
+                    await putRes.text();
+
+                console.error(
+                    "Takviye GitHub hatası:",
+                    errorText
+                );
+
+                updateCloudStatus(
+                    "error"
+                );
+
+            }
+
+        }
+        catch (e) {
+
+            console.error(
+                "Takviye bulut kayıt hatası:",
+                e
+            );
+
+            updateCloudStatus(
+                "error"
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE İHTİYACI HESABI
+       ========================================================= */
+
+    function isPilotRequired(ship) {
+
+        const value =
+            normalizeStr(
+                ship &&
+                ship.pilotReq
+            );
+
+
+        /*
+         * Açıkça HAYIR deniyorsa
+         * kılavuz gerektirmiyor.
+         */
+
+        if (
+            value === "HAYIR" ||
+            value === "NO" ||
+            value === "YOK"
+        ) {
+
+            return false;
+
+        }
+
+
+        /*
+         * Diğer durumlarda
+         * kılavuz ihtimali var kabul ediyoruz.
+         */
+
+        return true;
+
+    }
+
+
+    function getDirectionLabel(direction) {
+
+        return direction === "K-G"
+            ? "KUZEY → GÜNEY"
+            : "GÜNEY → KUZEY";
+
+    }
+
+
+    /*
+     * Aktif vardiyadaki toplam kılavuz sayısı.
+     */
+
+    function getActiveVardiyaPilotCount() {
+
+        return (
+            VARDIYALAR[
+                activeVardiya
+            ] || []
+        ).length;
+
+    }
+
+
+    /*
+     * Canlı gemilerden şu anda atanmış
+     * benzersiz kılavuzları çıkarır.
+     *
+     * PİLOTSUZ kayıtlar sayılmaz.
+     */
+
+    function getCurrentlyAssignedPilotSet() {
+
+        const set =
+            new Set();
+
+
+        allShips.forEach(
+            ship => {
+
+                if (
+                    isShipTooOldForLive(
+                        ship
+                    )
+                ) {
+                    return;
+                }
+
+
+                const assignment =
+                    getShipAssignment(
+                        ship
+                    );
+
+
+                if (
+                    !assignment ||
+                    assignment ===
+                    PILOTLESS_VALUE
+                ) {
+                    return;
+                }
+
+
+                set.add(
+                    assignment
+                );
+
+            }
+        );
+
+
+        return set;
+
+    }
+
+
+    /*
+     * TAKVİYE İHTİYACI İÇİN BASİT OPERASYON HESABI
+     *
+     * Seçilen boğazdaki aktif gemilerden:
+     *
+     * - kılavuz gerektiren gemileri sayar
+     * - mevcut vardiyadaki kılavuz sayısını bulur
+     * - aktif atamalara göre kullanılabilir
+     *   kılavuz sayısını hesaplar
+     *
+     * Geminin fiziksel konumu bilinmediği için
+     * sonuç "TAKVİYE İHTİYACI OLABİLİR" şeklindedir.
+     */
+
+    function calculateSupportNeed(
+        bogaz,
+        direction
+    ) {
+
+        const directionText =
+            direction === "K-G"
+                ? "KUZEY-GÜNEY"
+                : "GÜNEY-KUZEY";
+
+
+        const ships =
+            allShips.filter(
+                ship => {
+
+                    if (
+                        normalizeStr(
+                            ship.bogaz
+                        ) !==
+                        normalizeStr(
+                            bogaz
+                        )
+                    ) {
+                        return false;
+                    }
+
+
+                    if (
+                        normalizeStr(
+                            ship.yon
+                        ) !==
+                        normalizeStr(
+                            directionText
+                        )
+                    ) {
+                        return false;
+                    }
+
+
+                    if (
+                        isShipTooOldForLive(
+                            ship
+                        )
+                    ) {
+                        return false;
+                    }
+
+
+                    if (
+                        isShipPilotless(
+                            ship
+                        )
+                    ) {
+                        return false;
+                    }
+
+
+                    return isPilotRequired(
+                        ship
+                    );
+
+                }
+            );
+
+
+        const assignedSet =
+            getCurrentlyAssignedPilotSet();
+
+
+        const totalPilots =
+            getActiveVardiyaPilotCount();
+
+
+        const occupiedPilots =
+            assignedSet.size;
+
+
+        const availablePilots =
+            Math.max(
+                0,
+                totalPilots -
+                occupiedPilots
+            );
+
+
+        /*
+         * Aynı yöndeki atanmış
+         * kılavuz sayısı.
+         */
+
+        const directionAssigned =
+            ships.filter(
+                ship =>
+                    !!getShipAssignment(
+                        ship
+                    )
+            );
+
+
+        const directionAssignedUnique =
+            new Set(
+                directionAssigned.map(
+                    ship =>
+                        getShipAssignment(
+                            ship
+                        )
+                )
+            ).size;
+
+
+        /*
+         * Takviye uyarısı:
+         *
+         * Yöndeki ihtiyaç,
+         * mevcut kullanılabilir kılavuz
+         * kapasitesinden fazlaysa uyarı.
+         *
+         * Ayrıca aynı yönde hiç boşta kılavuz
+         * görünmüyorsa uyarı verilir.
+         */
+
+        const need =
+            ships.length;
+
+
+        const shortage =
+            Math.max(
+                0,
+                need -
+                availablePilots
+            );
+
+
+        const warning =
+            need > 0 &&
+            (
+                shortage > 0 ||
+                availablePilots === 0
+            );
+
+
+        return {
+
+            direction:
+                direction,
+
+            directionLabel:
+                getDirectionLabel(
+                    direction
+                ),
+
+            requiredShips:
+                need,
+
+            totalPilots:
+                totalPilots,
+
+            occupiedPilots:
+                occupiedPilots,
+
+            availablePilots:
+                availablePilots,
+
+            directionAssigned:
+                directionAssignedUnique,
+
+            shortage:
+                shortage,
+
+            warning:
+                warning
+
+        };
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE PANELİ
+       ========================================================= */
+
+    function buildSupportPanel(
+        bogaz,
+        direction
+    ) {
+
+        const calc =
+            calculateSupportNeed(
+                bogaz,
+                direction
+            );
+
+
+        const recent =
+            supportRecords
+                .filter(
+                    record =>
+                        record.direction ===
+                        direction
+                )
+                .slice(
+                    0,
+                    3
+                );
+
+
+        const panelClass =
+            calc.warning
+                ? "support-panel warning"
+                : "support-panel ok";
+
+
+        let html = `
+
+            <div class="${panelClass}">
+
+                <div class="support-header">
+
+                    <div class="support-title">
+                        🚐 TAKVİYE
+                    </div>
+
+                    <div class="support-count">
+                        ${calc.requiredShips}
+                        Gemi
+                    </div>
+
+                </div>
+
+        `;
+
+
+        if (calc.warning) {
+
+            html += `
+
+                <div class="support-warning">
+
+                    ⚠️ TAKVİYE İHTİYACI OLABİLİR
+
+                </div>
+
+                <div class="support-detail">
+
+                    ${calc.directionLabel}
+                    yönünde yaklaşık
+                    <strong>
+                        ${calc.requiredShips}
+                    </strong>
+                    kılavuz gerektiren aktif kayıt var.
+
+                    Aktif vardiya:
+                    <strong>
+                        ${calc.totalPilots}
+                    </strong>
+
+                    Kullanılabilir:
+                    <strong>
+                        ${calc.availablePilots}
+                    </strong>
+
+                    ${
+                        calc.shortage > 0
+                            ? `
+                                <br>
+                                Yaklaşık açık:
+                                <strong style="color:#fca5a5;">
+                                    ${calc.shortage}
+                                </strong>
+                              `
+                            : ""
+                    }
+
+                    <br><br>
+
+                    Bu yalnızca operasyonel bir
+                    <strong>
+                        ihtimal uyarısıdır.
+                    </strong>
+
+                </div>
+
+            `;
+
+        }
+        else {
+
+            html += `
+
+                <div class="support-ok">
+
+                    ✅ Şu an takviye açığı görünmüyor.
+
+                </div>
+
+                <div class="support-detail">
+
+                    ${calc.directionLabel}
+
+                    • Kılavuz gerektiren gemi:
+                    <strong>
+                        ${calc.requiredShips}
+                    </strong>
+
+                    • Kullanılabilir kılavuz:
+                    <strong>
+                        ${calc.availablePilots}
+                    </strong>
+
+                </div>
+
+            `;
+
+        }
+
+
+        html += `
+
+                <button
+                    class="btn-search btn-support"
+                    onclick="openSupportModal('${direction}')">
+
+                    + TAKVİYE KAYDI
+
+                </button>
+
+        `;
+
+
+        if (
+            recent.length > 0
+        ) {
+
+            html += `
+
+                <div class="support-records">
+
+            `;
+
+
+            recent.forEach(
+                record => {
+
+                    const pilotText =
+                        Array.isArray(
+                            record.pilots
+                        )
+                            ? record.pilots.join(
+                                ", "
+                            )
+                            : "";
+
+
+                    html += `
+
+                        <div class="support-record">
+
+                            <div class="support-record-top">
+
+                                <span class="support-record-direction">
+                                    ${getDirectionLabel(
+                                        record.direction
+                                    )}
+                                </span>
+
+                                <span class="support-record-time">
+                                    ${record.date || ""}
+                                    ${record.time || ""}
+                                </span>
+
+                            </div>
+
+                            <div class="support-record-pilots">
+
+                                👨‍✈️ ${pilotText}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            html += `</div>`;
+
+        }
+
+
+        html += `
+            </div>
+        `;
+
+
+        return html;
 
     }
 
@@ -2599,7 +4221,7 @@
         try {
 
             /*
-             * Önce cihazdaki atamalar.
+             * Yerel pilot atamaları
              */
 
             try {
@@ -2614,15 +4236,24 @@
             }
             catch (e) {
 
-                globalAssignments = {};
+                globalAssignments =
+                    {};
 
             }
+
+
+            /*
+             * Yerel TAKVİYE kayıtları
+             */
+
+            loadLocalSupportRecords();
 
 
             const [
                 liveRes,
                 histRes,
-                assignRes
+                assignRes,
+                supportRes
             ] =
                 await Promise.all([
 
@@ -2651,6 +4282,15 @@
                         () => ({
                             ok: false
                         })
+                    ),
+
+                    fetch(
+                        `${SUPPORT_FILE_NAME}?t=` +
+                        Date.now()
+                    ).catch(
+                        () => ({
+                            ok: false
+                        })
                     )
 
                 ]);
@@ -2673,7 +4313,7 @@
 
 
             /*
-             * GitHub / uzak assignments.json
+             * Uzak assignments.json
              */
 
             if (assignRes.ok) {
@@ -2682,14 +4322,12 @@
                     await assignRes.json();
 
 
-                /*
-                 * Uzak kayıtlar yerel kayıtların üzerine
-                 * yazılır.
-                 */
-
                 globalAssignments = {
+
                     ...globalAssignments,
+
                     ...cloudAssignments
+
                 };
 
 
@@ -2701,9 +4339,40 @@
                 );
 
 
-                if (getStoredToken()) {
+                if (
+                    getStoredToken()
+                ) {
 
-                    updateCloudStatus("ok");
+                    updateCloudStatus(
+                        "ok"
+                    );
+
+                }
+
+            }
+
+
+            /*
+             * Uzak takviye.json
+             */
+
+            if (supportRes.ok) {
+
+                const cloudSupport =
+                    await supportRes.json();
+
+
+                if (
+                    Array.isArray(
+                        cloudSupport
+                    )
+                ) {
+
+                    supportRecords =
+                        cloudSupport;
+
+
+                    saveLocalSupportRecords();
 
                 }
 
@@ -2737,7 +4406,10 @@
 
     function renderCurrentView() {
 
-        if (currentMode === "live") {
+        if (
+            currentMode ===
+            "live"
+        ) {
 
             renderLiveList();
 
@@ -2789,272 +4461,376 @@
             .toLowerCase();
 
 
+        /*
+         * TAKVİYE yönünü seçili yön ile
+         * eşleştiriyoruz.
+         */
+
+        const supportDirection =
+            isNorthSouth(
+                yon
+            )
+                ? "K-G"
+                : "G-K";
+
+
+        /*
+         * ÖNCE YAŞ KONTROLÜ
+         *
+         * Buradaki önemli fark:
+         *
+         * BOĞAZDA -> 9 saat
+         * diğerleri -> 48 saat
+         *
+         * Böylece sistemde 2-3 gün takılı kalan
+         * gemiler listeye hiç giremez.
+         */
+
         let filtered =
-            allShips.filter(s => {
+            allShips.filter(
+                ship => {
 
-                const matchBogaz =
-                    normalizeStr(s.bogaz) ===
-                    normalizeStr(bogaz);
-
-
-                const matchYon =
-                    normalizeStr(s.yon) ===
-                    normalizeStr(yon);
-
-
-                const matchHareket =
-                    normalizeStr(s.hareket) ===
-                    normalizeStr(hareket);
+                    if (
+                        isShipTooOldForLive(
+                            ship
+                        )
+                    ) {
+                        return false;
+                    }
 
 
-                if (
-                    !matchBogaz ||
-                    !matchYon ||
-                    !matchHareket
-                ) {
-                    return false;
-                }
+                    const matchBogaz =
+                        normalizeStr(
+                            ship.bogaz
+                        ) ===
+                        normalizeStr(
+                            bogaz
+                        );
 
 
-                if (searchQuery.length > 0) {
+                    const matchYon =
+                        normalizeStr(
+                            ship.yon
+                        ) ===
+                        normalizeStr(
+                            yon
+                        );
 
-                    return (
-                        (s.name || "")
+
+                    const matchHareket =
+                        normalizeStr(
+                            ship.hareket
+                        ) ===
+                        normalizeStr(
+                            hareket
+                        );
+
+
+                    if (
+                        !matchBogaz ||
+                        !matchYon ||
+                        !matchHareket
+                    ) {
+                        return false;
+                    }
+
+
+                    if (
+                        searchQuery.length > 0
+                    ) {
+
+                        return (
+                            (
+                                ship.name ||
+                                ""
+                            )
                             .toLowerCase()
-                            .includes(searchQuery)
-                    );
+                            .includes(
+                                searchQuery
+                            )
+                        );
+
+                    }
+
+
+                    return true;
 
                 }
+            );
 
 
-                return true;
+        /*
+         * TAKVİYE paneli her zaman yukarıda.
+         */
 
-            });
+        let html =
+            buildSupportPanel(
+                bogaz,
+                supportDirection
+            );
 
 
-        if (filtered.length === 0) {
+        if (
+            filtered.length === 0
+        ) {
 
-            container.innerHTML =
+            html +=
                 '<div class="status-msg">' +
                 'Bu kritere uygun aktif gemi bulunamadı.' +
                 '</div>';
+
+
+            container.innerHTML =
+                html;
 
             return;
 
         }
 
 
-        filtered.sort((a, b) => {
+        filtered.sort(
+            (a, b) => {
 
-            const timeA =
-                a.timestamp ||
-                parseTimeString(a.time) ||
-                0;
-
-
-            const timeB =
-                b.timestamp ||
-                parseTimeString(b.time) ||
-                0;
+                const timeA =
+                    getShipTimestamp(a) ||
+                    0;
 
 
-            return timeA - timeB;
-
-        });
-
-
-        let html = "";
+                const timeB =
+                    getShipTimestamp(b) ||
+                    0;
 
 
-        filtered.forEach(ship => {
-
-            const uniqueKey =
-                getShipKey(ship);
-
-
-            const assignedPilot =
-                getShipAssignment(ship);
-
-
-            const isPilotless =
-                assignedPilot ===
-                PILOTLESS_VALUE;
-
-
-            const isAssigned =
-                assignedPilot.length > 0 &&
-                !isPilotless;
-
-
-            let aisUrl =
-                ship.imo &&
-                ship.imo.length === 7
-
-                ? `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`
-
-                : `https://www.google.com/search?q=${
-                    encodeURIComponent(
-                        ship.name +
-                        " " +
-                        ship.len +
-                        "m marinetraffic"
-                    )
-                  }&btnI=1`;
-
-
-            const displayTime =
-                formatDisplayTime(
-                    ship.time,
-                    ship.planlama
+                return (
+                    timeA -
+                    timeB
                 );
 
-
-            let cardClass = "ship-card";
-
-
-            if (isPilotless) {
-
-                cardClass += " pilotless";
-
             }
-            else if (isAssigned) {
-
-                cardClass += " assigned";
-
-            }
+        );
 
 
-            let assignmentButtonText;
+        filtered.forEach(
+            ship => {
+
+                const uniqueKey =
+                    getShipKey(
+                        ship
+                    );
 
 
-            if (isPilotless) {
-
-                assignmentButtonText =
-                    "🚫 PİLOTSUZ";
-
-            }
-            else if (isAssigned) {
-
-                assignmentButtonText =
-                    "👨‍✈️ " + assignedPilot;
-
-            }
-            else {
-
-                assignmentButtonText =
-                    "+ Kılavuz Kaptan Ata";
-
-            }
+                const assignedPilot =
+                    getShipAssignment(
+                        ship
+                    );
 
 
-            html += `
+                const isPilotless =
+                    assignedPilot ===
+                    PILOTLESS_VALUE;
 
-                <div class="${cardClass}">
 
-                    <div class="ship-header">
+                const isAssigned =
+                    !!assignedPilot &&
+                    !isPilotless;
 
-                        <a href="${aisUrl}"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           class="ship-name-link">
 
-                            ${ship.name}
+                let aisUrl =
+                    ship.imo &&
+                    String(
+                        ship.imo
+                    ).length === 7
 
-                            <span class="ais-icon">
-                                ↗
+                        ? `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`
+
+                        : `https://www.google.com/search?q=${
+                            encodeURIComponent(
+                                (
+                                    ship.name ||
+                                    ""
+                                ) +
+                                " " +
+                                (
+                                    ship.len ||
+                                    ""
+                                ) +
+                                "m marinetraffic"
+                            )
+                          }&btnI=1`;
+
+
+                const displayTime =
+                    formatDisplayTime(
+                        ship.time,
+                        ship.planlama
+                    );
+
+
+                let cardClass =
+                    "ship-card";
+
+
+                if (
+                    isPilotless
+                ) {
+
+                    cardClass +=
+                        " pilotless";
+
+                }
+                else if (
+                    isAssigned
+                ) {
+
+                    cardClass +=
+                        " assigned";
+
+                }
+
+
+                let assignmentButtonText;
+
+
+                if (
+                    isPilotless
+                ) {
+
+                    assignmentButtonText =
+                        "🚫 PİLOTSUZ";
+
+                }
+                else if (
+                    isAssigned
+                ) {
+
+                    assignmentButtonText =
+                        "👨‍✈️ " +
+                        assignedPilot;
+
+                }
+                else {
+
+                    assignmentButtonText =
+                        "+ Kılavuz Kaptan Ata";
+
+                }
+
+
+                html += `
+
+                    <div class="${cardClass}">
+
+                        <div class="ship-header">
+
+                            <a
+                                href="${aisUrl}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="ship-name-link">
+
+                                ${ship.name || "-"}
+
+                                <span class="ais-icon">
+                                    ↗
+                                </span>
+
+                            </a>
+
+
+                            <div class="ship-time-badge">
+
+                                <span class="time-prefix">
+                                    ${ship.hareket || ""}
+                                </span>
+
+                                <span class="time-val">
+                                    ${displayTime}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        ${
+                            isPilotless
+                                ? `
+                                    <div class="pilotless-info visible">
+                                        🚫 BU GEMİ PİLOTSUZ OLARAK İŞARETLENDİ
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+
+                        <div class="ship-details">
+
+                            Boy:
+                            <span>
+                                ${ship.len || "-"} m
                             </span>
 
-                        </a>
+                            |
 
-
-                        <div class="ship-time-badge">
-
-                            <span class="time-prefix">
-                                ${ship.hareket}
+                            Tip:
+                            <span>
+                                ${ship.type || "-"}
                             </span>
 
-                            <span class="time-val">
-                                ${displayTime}
+                            <br>
+
+                            Kılavuz:
+                            <span>
+                                ${ship.pilotReq || "-"}
                             </span>
+
+                            |
+
+                            Römorkör:
+                            <span>
+                                ${ship.tug || "-"}
+                            </span>
+
+                        </div>
+
+
+                        <div class="pilot-row">
+
+                            <button
+                                class="
+                                    btn-assign-badge
+                                    ${
+                                        isPilotless
+                                            ? "pilotless"
+                                            : isAssigned
+                                                ? "saved"
+                                                : ""
+                                    }
+                                "
+                                onclick="
+                                    openPilotModal(
+                                        '${uniqueKey.replace(/'/g, "\\'")}',
+                                        '${String(
+                                            ship.name || ""
+                                        ).replace(
+                                            /'/g,
+                                            "\\'"
+                                        )}'
+                                    )
+                                ">
+
+                                ${assignmentButtonText}
+
+                            </button>
 
                         </div>
 
                     </div>
 
+                `;
 
-                    ${
-                        isPilotless
-                            ? `
-                                <div class="pilotless-info visible">
-                                    🚫 BU GEMİ PİLOTSUZ OLARAK İŞARETLENDİ
-                                </div>
-                              `
-                            : ""
-                    }
-
-
-                    <div class="ship-details">
-
-                        Boy:
-                        <span>
-                            ${ship.len || "-"} m
-                        </span>
-
-                        |
-
-                        Tip:
-                        <span>
-                            ${ship.type || "-"}
-                        </span>
-
-                        <br>
-
-                        Kılavuz:
-                        <span>
-                            ${ship.pilotReq || "-"}
-                        </span>
-
-                        |
-
-                        Römorkör:
-                        <span>
-                            ${ship.tug || "-"}
-                        </span>
-
-                    </div>
-
-
-                    <div class="pilot-row">
-
-                        <button
-                            class="
-                                btn-assign-badge
-                                ${
-                                    isPilotless
-                                        ? "pilotless"
-                                        : isAssigned
-                                            ? "saved"
-                                            : ""
-                                }
-                            "
-                            onclick="
-                                openPilotModal(
-                                    '${uniqueKey.replace(/'/g, "\\'")}',
-                                    '${ship.name.replace(/'/g, "\\'")}'
-                                )
-                            ">
-
-                            ${assignmentButtonText}
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        });
+            }
+        );
 
 
         container.innerHTML =
@@ -3099,211 +4875,156 @@
             );
 
 
-        /*
-         * TEMEL FİLTRE
-         */
-
         let rawList =
-            historyShips.filter(s => {
+            historyShips.filter(
+                ship => {
 
-                if (
-                    normalizeStr(s.bogaz) !==
-                    normalizeStr(bogaz)
-                ) {
-                    return false;
-                }
-
-
-                const uniqueKey =
-                    getShipKey(s);
-
-
-                const assignment =
-                    getShipAssignment(s);
+                    if (
+                        normalizeStr(
+                            ship.bogaz
+                        ) !==
+                        normalizeStr(
+                            bogaz
+                        )
+                    ) {
+                        return false;
+                    }
 
 
-                /*
-                 * EN ÖNEMLİ KONTROL:
-                 * PİLOTSUZ GEMİ LOGA GİRMEZ.
-                 */
-
-                if (
-                    assignment ===
-                    PILOTLESS_VALUE
-                ) {
-                    return false;
-                }
+                    const assignment =
+                        getShipAssignment(
+                            ship
+                        );
 
 
-                const hasAssignedPilot =
-                    !!assignment;
+                    /*
+                     * PİLOTSUZ LOGA GİRMEZ.
+                     */
+
+                    if (
+                        assignment ===
+                        PILOTLESS_VALUE
+                    ) {
+
+                        return false;
+
+                    }
 
 
-                const isBogazda =
-                    normalizeStr(
-                        s.hareket
-                    ).includes(
-                        "BOGAZDA"
-                    );
+                    const hasAssignedPilot =
+                        !!assignment;
 
 
-                /*
-                 * Pilotsuz değilse eski mantık:
-                 * atanmış pilot VEYA boğazda.
-                 */
-
-                if (
-                    !hasAssignedPilot &&
-                    !isBogazda
-                ) {
-                    return false;
-                }
+                    const isBogazda =
+                        isBogazdaShip(
+                            ship
+                        );
 
 
-                let timeVal =
-                    s.timestamp ||
-                    s.entryTimestamp ||
-                    parseTimeString(s.time) ||
-                    0;
+                    if (
+                        !hasAssignedPilot &&
+                        !isBogazda
+                    ) {
+
+                        return false;
+
+                    }
 
 
-                if (
-                    cutoffTime > 0 &&
-                    timeVal > 0 &&
-                    timeVal < cutoffTime
-                ) {
-                    return false;
-                }
+                    const timeVal =
+                        getShipTimestamp(
+                            ship
+                        );
 
 
-                if (searchQuery.length > 0) {
+                    if (
+                        cutoffTime > 0 &&
+                        timeVal > 0 &&
+                        timeVal < cutoffTime
+                    ) {
 
-                    return (
-                        (s.name || "")
+                        return false;
+
+                    }
+
+
+                    if (
+                        searchQuery.length > 0
+                    ) {
+
+                        return (
+                            (
+                                ship.name ||
+                                ""
+                            )
                             .toLowerCase()
                             .includes(
                                 searchQuery
                             )
-                    );
+                        );
+
+                    }
+
+
+                    return true;
 
                 }
+            );
 
 
-                return true;
+        rawList.sort(
+            (a, b) => {
 
-            });
-
-
-        /*
-         * EN GÜNCELDEN ESKİYE
-         */
-
-        rawList.sort((a, b) => {
-
-            const timeA =
-                a.timestamp ||
-                a.entryTimestamp ||
-                parseTimeString(a.time) ||
-                0;
+                const timeA =
+                    getShipTimestamp(
+                        a
+                    ) || 0;
 
 
-            const timeB =
-                b.timestamp ||
-                b.entryTimestamp ||
-                parseTimeString(b.time) ||
-                0;
+                const timeB =
+                    getShipTimestamp(
+                        b
+                    ) || 0;
 
 
-            return timeB - timeA;
+                return (
+                    timeB -
+                    timeA
+                );
 
-        });
+            }
+        );
 
-
-        /*
-         * DUPLİKE TEMİZLEME
-         */
 
         const uniqueMap =
             new Map();
 
 
-        rawList.forEach(ship => {
+        rawList.forEach(
+            ship => {
 
-            const cleanName =
-                normalizeStr(
-                    ship.name
-                );
-
-
-            const dirKey =
-                isNorthSouth(ship.yon)
-                    ? "NS"
-                    : "SN";
-
-
-            const dedupKey =
-                `${cleanName}_${dirKey}`;
-
-
-            if (!uniqueMap.has(dedupKey)) {
-
-                uniqueMap.set(
-                    dedupKey,
-                    ship
-                );
-
-            }
-            else {
-
-                const existing =
-                    uniqueMap.get(
-                        dedupKey
+                const cleanName =
+                    normalizeStr(
+                        ship.name
                     );
 
 
-                const existingKey =
-                    getShipKey(existing);
+                const dirKey =
+                    isNorthSouth(
+                        ship.yon
+                    )
+                        ? "NS"
+                        : "SN";
 
 
-                const currentKey =
-                    getShipKey(ship);
-
-
-                const existingAssignment =
-                    globalAssignments[
-                        existingKey
-                    ] ||
-                    globalAssignments[
-                        existing.name
-                    ] ||
-                    "";
-
-
-                const currentAssignment =
-                    globalAssignments[
-                        currentKey
-                    ] ||
-                    globalAssignments[
-                        ship.name
-                    ] ||
-                    "";
-
-
-                const existingHasPilot =
-                    existingAssignment &&
-                    existingAssignment !==
-                    PILOTLESS_VALUE;
-
-
-                const currentHasPilot =
-                    currentAssignment &&
-                    currentAssignment !==
-                    PILOTLESS_VALUE;
+                const dedupKey =
+                    `${cleanName}_${dirKey}`;
 
 
                 if (
-                    !existingHasPilot &&
-                    currentHasPilot
+                    !uniqueMap.has(
+                        dedupKey
+                    )
                 ) {
 
                     uniqueMap.set(
@@ -3312,10 +5033,54 @@
                     );
 
                 }
+                else {
+
+                    const existing =
+                        uniqueMap.get(
+                            dedupKey
+                        );
+
+
+                    const existingAssignment =
+                        getShipAssignment(
+                            existing
+                        );
+
+
+                    const currentAssignment =
+                        getShipAssignment(
+                            ship
+                        );
+
+
+                    const existingHasPilot =
+                        !!existingAssignment &&
+                        existingAssignment !==
+                        PILOTLESS_VALUE;
+
+
+                    const currentHasPilot =
+                        !!currentAssignment &&
+                        currentAssignment !==
+                        PILOTLESS_VALUE;
+
+
+                    if (
+                        !existingHasPilot &&
+                        currentHasPilot
+                    ) {
+
+                        uniqueMap.set(
+                            dedupKey,
+                            ship
+                        );
+
+                    }
+
+                }
 
             }
-
-        });
+        );
 
 
         const baseList =
@@ -3324,7 +5089,9 @@
             );
 
 
-        if (baseList.length === 0) {
+        if (
+            baseList.length === 0
+        ) {
 
             container.innerHTML =
                 `<div class="status-msg">
@@ -3340,22 +5107,25 @@
 
         const nsList =
             baseList.filter(
-                s => isNorthSouth(s.yon)
+                s =>
+                    isNorthSouth(
+                        s.yon
+                    )
             );
 
 
         const snList =
             baseList.filter(
-                s => isSouthNorth(s.yon)
+                s =>
+                    isSouthNorth(
+                        s.yon
+                    )
             );
 
 
-        let html = "";
+        let html =
+            "";
 
-
-        /*
-         * KUZEY - GÜNEY
-         */
 
         html += `
 
@@ -3380,7 +5150,9 @@
         `;
 
 
-        if (nsList.length === 0) {
+        if (
+            nsList.length === 0
+        ) {
 
             html += `
                 <div style="
@@ -3395,24 +5167,23 @@
         }
         else {
 
-            nsList.forEach(ship => {
+            nsList.forEach(
+                ship => {
 
-                html +=
-                    buildCompactLogRow(
-                        ship
-                    );
+                    html +=
+                        buildCompactLogRow(
+                            ship
+                        );
 
-            });
+                }
+            );
 
         }
 
 
-        html += `</div>`;
+        html +=
+            `</div>`;
 
-
-        /*
-         * GÜNEY - KUZEY
-         */
 
         html += `
 
@@ -3437,7 +5208,9 @@
         `;
 
 
-        if (snList.length === 0) {
+        if (
+            snList.length === 0
+        ) {
 
             html += `
                 <div style="
@@ -3452,19 +5225,22 @@
         }
         else {
 
-            snList.forEach(ship => {
+            snList.forEach(
+                ship => {
 
-                html +=
-                    buildCompactLogRow(
-                        ship
-                    );
+                    html +=
+                        buildCompactLogRow(
+                            ship
+                        );
 
-            });
+                }
+            );
 
         }
 
 
-        html += `</div>`;
+        html +=
+            `</div>`;
 
 
         container.innerHTML =
@@ -3477,30 +5253,34 @@
        KOMPAKT LOG SATIRI
        ========================================================= */
 
-    function buildCompactLogRow(ship) {
+    function buildCompactLogRow(
+        ship
+    ) {
 
         const uniqueKey =
-            getShipKey(ship);
+            getShipKey(
+                ship
+            );
 
 
         const assignedPilot =
-            getShipAssignment(ship);
+            getShipAssignment(
+                ship
+            );
 
-
-        /*
-         * Güvenlik kontrolü.
-         */
 
         if (
             assignedPilot ===
             PILOTLESS_VALUE
         ) {
+
             return "";
+
         }
 
 
         const isAssigned =
-            assignedPilot.length > 0;
+            !!assignedPilot;
 
 
         const displayTime =
@@ -3538,7 +5318,12 @@
                     onclick="
                         openPilotModal(
                             '${uniqueKey.replace(/'/g, "\\'")}',
-                            '${ship.name.replace(/'/g, "\\'")}'
+                            '${String(
+                                ship.name || ""
+                            ).replace(
+                                /'/g,
+                                "\\'"
+                            )}'
                         )
                     ">
 
@@ -3553,6 +5338,978 @@
             </div>
 
         `;
+
+    }
+
+
+    /* =========================================================
+       İSTATİSTİK
+       ========================================================= */
+
+    function openStatsModal() {
+
+        populatePilotDropdown();
+
+
+        document.getElementById(
+            "secretStatsModal"
+        ).style.display =
+            "flex";
+
+
+        calcStats();
+
+    }
+
+
+    function closeStatsModal(e) {
+
+        if (
+            e &&
+            e.target !== e.currentTarget &&
+            !e.target.classList.contains(
+                "btn-close"
+            )
+        ) {
+            return;
+        }
+
+
+        document.getElementById(
+            "secretStatsModal"
+        ).style.display =
+            "none";
+
+    }
+
+
+    function populatePilotDropdown() {
+
+        const sel =
+            document.getElementById(
+                "statFilterPilot"
+            );
+
+
+        sel.innerHTML =
+            '<option value="ALL">Tüm Pilotlar</option>';
+
+
+        const pilotSet =
+            new Set();
+
+
+        for (
+            let v in VARDIYALAR
+        ) {
+
+            VARDIYALAR[v].forEach(
+                p => {
+
+                    pilotSet.add(
+                        p
+                    );
+
+                }
+            );
+
+        }
+
+
+        Array.from(
+            pilotSet
+        )
+        .sort(
+            (a, b) =>
+                normalizeStr(a)
+                    .localeCompare(
+                        normalizeStr(b)
+                    )
+        )
+        .forEach(
+            p => {
+
+                const opt =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                opt.value =
+                    p;
+
+                opt.textContent =
+                    p;
+
+
+                sel.appendChild(
+                    opt
+                );
+
+            }
+        );
+
+    }
+
+
+    function getStatsCutoff() {
+
+        const period =
+            document.getElementById(
+                "statFilterPeriod"
+            ).value;
+
+
+        const now =
+            Date.now();
+
+
+        if (
+            period === "12h"
+        ) {
+
+            return (
+                now -
+                (
+                    12 *
+                    60 *
+                    60 *
+                    1000
+                )
+            );
+
+        }
+
+
+        if (
+            period === "24h"
+        ) {
+
+            return (
+                now -
+                (
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                )
+            );
+
+        }
+
+
+        if (
+            period === "month"
+        ) {
+
+            const d =
+                new Date();
+
+
+            return new Date(
+                d.getFullYear(),
+                d.getMonth(),
+                1
+            ).getTime();
+
+        }
+
+
+        if (
+            period === "year"
+        ) {
+
+            const d =
+                new Date();
+
+
+            return new Date(
+                d.getFullYear(),
+                0,
+                1
+            ).getTime();
+
+        }
+
+
+        return 0;
+
+    }
+
+
+    function calcStats() {
+
+        const targetPilot =
+            document.getElementById(
+                "statFilterPilot"
+            ).value;
+
+
+        const cutoff =
+            getStatsCutoff();
+
+
+        let rawFiltered =
+            historyShips.filter(
+                ship => {
+
+                    const assignment =
+                        getShipAssignment(
+                            ship
+                        );
+
+
+                    if (
+                        !assignment ||
+                        assignment ===
+                        PILOTLESS_VALUE
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (
+                        targetPilot !==
+                        "ALL" &&
+                        assignment !==
+                        targetPilot
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    const t =
+                        getShipTimestamp(
+                            ship
+                        );
+
+
+                    if (
+                        cutoff > 0 &&
+                        t > 0 &&
+                        t < cutoff
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                }
+            );
+
+
+        rawFiltered.sort(
+            (a, b) => {
+
+                return (
+                    (
+                        getShipTimestamp(
+                            b
+                        ) || 0
+                    ) -
+                    (
+                        getShipTimestamp(
+                            a
+                        ) || 0
+                    )
+                );
+
+            }
+        );
+
+
+        const uniqueMap =
+            new Map();
+
+
+        rawFiltered.forEach(
+            ship => {
+
+                const cleanName =
+                    normalizeStr(
+                        ship.name
+                    );
+
+
+                const dirKey =
+                    isNorthSouth(
+                        ship.yon
+                    )
+                        ? "NS"
+                        : "SN";
+
+
+                const dedupKey =
+                    `${cleanName}_${dirKey}`;
+
+
+                if (
+                    !uniqueMap.has(
+                        dedupKey
+                    )
+                ) {
+
+                    uniqueMap.set(
+                        dedupKey,
+                        ship
+                    );
+
+                }
+
+            }
+        );
+
+
+        currentFilteredStats =
+            Array.from(
+                uniqueMap.values()
+            );
+
+
+        const total =
+            currentFilteredStats.length;
+
+
+        const ns =
+            currentFilteredStats.filter(
+                s =>
+                    isNorthSouth(
+                        s.yon
+                    )
+            ).length;
+
+
+        const sn =
+            currentFilteredStats.filter(
+                s =>
+                    isSouthNorth(
+                        s.yon
+                    )
+            ).length;
+
+
+        document.getElementById(
+            "statTotalCount"
+        ).innerText =
+            total;
+
+
+        document.getElementById(
+            "statNsCount"
+        ).innerText =
+            ns;
+
+
+        document.getElementById(
+            "statSnCount"
+        ).innerText =
+            sn;
+
+
+        const tbody =
+            document.getElementById(
+                "statsTableBody"
+            );
+
+
+        let html =
+            "";
+
+
+        currentFilteredStats.forEach(
+            ship => {
+
+                const pilot =
+                    getShipAssignment(
+                        ship
+                    );
+
+
+                if (
+                    !pilot ||
+                    pilot ===
+                    PILOTLESS_VALUE
+                ) {
+
+                    return;
+
+                }
+
+
+                html += `
+
+                    <tr>
+
+                        <td>
+                            ${formatDisplayTime(
+                                ship.time,
+                                ship.planlama
+                            )}
+                        </td>
+
+                        <td style="
+                            font-weight:700;
+                        ">
+                            ${ship.name}
+                        </td>
+
+                        <td>
+                            ${
+                                isNorthSouth(
+                                    ship.yon
+                                )
+                                    ? "K-G"
+                                    : "G-K"
+                            }
+                        </td>
+
+                        <td style="
+                            color:#4ade80;
+                            font-weight:600;
+                        ">
+                            ${pilot}
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        if (!html) {
+
+            html = `
+                <tr>
+
+                    <td
+                        colspan="4"
+                        style="
+                            text-align:center;
+                            color:#64748b;
+                            padding:16px;
+                        ">
+
+                        Kayıt bulunamadı.
+
+                    </td>
+
+                </tr>
+            `;
+
+        }
+
+
+        tbody.innerHTML =
+            html;
+
+
+        renderSupportStats();
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE İSTATİSTİKLERİ
+       ========================================================= */
+
+    function renderSupportStats() {
+
+        const cutoff =
+            getStatsCutoff();
+
+
+        const filtered =
+            supportRecords.filter(
+                record => {
+
+                    const t =
+                        Number(
+                            record.timestamp ||
+                            0
+                        );
+
+
+                    if (
+                        cutoff > 0 &&
+                        t > 0 &&
+                        t < cutoff
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                }
+            );
+
+
+        const total =
+            filtered.length;
+
+
+        const kg =
+            filtered.filter(
+                r =>
+                    r.direction ===
+                    "K-G"
+            ).length;
+
+
+        const gk =
+            filtered.filter(
+                r =>
+                    r.direction ===
+                    "G-K"
+            ).length;
+
+
+        document.getElementById(
+            "supportStatTotal"
+        ).innerText =
+            total;
+
+
+        document.getElementById(
+            "supportStatKG"
+        ).innerText =
+            kg;
+
+
+        document.getElementById(
+            "supportStatGK"
+        ).innerText =
+            gk;
+
+
+        const pilotCount =
+            new Map();
+
+
+        filtered.forEach(
+            record => {
+
+                (
+                    record.pilots ||
+                    []
+                ).forEach(
+                    pilot => {
+
+                        pilotCount.set(
+                            pilot,
+                            (
+                                pilotCount.get(
+                                    pilot
+                                ) || 0
+                            ) + 1
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+        const list =
+            document.getElementById(
+                "supportPilotStats"
+            );
+
+
+        if (
+            pilotCount.size === 0
+        ) {
+
+            list.innerHTML =
+                `
+                    <div class="support-empty">
+                        Bu dönemde TAKVİYE kaydı yok.
+                    </div>
+                `;
+
+            return;
+
+        }
+
+
+        const sorted =
+            Array.from(
+                pilotCount.entries()
+            ).sort(
+                (a, b) =>
+                    b[1] -
+                    a[1]
+            );
+
+
+        let html =
+            "";
+
+
+        sorted.forEach(
+            ([pilot, count]) => {
+
+                html += `
+
+                    <div class="support-pilot-stat-row">
+
+                        <span>
+                            ${pilot}
+                        </span>
+
+                        <strong>
+                            ${count}
+                        </strong>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        list.innerHTML =
+            html;
+
+    }
+
+
+    /* =========================================================
+       KILAVUZ CSV
+       ========================================================= */
+
+    function exportStatsToCSV() {
+
+        if (
+            currentFilteredStats.length === 0
+        ) {
+
+            alert(
+                "Dışa aktarılacak kayıt yok."
+            );
+
+            return;
+
+        }
+
+
+        let csvContent =
+            "\uFEFF";
+
+
+        csvContent +=
+            "Tarih/Saat;Gemi Adi;Bogaz;Yon;Boy;Tip;Kilavuz Kaptan\n";
+
+
+        currentFilteredStats.forEach(
+            ship => {
+
+                const pilot =
+                    getShipAssignment(
+                        ship
+                    );
+
+
+                if (
+                    !pilot ||
+                    pilot ===
+                    PILOTLESS_VALUE
+                ) {
+
+                    return;
+
+                }
+
+
+                const row = [
+
+                    `"${formatDisplayTime(
+                        ship.time,
+                        ship.planlama
+                    )}"`,
+
+                    `"${ship.name || ""}"`,
+
+                    `"${ship.bogaz || ""}"`,
+
+                    `"${ship.yon || ""}"`,
+
+                    `"${ship.len || ""}"`,
+
+                    `"${ship.type || ""}"`,
+
+                    `"${pilot}"`
+
+                ];
+
+
+                csvContent +=
+                    row.join(";") +
+                    "\n";
+
+            }
+        );
+
+
+        downloadCSV(
+            csvContent,
+            `Kilavuz_Gecis_Raporu_${Date.now()}.csv`
+        );
+
+    }
+
+
+    /* =========================================================
+       TAKVİYE CSV
+       ========================================================= */
+
+    function exportSupportStatsToCSV() {
+
+        const cutoff =
+            getStatsCutoff();
+
+
+        const filtered =
+            supportRecords.filter(
+                record => {
+
+                    const t =
+                        Number(
+                            record.timestamp ||
+                            0
+                        );
+
+
+                    if (
+                        cutoff > 0 &&
+                        t > 0 &&
+                        t < cutoff
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                }
+            );
+
+
+        if (
+            filtered.length === 0
+        ) {
+
+            alert(
+                "Dışa aktarılacak TAKVİYE kaydı yok."
+            );
+
+            return;
+
+        }
+
+
+        let csvContent =
+            "\uFEFF";
+
+
+        csvContent +=
+            "Tarih;Saat;Yon;Giden Kilavuzlar\n";
+
+
+        filtered.forEach(
+            record => {
+
+                const pilots =
+                    Array.isArray(
+                        record.pilots
+                    )
+                        ? record.pilots.join(
+                            " | "
+                        )
+                        : "";
+
+
+                csvContent +=
+                    [
+                        `"${record.date || ""}"`,
+                        `"${record.time || ""}"`,
+                        `"${record.direction || ""}"`,
+                        `"${pilots}"`
+                    ].join(";") +
+                    "\n";
+
+            }
+        );
+
+
+        downloadCSV(
+            csvContent,
+            `Takviye_Raporu_${Date.now()}.csv`
+        );
+
+    }
+
+
+    function downloadCSV(
+        content,
+        filename
+    ) {
+
+        const blob =
+            new Blob(
+                [content],
+                {
+                    type:
+                        "text/csv;charset=utf-8;"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            filename;
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        document.body.removeChild(
+            link
+        );
+
+
+        URL.revokeObjectURL(
+            url
+        );
+
+    }
+
+
+    /* =========================================================
+       MOD DEĞİŞTİRME
+       ========================================================= */
+
+    function switchMode(
+        mode
+    ) {
+
+        currentMode =
+            mode;
+
+
+        document.getElementById(
+            "tabLive"
+        ).classList.toggle(
+            "active",
+            mode === "live"
+        );
+
+
+        document.getElementById(
+            "tabHistory"
+        ).classList.toggle(
+            "active",
+            mode === "history"
+        );
+
+
+        document.getElementById(
+            "selYon"
+        ).style.display =
+            mode === "live"
+                ? "block"
+                : "none";
+
+
+        document.getElementById(
+            "selHareket"
+        ).style.display =
+            mode === "live"
+                ? "block"
+                : "none";
+
+
+        document.getElementById(
+            "logRangeBox"
+        ).style.display =
+            mode === "history"
+                ? "flex"
+                : "none";
+
+
+        renderCurrentView();
+
+    }
+
+
+    function setLogHours(
+        hours
+    ) {
+
+        logHours =
+            hours;
+
+
+        document.getElementById(
+            "btnRange6"
+        ).classList.toggle(
+            "active",
+            hours === 6
+        );
+
+
+        document.getElementById(
+            "btnRange12"
+        ).classList.toggle(
+            "active",
+            hours === 12
+        );
+
+
+        document.getElementById(
+            "btnRange24"
+        ).classList.toggle(
+            "active",
+            hours === 24
+        );
+
+
+        renderCurrentView();
 
     }
 
