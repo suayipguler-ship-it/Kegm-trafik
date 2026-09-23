@@ -1153,11 +1153,13 @@
 
 
         <div class="support-form-label">
-            Saat
+            Saat (15 dk aralıklarla)
         </div>
 
+        <!-- 15 dakikalık dilimler için step="900" eklendi -->
         <input type="time"
-               id="supportTime">
+               id="supportTime"
+               step="900">
 
 
         <div class="support-form-label">
@@ -2115,7 +2117,6 @@
         document.getElementById("supportSelectedCount").innerText = `${count} kılavuz seçildi.`;
     }
 
-    // Sağ üst rozetten manuel aktif pilot sayısı değiştirildiğinde çalışır
     function updateManualCapacity(val) {
         const num = parseInt(val, 10);
         if (!isNaN(num) && num > 0) {
