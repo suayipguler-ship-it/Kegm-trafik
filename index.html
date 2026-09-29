@@ -2127,7 +2127,7 @@
                         n_gk_finished++;
                     } else {
                         n3_gk_active++;
-                        if (!earliestGK_startTime || shipTime < earliestGK_startTime) earliestGK_startTime = shipTime;
+                        if (!earliestGK_startTime || shipTime < earliestKG_startTime) earliestGK_startTime = shipTime;
                     }
                 }
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
@@ -2291,9 +2291,9 @@
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrGK})<br>
                     🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
-                    ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                    ${calc.minutesUntilDepartureGK > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
 
@@ -2339,7 +2339,7 @@
     }
 
     /* =========================================================
-       VERİ YÜKLEME VE GÖRÜNÜM
+       VERİ YÜKLEME VE GÖRÜNÜM (MARINETRAFFIC DEEP-LINK ENTEGRE)
        ========================================================= */
 
     async function loadAllData() {
@@ -2425,9 +2425,13 @@
                 const isPilotless = assignedPilot === PILOTLESS_VALUE;
                 const isAssigned = !!assignedPilot && !isPilotless;
 
-                let aisUrl = ship.imo && String(ship.imo).length === 7
-                    ? `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`
-                    : `https://www.google.com/search?q=${encodeURIComponent((ship.name || "") + " " + (ship.len || "") + "m marinetraffic")}&btnI=1`;
+                // MarineTraffic Deep Linking (App varsa App'te, yoksa Web'de doğrudan açılır; Google araya girmez)
+                let aisUrl = "";
+                if (ship.imo && String(ship.imo).length === 7) {
+                    aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`;
+                } else {
+                    aisUrl = `https://www.marinetraffic.com/en/ais/index/ships/all/keyword:${encodeURIComponent(ship.name || "")}`;
+                }
 
                 const displayTime = formatDisplayTime(ship.time, ship.planlama);
                 let cardClass = "ship-card";
