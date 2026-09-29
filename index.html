@@ -1713,7 +1713,6 @@
         return ageHours > maxAge;
     }
 
-    // Rozetin yan yana kalması için sadeleştirilmiş "Gün / Saat:Dk" formatı (Örn: 29 / 13:00)
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
             const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
@@ -2126,7 +2125,7 @@
                 if (isKG) {
                     if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 } else if (isGK) {
-                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextKG_ship = ship;
+                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextGK_ship = ship;
                 }
             }
         });
@@ -2198,7 +2197,7 @@
             if (isCapacityExhaustedGK && !canKGRelieve) {
                 warningGK = true;
                 if (minutesUntilDepartureGK <= 0) {
-                    isCriticalGK = true;
+                    isCriticalKG = true;
                 }
             }
         }
@@ -2281,7 +2280,7 @@
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameKG} (${calc.targetShipTimeStrKG})<br>
                     🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
                     ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
@@ -2329,7 +2328,7 @@
     }
 
     /* =========================================================
-       VERİ YÜKLEME VE GÖRÜNÜM (MARINETRAFFIC AKILLI BOY FİLTRELİ)
+       VERİ YÜKLEME VE GÖRÜNÜM (DOĞRUDAN MARINETRAFFIC LINK)
        ========================================================= */
 
     async function loadAllData() {
@@ -2415,35 +2414,12 @@
                 const isPilotless = assignedPilot === PILOTLESS_VALUE;
                 const isAssigned = !!assignedPilot && !isPilotless;
 
-                // MarineTraffic Akıllı Arama & Boy/Tip Filtreleme
+                // Doğrudan çalışan ve tablo hatasına düşmeyen evrensel gemi bağlantısı
                 let aisUrl = "";
                 if (ship.imo && String(ship.imo).length === 7) {
                     aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`;
                 } else {
-                    const cleanName = encodeURIComponent(ship.name || "");
-                    let filterParams = `shipname=${cleanName}&quicksearch=1`;
-
-                    // Boy (LOA) bilgisi varsa ±2 metre toleransla aralık filtrele
-                    const rawLen = parseFloat(String(ship.len || "").replace(",", "."));
-                    if (!isNaN(rawLen) && rawLen > 0) {
-                        const minLen = Math.max(0, Math.floor(rawLen - 2));
-                        const maxLen = Math.ceil(rawLen + 2);
-                        filterParams += `&length_between=${minLen},${maxLen}`;
-                    }
-
-                    // Gemi Tipi Parametresi
-                    const typeNorm = normalizeStr(ship.type);
-                    if (typeNorm.includes("TANKER")) {
-                        filterParams += `&type_group=tanker`;
-                    } else if (typeNorm.includes("CARGO") || typeNorm.includes("DRY") || typeNorm.includes("DOKME")) {
-                        filterParams += `&type_group=cargo`;
-                    } else if (typeNorm.includes("CONTAINER") || typeNorm.includes("KONTEYNER")) {
-                        filterParams += `&type_group=container`;
-                    } else if (typeNorm.includes("TUG") || typeNorm.includes("ROMORKOR")) {
-                        filterParams += `&type_group=tug`;
-                    }
-
-                    aisUrl = `https://www.marinetraffic.com/en/data/?asset_type=vessels&columns=flag,shipname,photo,recognized_next_port,reported_eta,reported_destination,current_port,imo,ship_type,length,show_on_live_map&${filterParams}`;
+                    aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/shipname:${encodeURIComponent(ship.name || "")}`;
                 }
 
                 const displayTime = formatDisplayTime(ship.time, ship.planlama);
