@@ -482,6 +482,26 @@
             padding: 0 4px;
         }
 
+        .btn-modal-back {
+            background: #1e293b;
+            border: 1px solid #475569;
+            color: #38bdf8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-modal-back:active {
+            background: #0284c7;
+            color: #ffffff;
+        }
+
         .vardiya-tabs {
             display: flex;
             gap: 6px;
@@ -559,7 +579,7 @@
 
         /* =====================================================
            VARDİYA ERİŞİM (5 + 5 KUTU) MODAL STİLLERİ
-           ===================================================== */
+           ========================================================= */
 
         .auth-split-inputs {
             display: flex;
@@ -1073,12 +1093,15 @@
 </div>
 
 <!-- =========================================================
-     TAKVİYE MODALI (ANALİZ + 5 GÜNLÜK LİSTE + SEÇİM)
+     TAKVİYE MODALI (ANALİZ + ÇIKIŞ BUTONU + SEÇİM)
      ========================================================= -->
 
 <div id="supportModal" class="modal-overlay" onclick="closeSupportModal(event)">
     <div class="modal-content support-modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
+            <button class="btn-modal-back" onclick="closeSupportModal()">
+                ← Ana Ekran
+            </button>
             <h3 style="color:#fbbf24;">🚐 ANLIK TAKVİYE DURUMU</h3>
             <button class="btn-close" onclick="closeSupportModal()">✕</button>
         </div>
@@ -1937,7 +1960,7 @@
     }
 
     function closeSupportModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-modal-back")) return;
         document.getElementById("supportModal").style.display = "none";
     }
 
@@ -2198,7 +2221,7 @@
             if (isCapacityExhaustedGK && !canKGRelieve) {
                 warningGK = true;
                 if (minutesUntilDepartureGK <= 0) {
-                    isCriticalGK = true;
+                    isCriticalKG = true;
                 }
             }
         }
@@ -2246,6 +2269,9 @@
             ? (isCritical ? "support-panel warning" : "support-panel warning") 
             : "support-panel ok";
 
+        // Toplam havuzdaki aktif gemi/kılavuz sayısı (KG ve GK toplamı)
+        const totalInTransit = calc.n2_kg_active + calc.n3_gk_active;
+
         let html = `
             <div class="${panelClass}" style="${!isCritical && calc.hasAnyWarning ? 'border-left-color:#f59e0b; background:#1c1912;' : ''}">
                 <div class="support-header-row">
@@ -2281,15 +2307,14 @@
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
-                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
-                    ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrGK})<br>
+                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
+                    ${calc.minutesUntilDepartureGK > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
 
             html += `
-                    Havuz Dağılımı: [N1 Etabı Biten: <strong>${calc.n1_kg_finished}</strong> | N2 K-G: <strong>${calc.n2_kg_active}</strong> | N3 G-K: <strong>${calc.n3_gk_active}</strong>]<br>
-                    İstasyon Doluluğu: <strong>${calc.poolSumKG} / ${calc.totalActivePilots}</strong>
+                    Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${totalInTransit} / ${calc.totalActivePilots}</strong>
                 </div>
             `;
         } else {
@@ -2298,8 +2323,8 @@
                     ✅ Önümüzdeki 3.5 Saatte Takviye İhtiyacı Görünmüyor
                 </div>
                 <div class="support-info-line">
-                    Karşıdan inen kılavuzlar planlanan gemilere yetişebiliyor veya istasyonda serbest kılavuz mevcut.<br>
-                    Havuz: [N1: <strong>${calc.n1_kg_finished}</strong> | N2: <strong>${calc.n2_kg_active}</strong> | N3: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.poolSumKG} / ${calc.totalActivePilots}</strong>
+                    İstasyonlarda serbest kılavuz mevcut.<br>
+                    Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${totalInTransit} / ${calc.totalActivePilots}</strong>
                 </div>
             `;
         }
@@ -2329,7 +2354,7 @@
     }
 
     /* =========================================================
-       VERİ YÜKLEME VE GÖRÜNÜM (DOĞRUDAN VESSELFINDER LINK)
+       VERİ YÜKLEME VE GÖRÜNÜM (DOĞRUDAN VESSELFINDER CANLI HARİTA)
        ========================================================= */
 
     async function loadAllData() {
@@ -2415,13 +2440,9 @@
                 const isPilotless = assignedPilot === PILOTLESS_VALUE;
                 const isAssigned = !!assignedPilot && !isPilotless;
 
-                // VesselFinder Canlı Arama ve Takip Bağlantısı
-                let aisUrl = "";
-                if (ship.imo && String(ship.imo).length === 7) {
-                    aisUrl = `https://www.vesselfinder.com/vessels?name=${ship.imo}`;
-                } else {
-                    aisUrl = `https://www.vesselfinder.com/vessels?name=${encodeURIComponent(ship.name || "")}`;
-                }
+                // Doğrudan Canlı AIS Haritası Açma Linki
+                const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
+                const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
 
                 const displayTime = formatDisplayTime(ship.time, ship.planlama);
                 let cardClass = "ship-card";
