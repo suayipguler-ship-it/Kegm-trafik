@@ -1713,6 +1713,7 @@
         return ageHours > maxAge;
     }
 
+    // Rozetin yan yana kalması için sadeleştirilmiş "Gün / Saat:Dk" formatı (Örn: 29 / 13:00)
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
             const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
@@ -2118,7 +2119,7 @@
                         n_gk_finished++;
                     } else {
                         n3_gk_active++;
-                        if (!earliestGK_startTime || shipTime < earliestGK_startTime) earliestGK_startTime = shipTime;
+                        if (!earliestKG_startTime || shipTime < earliestKG_startTime) earliestKG_startTime = shipTime;
                     }
                 }
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
@@ -2197,7 +2198,7 @@
             if (isCapacityExhaustedGK && !canKGRelieve) {
                 warningGK = true;
                 if (minutesUntilDepartureGK <= 0) {
-                    isCriticalKG = true;
+                    isCriticalGK = true;
                 }
             }
         }
@@ -2280,7 +2281,7 @@
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameKG} (${calc.targetShipTimeStrKG})<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
                     🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
                     ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
@@ -2328,7 +2329,7 @@
     }
 
     /* =========================================================
-       VERİ YÜKLEME VE GÖRÜNÜM (DOĞRUDAN MARINETRAFFIC LINK)
+       VERİ YÜKLEME VE GÖRÜNÜM (DOĞRUDAN VESSELFINDER LINK)
        ========================================================= */
 
     async function loadAllData() {
@@ -2414,12 +2415,12 @@
                 const isPilotless = assignedPilot === PILOTLESS_VALUE;
                 const isAssigned = !!assignedPilot && !isPilotless;
 
-                // Doğrudan çalışan ve tablo hatasına düşmeyen evrensel gemi bağlantısı
+                // VesselFinder Canlı Arama ve Takip Bağlantısı
                 let aisUrl = "";
                 if (ship.imo && String(ship.imo).length === 7) {
-                    aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`;
+                    aisUrl = `https://www.vesselfinder.com/vessels?name=${ship.imo}`;
                 } else {
-                    aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/shipname:${encodeURIComponent(ship.name || "")}`;
+                    aisUrl = `https://www.vesselfinder.com/vessels?name=${encodeURIComponent(ship.name || "")}`;
                 }
 
                 const displayTime = formatDisplayTime(ship.time, ship.planlama);
