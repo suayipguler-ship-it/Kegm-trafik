@@ -7,6 +7,13 @@
 
     <title>BOĞAZ GEÇİŞ PLANLAMA</title>
 
+    <!-- PWA & Mobil Uygulama Desteği (Android & iOS Safari) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#050b14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2942/2942076.png">
+
     <style>
         * {
             box-sizing: border-box;
@@ -2134,7 +2141,7 @@
                 if (isKG) {
                     if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 } else if (isGK) {
-                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextGK_ship = ship;
+                    if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 }
             }
         });
@@ -2785,6 +2792,13 @@
         document.getElementById("btnRange12").classList.toggle("active", hours === 12);
         document.getElementById("btnRange24").classList.toggle("active", hours === 24);
         renderCurrentView();
+    }
+
+    // Service Worker Kaydı (PWA Çevrimdışı ve Hızlı Önbellek)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
     }
 
     window.onload = () => {
