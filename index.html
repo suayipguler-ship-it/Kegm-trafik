@@ -551,7 +551,7 @@
 
         /* =====================================================
            VARDİYA ERİŞİM (5 + 5 KUTU) MODAL STİLLERİ
-           ========================================================= */
+           ===================================================== */
 
         .auth-split-inputs {
             display: flex;
@@ -1089,7 +1089,7 @@
             <option value="G-K">GÜNEY → KUZEY</option>
         </select>
 
-        <div class="support-form-label">Saat (15 dk aralıklarla)</div>
+        <div class="support-form-label">Saat</div>
         <input type="time" id="supportTime" step="900">
 
         <div class="support-form-label">Vardiya Seçimi (Takviye Giden Kaptanlar İçin)</div>
@@ -1530,7 +1530,6 @@
 
     function handleShiftKeyInput(el) {
         el.value = el.value.toUpperCase();
-        // 1915 girildiği an doğrudan 2. kutuya atla
         if (el.value === "1915") {
             document.getElementById("txtShiftSicil").focus();
         } else if (el.value.length === 5) {
@@ -1542,7 +1541,6 @@
         el.value = el.value.replace(/\D/g, ""); // Sadece rakam
         const key = document.getElementById("txtShiftKey").value.trim().toUpperCase();
 
-        // 1915 + 1915 tamamlandığında anında giriş yap
         if (key === "1915" && el.value === "1915") {
             submitShiftAuth();
         } else if (key.length === 5 && el.value.length === 5) {
@@ -1615,9 +1613,6 @@
         const cyclePosition = ((diff % CYCLE_MS) + CYCLE_MS) % CYCLE_MS;
         const periodIndex = Math.floor(cyclePosition / FOUR_DAYS_MS); // 0, 1, 2
 
-        // Periyot 0: Vardiya 2 (2 Ekim 2026 12:00'da başlayan nöbet)
-        // Periyot 1: Vardiya 3
-        // Periyot 2: Vardiya 1
         const shiftMap = [2, 3, 1];
         return shiftMap[periodIndex];
     }
@@ -1804,11 +1799,9 @@
 
         const tabsBox = document.getElementById("pilotModalVardiyaTabs");
         if (isMasterAdmin) {
-            // Süper Yetkili: Vardiya sekmeleri açık, serbest geçiş
             tabsBox.style.display = "flex";
             switchVardiya(activeVardiya || 1);
         } else {
-            // Tek Vardiya: Diğer vardiyalar kilitli
             tabsBox.style.display = "none";
             activeVardiya = currentAuthShift;
             renderModalPilots();
@@ -1926,9 +1919,15 @@
 
         document.getElementById("supportModal").style.display = "flex";
         document.getElementById("supportDirection").value = direction || "K-G";
+
+        // Saati bir sonraki 15 dakikalık çeyreğe üste yuvarlama mantığı
         const now = new Date();
-        const hh = String(now.getHours()).padStart(2, "0");
-        const mm = String(now.getMinutes()).padStart(2, "0");
+        const remainder = now.getMinutes() % 15;
+        const minutesToAdd = remainder === 0 ? 0 : (15 - remainder);
+        const roundedDate = new Date(now.getTime() + minutesToAdd * 60000);
+        
+        const hh = String(roundedDate.getHours()).padStart(2, "0");
+        const mm = String(roundedDate.getMinutes()).padStart(2, "0");
         document.getElementById("supportTime").value = `${hh}:${mm}`;
 
         renderModalSupportAnalysis();
@@ -2132,7 +2131,6 @@
                     }
                 }
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
-                // 3.5 saat içindeki gelecek gemiler
                 if (isKG) {
                     if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 } else if (isGK) {
@@ -2148,7 +2146,7 @@
         const isCapacityExhaustedKG = poolSumKG >= totalActivePilots;
 
         let warningKG = false;
-        let isCriticalKG = false; // Son 1.5 saat içinde acil çıkış
+        let isCriticalKG = false;
         let departureTimeKG = null;
         let targetShipNameKG = "";
         let targetShipTimeStrKG = "";
@@ -2159,7 +2157,6 @@
             targetShipNameKG = nextKG_ship.name;
             targetShipTimeStrKG = formatDisplayTime(nextKG_ship.time, nextKG_ship.planlama);
             
-            // En geç araç çıkış saati = Gemi saati - 1.5 saat
             const latestDeparture = shipTime - ROAD_TRANSIT_MS;
             departureTimeKG = new Date(latestDeparture);
             minutesUntilDepartureKG = Math.round((latestDeparture - now) / 60000);
@@ -2169,14 +2166,13 @@
                 const gkPilotFinishTime = earliestGK_startTime + DURATION_GK_MS;
                 if (gkPilotFinishTime > shipTime) canGKRelieve = false;
             } else {
-                canGKRelieve = false; // Karşıdan gelen hiç gemi yoksa yetişemez
+                canGKRelieve = false;
             }
 
-            // Havuz doluysa ve karşıdan inen yetişemiyorsa erken uyarı başlar
             if (isCapacityExhaustedKG && !canGKRelieve) {
                 warningKG = true;
                 if (minutesUntilDepartureKG <= 0) {
-                    isCriticalKG = true; // Yola çıkış vakti geldi/geçiyor
+                    isCriticalKG = true;
                 }
             }
         }
@@ -2438,7 +2434,6 @@
                 if (isPilotless) cardClass += " pilotless";
                 else if (isAssigned) cardClass += " assigned";
 
-                // Mahremiyet Maskelemesi: Giriş yapılmamışsa pilot adını gizle
                 let pilotDisplayText = assignedPilot;
                 if (!currentAuthShift && isAssigned) {
                     pilotDisplayText = "KILAVUZ ATANDI";
