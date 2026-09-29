@@ -1266,15 +1266,12 @@
     const MAX_BOGAZDA_AGE_HOURS = 9;
     const SUPPORT_FILE_NAME = "takviye.json";
 
-    // 5 Karakterlik Bağımsız Vardiya Erişim Kodları
     const SHIFT_AUTH_KEYS = {
         "A2001": 1,
         "2X002": 2,
         "Z2003": 3
     };
 
-    // Referans Döngü: 2 Ekim 2026 Cuma 12:00 -> Vardiya 2 Başlangıcı
-    // 4 gün (96 saat) çalışma, 8 gün izin -> 12 günlük tam periyot
     const SHIFT_BASE_EPOCH = new Date("2026-10-02T12:00:00+03:00").getTime();
     const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
     const CYCLE_MS = 12 * 24 * 60 * 60 * 1000;
@@ -1400,10 +1397,9 @@
     let clickTimer = null;
     let currentFilteredStats = [];
 
-    // Oturum (Vardiya Mahremiyeti ve Master Yetki)
-    let currentAuthShift = null; // 1, 2, 3 veya 'ALL' (Süper Yetki)
-    let currentAuthSicil = "";   // 5 haneli sicil no veya '1915'
-    let isMasterAdmin = false;   // Tam Yetki Bayrağı
+    let currentAuthShift = null;
+    let currentAuthSicil = "";
+    let isMasterAdmin = false;
 
     /* =========================================================
        NORMALİZASYON VE TOKEN
@@ -1555,7 +1551,6 @@
         const sicil = document.getElementById("txtShiftSicil").value.trim();
         const err = document.getElementById("authErrMsg");
 
-        // SÜPER GİRİŞ KONTROLÜ (1915 + 1915)
         if (key === "1915" && sicil === "1915") {
             isMasterAdmin = true;
             currentAuthShift = "ALL";
@@ -1571,7 +1566,6 @@
             return;
         }
 
-        // STANDART 5 + 5 VARDİYA GİRİŞ KONTROLÜ
         if (key.length !== 5 || sicil.length !== 5) {
             err.innerText = "Lütfen 5 hane Vardiya Kodu ve 5 hane Sicil giriniz.";
             return;
@@ -1920,7 +1914,6 @@
         document.getElementById("supportModal").style.display = "flex";
         document.getElementById("supportDirection").value = direction || "K-G";
 
-        // Saati bir sonraki 15 dakikalık çeyreğe üste yuvarlama
         const now = new Date();
         const remainder = now.getMinutes() % 15;
         const minutesToAdd = remainder === 0 ? 0 : (15 - remainder);
@@ -2079,7 +2072,6 @@
 
     /* =========================================================
        GELİŞMİŞ ERKEN UYARILI TAKVİYE ANALİZ MOTORU
-       (1.5 Saat İntikal + 2.5-3.5 Saat Önceden Tahmin)
        ========================================================= */
 
     function calculateDynamicSupportNeeds(bogaz) {
@@ -2127,21 +2119,20 @@
                         n_gk_finished++;
                     } else {
                         n3_gk_active++;
-                        if (!earliestGK_startTime || shipTime < earliestKG_startTime) earliestGK_startTime = shipTime;
+                        if (!earliestGK_startTime || shipTime < earliestGK_startTime) earliestGK_startTime = shipTime;
                     }
                 }
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG) {
                     if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 } else if (isGK) {
-                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextGK_ship = ship;
+                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextKG_ship = ship;
                 }
             }
         });
 
         const totalActivePilots = getActiveVardiyaPilotCount();
 
-        // --- K-G YÖNÜ İÇİN ERKEN UYARI ANALİZİ ---
         const poolSumKG = n1_kg_finished + n2_kg_active + n3_gk_active;
         const isCapacityExhaustedKG = poolSumKG >= totalActivePilots;
 
@@ -2177,7 +2168,6 @@
             }
         }
 
-        // --- G-K YÖNÜ İÇİN SİMETRİK ERKEN UYARI ANALİZİ ---
         const poolSumGK = n_gk_finished + n3_gk_active + n2_kg_active;
         const isCapacityExhaustedGK = poolSumGK >= totalActivePilots;
 
@@ -2291,9 +2281,9 @@
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrGK})<br>
-                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
-                    ${calc.minutesUntilDepartureGK > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
+                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
+                    ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
 
@@ -2339,7 +2329,7 @@
     }
 
     /* =========================================================
-       VERİ YÜKLEME VE GÖRÜNÜM (MARINETRAFFIC DEEP-LINK ENTEGRE)
+       VERİ YÜKLEME VE GÖRÜNÜM (MARINETRAFFIC AKILLI BOY FİLTRELİ)
        ========================================================= */
 
     async function loadAllData() {
@@ -2425,12 +2415,35 @@
                 const isPilotless = assignedPilot === PILOTLESS_VALUE;
                 const isAssigned = !!assignedPilot && !isPilotless;
 
-                // MarineTraffic Deep Linking (App varsa App'te, yoksa Web'de doğrudan açılır; Google araya girmez)
+                // MarineTraffic Akıllı Arama & Boy/Tip Filtreleme
                 let aisUrl = "";
                 if (ship.imo && String(ship.imo).length === 7) {
                     aisUrl = `https://www.marinetraffic.com/en/ais/details/ships/imo:${ship.imo}`;
                 } else {
-                    aisUrl = `https://www.marinetraffic.com/en/ais/index/ships/all/keyword:${encodeURIComponent(ship.name || "")}`;
+                    const cleanName = encodeURIComponent(ship.name || "");
+                    let filterParams = `shipname=${cleanName}&quicksearch=1`;
+
+                    // Boy (LOA) bilgisi varsa ±2 metre toleransla aralık filtrele
+                    const rawLen = parseFloat(String(ship.len || "").replace(",", "."));
+                    if (!isNaN(rawLen) && rawLen > 0) {
+                        const minLen = Math.max(0, Math.floor(rawLen - 2));
+                        const maxLen = Math.ceil(rawLen + 2);
+                        filterParams += `&length_between=${minLen},${maxLen}`;
+                    }
+
+                    // Gemi Tipi Parametresi
+                    const typeNorm = normalizeStr(ship.type);
+                    if (typeNorm.includes("TANKER")) {
+                        filterParams += `&type_group=tanker`;
+                    } else if (typeNorm.includes("CARGO") || typeNorm.includes("DRY") || typeNorm.includes("DOKME")) {
+                        filterParams += `&type_group=cargo`;
+                    } else if (typeNorm.includes("CONTAINER") || typeNorm.includes("KONTEYNER")) {
+                        filterParams += `&type_group=container`;
+                    } else if (typeNorm.includes("TUG") || typeNorm.includes("ROMORKOR")) {
+                        filterParams += `&type_group=tug`;
+                    }
+
+                    aisUrl = `https://www.marinetraffic.com/en/data/?asset_type=vessels&columns=flag,shipname,photo,recognized_next_port,reported_eta,reported_destination,current_port,imo,ship_type,length,show_on_live_map&${filterParams}`;
                 }
 
                 const displayTime = formatDisplayTime(ship.time, ship.planlama);
