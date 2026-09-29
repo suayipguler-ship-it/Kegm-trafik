@@ -551,7 +551,7 @@
 
         /* =====================================================
            VARDİYA ERİŞİM (5 + 5 KUTU) MODAL STİLLERİ
-           ===================================================== */
+           ========================================================= */
 
         .auth-split-inputs {
             display: flex;
@@ -928,7 +928,7 @@
         <span id="cloudStatus"
               class="cloud-status"
               title="Senkronizasyon Durumu">
-            ☁️
+            ☁
         </span>
 
         <button class="btn-settings"
@@ -2079,73 +2079,169 @@
     }
 
     /* =========================================================
-       AKILLI KAPASİTE ANALİZİ
+       GELİŞMİŞ ERKEN UYARILI TAKVİYE ANALİZ MOTORU
+       (1.5 Saat İntikal + 2.5-3.5 Saat Önceden Tahmin)
        ========================================================= */
 
     function calculateDynamicSupportNeeds(bogaz) {
         const now = Date.now();
-        const twoHoursMs = 2 * 60 * 60 * 1000;
-        const returnTimeKG_to_GK = 3 * 60 * 60 * 1000; 
-        const returnTimeGK_to_KG = (3 * 60 + 45) * 60 * 1000;
+        const DURATION_KG_MS = 3.0 * 60 * 60 * 1000; // 3 saat
+        const DURATION_GK_MS = 3.5 * 60 * 60 * 1000; // 3.5 saat
+        const ROAD_TRANSIT_MS = 1.5 * 60 * 60 * 1000; // 1.5 saat karayolu intikali
+        const PREDICTION_WINDOW_MS = 3.5 * 60 * 60 * 1000; // 3.5 saate kadar olan planlı gemileri tara
 
-        let activeBogazdaCount = 0;
-        let demandKG = 0;
-        let demandGK = 0;
-        let returnedFromKG = 0; 
-        let returnedFromGK = 0; 
+        let n1_kg_finished = 0; // K-G etabını bitirmişler (>= 3 sa)
+        let n2_kg_active = 0;   // K-G boğazdakiler (< 3 sa)
+        let n3_gk_active = 0;   // G-K boğazdakiler (< 3.5 sa)
+        let n_gk_finished = 0;  // G-K etabını bitirmişler (>= 3.5 sa)
+
+        let earliestGK_startTime = null; // G-K'da en erken binen (en erken boşa çıkacak)
+        let earliestKG_startTime = null; // K-G'de en erken binen
+
+        let nextKG_ship = null; // K-G yönlü ilk planlı/hazır gemi
+        let nextGK_ship = null; // G-K yönlü ilk planlı/hazır gemi
 
         allShips.forEach(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return;
             if (isShipTooOldForLive(ship)) return;
             if (isShipPilotless(ship)) return;
 
-            const hareketNorm = normalizeStr(ship.hareket);
-            if (hareketNorm.includes("HAZIR")) return;
-
             const pilotReqVal = normalizeStr(ship.pilotReq);
             if (pilotReqVal === "HAYIR" || pilotReqVal === "NO" || pilotReqVal === "YOK") return;
 
             const isBog = isBogazdaShip(ship);
             const shipTime = getShipTimestamp(ship);
-            const inNextTwoHours = shipTime > 0 && shipTime >= now && (shipTime - now <= twoHoursMs);
-            const isPastOrCurrent = shipTime > 0 && shipTime <= now;
-
-            if (isBog) activeBogazdaCount++;
-
             const isKG = isNorthSouth(ship.yon);
             const isGK = isSouthNorth(ship.yon);
 
-            if (isBog || isPastOrCurrent || inNextTwoHours) {
-                if (isKG) demandKG++;
-                if (isGK) demandGK++;
-            }
-
-            if (shipTime > 0 && shipTime < now) {
+            if (isBog && shipTime > 0) {
                 const elapsed = now - shipTime;
-                if (isKG && elapsed >= returnTimeKG_to_GK) {
-                    returnedFromKG++; 
-                } else if (isGK && elapsed >= returnTimeGK_to_KG) {
-                    returnedFromGK++; 
+                if (isKG) {
+                    if (elapsed >= DURATION_KG_MS) {
+                        n1_kg_finished++;
+                    } else {
+                        n2_kg_active++;
+                        if (!earliestKG_startTime || shipTime < earliestKG_startTime) earliestKG_startTime = shipTime;
+                    }
+                } else if (isGK) {
+                    if (elapsed >= DURATION_GK_MS) {
+                        n_gk_finished++;
+                    } else {
+                        n3_gk_active++;
+                        if (!earliestGK_startTime || shipTime < earliestGK_startTime) earliestGK_startTime = shipTime;
+                    }
+                }
+            } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
+                // 3.5 saat içindeki gelecek gemiler
+                if (isKG) {
+                    if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
+                } else if (isGK) {
+                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextGK_ship = ship;
                 }
             }
         });
 
-        let totalCapacity = getActiveVardiyaPilotCount();
-        const availablePilots = Math.max(0, totalCapacity - activeBogazdaCount + Math.max(returnedFromKG, returnedFromGK));
-        const totalDemand = demandKG + demandGK;
-        const shortage = Math.max(0, totalDemand - availablePilots);
-        const warning = shortage > 0 || availablePilots === 0;
+        const totalActivePilots = getActiveVardiyaPilotCount();
+
+        // --- K-G YÖNÜ İÇİN ERKEN UYARI ANALİZİ ---
+        const poolSumKG = n1_kg_finished + n2_kg_active + n3_gk_active;
+        const isCapacityExhaustedKG = poolSumKG >= totalActivePilots;
+
+        let warningKG = false;
+        let isCriticalKG = false; // Son 1.5 saat içinde acil çıkış
+        let departureTimeKG = null;
+        let targetShipNameKG = "";
+        let targetShipTimeStrKG = "";
+        let minutesUntilDepartureKG = 0;
+
+        if (nextKG_ship) {
+            const shipTime = getShipTimestamp(nextKG_ship);
+            targetShipNameKG = nextKG_ship.name;
+            targetShipTimeStrKG = formatDisplayTime(nextKG_ship.time, nextKG_ship.planlama);
+            
+            // En geç araç çıkış saati = Gemi saati - 1.5 saat
+            const latestDeparture = shipTime - ROAD_TRANSIT_MS;
+            departureTimeKG = new Date(latestDeparture);
+            minutesUntilDepartureKG = Math.round((latestDeparture - now) / 60000);
+
+            let canGKRelieve = true;
+            if (earliestGK_startTime) {
+                const gkPilotFinishTime = earliestGK_startTime + DURATION_GK_MS;
+                if (gkPilotFinishTime > shipTime) canGKRelieve = false;
+            } else {
+                canGKRelieve = false; // Karşıdan gelen hiç gemi yoksa yetişemez
+            }
+
+            // Havuz doluysa ve karşıdan inen yetişemiyorsa erken uyarı başlar
+            if (isCapacityExhaustedKG && !canGKRelieve) {
+                warningKG = true;
+                if (minutesUntilDepartureKG <= 0) {
+                    isCriticalKG = true; // Yola çıkış vakti geldi/geçiyor
+                }
+            }
+        }
+
+        // --- G-K YÖNÜ İÇİN SİMETRİK ERKEN UYARI ANALİZİ ---
+        const poolSumGK = n_gk_finished + n3_gk_active + n2_kg_active;
+        const isCapacityExhaustedGK = poolSumGK >= totalActivePilots;
+
+        let warningGK = false;
+        let isCriticalGK = false;
+        let departureTimeGK = null;
+        let targetShipNameGK = "";
+        let targetShipTimeStrGK = "";
+        let minutesUntilDepartureGK = 0;
+
+        if (nextGK_ship) {
+            const shipTime = getShipTimestamp(nextGK_ship);
+            targetShipNameGK = nextGK_ship.name;
+            targetShipTimeStrGK = formatDisplayTime(nextGK_ship.time, nextGK_ship.planlama);
+            
+            const latestDeparture = shipTime - ROAD_TRANSIT_MS;
+            departureTimeGK = new Date(latestDeparture);
+            minutesUntilDepartureGK = Math.round((latestDeparture - now) / 60000);
+
+            let canKGRelieve = true;
+            if (earliestKG_startTime) {
+                const kgPilotFinishTime = earliestKG_startTime + DURATION_KG_MS;
+                if (kgPilotFinishTime > shipTime) canKGRelieve = false;
+            } else {
+                canKGRelieve = false;
+            }
+
+            if (isCapacityExhaustedGK && !canKGRelieve) {
+                warningGK = true;
+                if (minutesUntilDepartureGK <= 0) {
+                    isCriticalGK = true;
+                }
+            }
+        }
 
         return {
-            totalCapacity,
-            activeBogazdaCount,
-            availablePilots,
-            demandKG,
-            demandGK,
-            totalDemand,
-            shortage,
-            warning
+            totalActivePilots,
+            n1_kg_finished,
+            n2_kg_active,
+            n3_gk_active,
+            poolSumKG,
+            warningKG,
+            isCriticalKG,
+            targetShipNameKG,
+            targetShipTimeStrKG,
+            departureTimeKG,
+            minutesUntilDepartureKG,
+            warningGK,
+            isCriticalGK,
+            targetShipNameGK,
+            targetShipTimeStrGK,
+            departureTimeGK,
+            minutesUntilDepartureGK,
+            hasAnyWarning: warningKG || warningGK
         };
+    }
+
+    function formatClock(d) {
+        if (!d) return "--:--";
+        return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
     }
 
     function renderModalSupportAnalysis() {
@@ -2159,45 +2255,65 @@
         });
 
         const calc = calculateDynamicSupportNeeds(bogaz);
-        const panelClass = calc.warning ? "support-panel warning" : "support-panel ok";
+        const isCritical = calc.isCriticalKG || calc.isCriticalGK;
+        const panelClass = calc.hasAnyWarning 
+            ? (isCritical ? "support-panel warning" : "support-panel warning") 
+            : "support-panel ok";
 
         let html = `
-            <div class="${panelClass}">
+            <div class="${panelClass}" style="${!isCritical && calc.hasAnyWarning ? 'border-left-color:#f59e0b; background:#1c1912;' : ''}">
                 <div class="support-header-row">
-                    <div class="support-title-text">🚐 ANLIK TAKVİYE & DÖNÜŞ SÜRELİ ANALİZ</div>
+                    <div class="support-title-text">🚐 1.5 SAAT İNTİKALLİ ERKEN UYARI SİSTEMİ</div>
                     <div style="display:flex; align-items:center; gap:4px;">
                         <input type="number" 
                                id="modalManualCapacityInput" 
-                               value="${calc.totalCapacity}" 
+                               value="${calc.totalActivePilots}" 
                                min="1" max="50" 
                                class="support-count-badge-editable"
                                onchange="updateManualCapacity(this.value)"
                                title="Aktif Pilot Sayısını Düzenle">
-                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Aktif</span>
+                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
                     </div>
                 </div>
         `;
 
-        if (calc.warning) {
+        if (calc.hasAnyWarning) {
             html += `
-                <div style="color:#fca5a5; font-size:0.8rem; font-weight:800; margin-bottom:4px;">
-                    ⚠️ TAKVİYE İHTİYACI OLABİLİR (DÖNÜŞ SÜRELERİ DAHİL)
+                <div style="color:${isCritical ? '#fca5a5' : '#fbbf24'}; font-size:0.85rem; font-weight:800; margin-bottom:4px;">
+                    ${isCritical ? '🚨 ACİL: TAKVİYE ARACI HEMEN ÇIKMALI!' : '⏳ 2-3 SAAT ÖNCEDEN TAKVİYE ERKEN UYARISI'}
                 </div>
                 <div class="support-info-line">
-                    Aktif Vardiya Kapasite: <strong>${calc.totalCapacity}</strong> | 
-                    Boğazda: <strong>${calc.activeBogazdaCount}</strong> | 
-                    Net Müsait: <strong>${calc.availablePilots}</strong><br>
-                    2 Saatlik Talep (K→G: <strong>${calc.demandKG}</strong> | G→K: <strong>${calc.demandGK}</strong>)
-                    ${calc.shortage > 0 ? ` | Açık: <strong style="color:#fca5a5;">${calc.shortage}</strong>` : ""}
+            `;
+
+            if (calc.warningKG) {
+                html += `
+                    <strong>🧭 K-G Hedef:</strong> ${calc.targetShipNameKG} (${calc.targetShipTimeStrKG})<br>
+                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
+                    ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                `;
+            }
+
+            if (calc.warningGK) {
+                html += `
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrGK})<br>
+                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
+                    ${calc.minutesUntilDepartureGK > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                `;
+            }
+
+            html += `
+                    Havuz Dağılımı: [N1 Etabı Biten: <strong>${calc.n1_kg_finished}</strong> | N2 K-G: <strong>${calc.n2_kg_active}</strong> | N3 G-K: <strong>${calc.n3_gk_active}</strong>]<br>
+                    İstasyon Doluluğu: <strong>${calc.poolSumKG} / ${calc.totalActivePilots}</strong>
                 </div>
             `;
         } else {
             html += `
                 <div style="color:#86efac; font-size:0.8rem; font-weight:700; margin-bottom:4px;">
-                    ✅ Kılavuz Kapasitesi Yeterli
+                    ✅ Önümüzdeki 3.5 Saatte Takviye İhtiyacı Görünmüyor
                 </div>
                 <div class="support-info-line">
-                    Kapasite: <strong>${calc.totalCapacity}</strong> | Boğazda: <strong>${calc.activeBogazdaCount}</strong> | Net Müsait: <strong>${calc.availablePilots}</strong>
+                    Karşıdan inen kılavuzlar planlanan gemilere yetişebiliyor veya istasyonda serbest kılavuz mevcut.<br>
+                    Havuz: [N1: <strong>${calc.n1_kg_finished}</strong> | N2: <strong>${calc.n2_kg_active}</strong> | N3: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.poolSumKG} / ${calc.totalActivePilots}</strong>
                 </div>
             `;
         }
