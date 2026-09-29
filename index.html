@@ -914,7 +914,7 @@
     <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
 
     <div class="header-actions">
-        <!-- VARDİYA ERİŞİM BUTONU / ROZETİ -->
+        <!-- VARDİYA / ROOT ERİŞİM ROZETİ -->
         <button id="btnShiftAuthBadge"
                 class="btn-shift-auth"
                 onclick="handleShiftAuthClick()"
@@ -1001,7 +1001,7 @@
 </div>
 
 <!-- =========================================================
-     VARDİYA ERİŞİM (5 + 5 HANELİ) MODALI
+     VARDİYA ERİŞİM (5 + 5 / SÜPER 1915+1915) MODALI
      ========================================================= -->
 
 <div id="shiftAuthModal"
@@ -1022,7 +1022,7 @@
                    id="txtShiftKey"
                    class="auth-box-field"
                    maxlength="5"
-                   placeholder="V-KOD"
+                   placeholder="V-KOD / 1915"
                    autocomplete="off"
                    oninput="handleShiftKeyInput(this)">
 
@@ -1030,7 +1030,7 @@
                    id="txtShiftSicil"
                    class="auth-box-field"
                    maxlength="5"
-                   placeholder="SİCİL"
+                   placeholder="SİCİL / 1915"
                    autocomplete="off"
                    inputmode="numeric"
                    oninput="handleSicilInput(this)">
@@ -1274,8 +1274,8 @@
         "Z2003": 3
     };
 
-    // Referans Döngü: 2 Ekim 2026 12:00 -> Vardiya 2 Başlangıcı
-    // 4 gün (96 saat) çalışma, 8 gün izin -> 12 günlük toplam döngü
+    // Referans Döngü: 2 Ekim 2026 Cuma 12:00 -> Vardiya 2 Başlangıcı
+    // 4 gün (96 saat) çalışma, 8 gün izin -> 12 günlük tam periyot
     const SHIFT_BASE_EPOCH = new Date("2026-10-02T12:00:00+03:00").getTime();
     const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
     const CYCLE_MS = 12 * 24 * 60 * 60 * 1000;
@@ -1401,9 +1401,10 @@
     let clickTimer = null;
     let currentFilteredStats = [];
 
-    // Oturum (Vardiya Mahremiyeti)
-    let currentAuthShift = null; // 1, 2, 3
-    let currentAuthSicil = "";   // 5 haneli sicil no
+    // Oturum (Vardiya Mahremiyeti ve Master Yetki)
+    let currentAuthShift = null; // 1, 2, 3 veya 'ALL' (Süper Yetki)
+    let currentAuthSicil = "";   // 5 haneli sicil no veya '1915'
+    let isMasterAdmin = false;   // Tam Yetki Bayrağı
 
     /* =========================================================
        NORMALİZASYON VE TOKEN
@@ -1454,29 +1455,46 @@
     }
 
     /* =========================================================
-       VARDİYA MAHREMİYETİ & 5+5 GİRİŞ KONTROLLERİ
+       VARDİYA MAHREMİYETİ & 5+5 / 1915+1915 GİRİŞ KONTROLLERİ
        ========================================================= */
 
     function initAuthSession() {
         const savedShift = sessionStorage.getItem("kegm_auth_shift");
         const savedSicil = sessionStorage.getItem("kegm_auth_sicil");
         if (savedShift && savedSicil) {
-            currentAuthShift = parseInt(savedShift, 10);
-            currentAuthSicil = savedSicil;
-            activeVardiya = currentAuthShift;
-            supportActiveVardiya = currentAuthShift;
+            if (savedShift === "ALL" && savedSicil === "1915") {
+                isMasterAdmin = true;
+                currentAuthShift = "ALL";
+                currentAuthSicil = "1915";
+            } else {
+                isMasterAdmin = false;
+                currentAuthShift = parseInt(savedShift, 10);
+                currentAuthSicil = savedSicil;
+                activeVardiya = currentAuthShift;
+                supportActiveVardiya = currentAuthShift;
+            }
         }
         updateAuthBadgeUI();
     }
 
     function updateAuthBadgeUI() {
         const badge = document.getElementById("btnShiftAuthBadge");
-        if (currentAuthShift) {
+        if (isMasterAdmin) {
             badge.classList.add("active");
+            badge.style.borderColor = "#f59e0b";
+            badge.style.color = "#fbbf24";
+            badge.innerHTML = `👑 ROOT (1915)`;
+            badge.title = "Süper Yönetici Oturumunu Kapat";
+        } else if (currentAuthShift) {
+            badge.classList.add("active");
+            badge.style.borderColor = "#22c55e";
+            badge.style.color = "#4ade80";
             badge.innerHTML = `🟢 V-${currentAuthShift} (#${currentAuthSicil})`;
             badge.title = "Vardiya oturumunu kapatmak için tıklayın";
         } else {
             badge.classList.remove("active");
+            badge.style.borderColor = "#334155";
+            badge.style.color = "#94a3b8";
             badge.innerHTML = `🔒 Vardiya Girişi`;
             badge.title = "Vardiya ve sicil ile giriş yap";
         }
@@ -1484,12 +1502,14 @@
 
     function handleShiftAuthClick() {
         if (currentAuthShift) {
-            const confirmed = confirm(`Vardiya ${currentAuthShift} (Sicil: ${currentAuthSicil}) oturumunu kapatmak istiyor musunuz?`);
+            const roleName = isMasterAdmin ? "SÜPER YÖNETİCİ (1915)" : `Vardiya ${currentAuthShift} (Sicil: ${currentAuthSicil})`;
+            const confirmed = confirm(`${roleName} oturumunu kapatmak istiyor musunuz?`);
             if (confirmed) {
                 sessionStorage.removeItem("kegm_auth_shift");
                 sessionStorage.removeItem("kegm_auth_sicil");
                 currentAuthShift = null;
                 currentAuthSicil = "";
+                isMasterAdmin = false;
                 updateAuthBadgeUI();
                 renderCurrentView();
             }
@@ -1513,14 +1533,22 @@
 
     function handleShiftKeyInput(el) {
         el.value = el.value.toUpperCase();
-        if (el.value.length === 5) {
+        // 1915 girildiği an doğrudan 2. kutuya atla
+        if (el.value === "1915") {
+            document.getElementById("txtShiftSicil").focus();
+        } else if (el.value.length === 5) {
             document.getElementById("txtShiftSicil").focus();
         }
     }
 
     function handleSicilInput(el) {
         el.value = el.value.replace(/\D/g, ""); // Sadece rakam
-        if (el.value.length === 5 && document.getElementById("txtShiftKey").value.length === 5) {
+        const key = document.getElementById("txtShiftKey").value.trim().toUpperCase();
+
+        // 1915 + 1915 tamamlandığında anında giriş yap
+        if (key === "1915" && el.value === "1915") {
+            submitShiftAuth();
+        } else if (key.length === 5 && el.value.length === 5) {
             submitShiftAuth();
         }
     }
@@ -1530,6 +1558,23 @@
         const sicil = document.getElementById("txtShiftSicil").value.trim();
         const err = document.getElementById("authErrMsg");
 
+        // SÜPER GİRİŞ KONTROLÜ (1915 + 1915)
+        if (key === "1915" && sicil === "1915") {
+            isMasterAdmin = true;
+            currentAuthShift = "ALL";
+            currentAuthSicil = "1915";
+
+            sessionStorage.setItem("kegm_auth_shift", "ALL");
+            sessionStorage.setItem("kegm_auth_sicil", "1915");
+
+            err.innerText = "";
+            document.getElementById("shiftAuthModal").style.display = "none";
+            updateAuthBadgeUI();
+            renderCurrentView();
+            return;
+        }
+
+        // STANDART 5 + 5 VARDİYA GİRİŞ KONTROLÜ
         if (key.length !== 5 || sicil.length !== 5) {
             err.innerText = "Lütfen 5 hane Vardiya Kodu ve 5 hane Sicil giriniz.";
             return;
@@ -1540,6 +1585,7 @@
             return;
         }
 
+        isMasterAdmin = false;
         const shiftNo = SHIFT_AUTH_KEYS[key];
         currentAuthShift = shiftNo;
         currentAuthSicil = sicil;
@@ -1563,7 +1609,7 @@
         if (!timestamp || timestamp <= 0) return null;
         
         // K-G devir saati: 12:00 (+0 saat)
-        // G-K devir saati: 14:00 (+2 saat gecikmeli)
+        // G-K devir saati: 14:00 (+2 saat gecikmeli devir)
         const isGK = isSouthNorth(yonStr);
         const shiftOffset = isGK ? (2 * 60 * 60 * 1000) : 0;
         const effectiveEpoch = SHIFT_BASE_EPOCH + shiftOffset;
@@ -1572,7 +1618,7 @@
         const cyclePosition = ((diff % CYCLE_MS) + CYCLE_MS) % CYCLE_MS;
         const periodIndex = Math.floor(cyclePosition / FOUR_DAYS_MS); // 0, 1, 2
 
-        // Periyot 0: Vardiya 2 (2 Ekim öğlen başlayan)
+        // Periyot 0: Vardiya 2 (2 Ekim 2026 12:00'da başlayan nöbet)
         // Periyot 1: Vardiya 3
         // Periyot 2: Vardiya 1
         const shiftMap = [2, 3, 1];
@@ -1759,12 +1805,15 @@
             pilotlessButton.innerText = "🚫 BU GEMİ PİLOTSUZ";
         }
 
-        // Giriş yapan vardiyayı zorunlu kıl ve sekmeleri kilitle
-        activeVardiya = currentAuthShift;
         const tabsBox = document.getElementById("pilotModalVardiyaTabs");
-        tabsBox.style.display = "none"; // Diğer vardiyalara müdahaleyi kapat
-
-        renderModalPilots();
+        if (isMasterAdmin) {
+            tabsBox.style.display = "flex";
+            switchVardiya(activeVardiya || 1);
+        } else {
+            tabsBox.style.display = "none";
+            activeVardiya = currentAuthShift;
+            renderModalPilots();
+        }
     }
 
     function closeModal(e) {
@@ -1885,11 +1934,15 @@
 
         renderModalSupportAnalysis();
 
-        // Takviye paneli de aktif vardiyaya kilitlenir
-        supportActiveVardiya = currentAuthShift;
         const tabsBox = document.getElementById("supportModalVardiyaTabs");
-        tabsBox.style.display = "none";
-        renderSupportPilotList();
+        if (isMasterAdmin) {
+            tabsBox.style.display = "flex";
+            switchSupportVardiya(supportActiveVardiya || 1);
+        } else {
+            tabsBox.style.display = "none";
+            supportActiveVardiya = currentAuthShift;
+            renderSupportPilotList();
+        }
     }
 
     function closeSupportModal(e) {
@@ -2270,7 +2323,7 @@
                 if (isPilotless) cardClass += " pilotless";
                 else if (isAssigned) cardClass += " assigned";
 
-                // Mahremiyet Maskelemesi: Giriş yapılmamışsa pilot adını gösterme
+                // Mahremiyet Maskelemesi: Giriş yapılmamışsa pilot adını gizle
                 let pilotDisplayText = assignedPilot;
                 if (!currentAuthShift && isAssigned) {
                     pilotDisplayText = "KILAVUZ ATANDI";
@@ -2431,7 +2484,6 @@
         const period = document.getElementById("statFilterPeriod").value;
         const now = Date.now();
         if (period === "current_shift") {
-            // Son 4 günlük blok (96 saat)
             return now - FOUR_DAYS_MS;
         }
         if (period === "12h") return now - (12 * 60 * 60 * 1000);
