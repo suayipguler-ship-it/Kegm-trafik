@@ -202,7 +202,7 @@
         }
 
         /* =====================================================
-           CANLI PLANLAMA
+           CANLI PLANLAMA (YAN YANA SABİT BAŞLIK VE ROZET)
            ===================================================== */
 
         .ship-card {
@@ -227,7 +227,7 @@
         .ship-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             gap: 8px;
             margin-bottom: 6px;
         }
@@ -241,6 +241,7 @@
             line-height: 1.3;
             word-break: break-word;
             flex: 1;
+            min-width: 0;
         }
 
         .ship-name-link:active {
@@ -258,7 +259,7 @@
             align-items: center;
             background: #1e293b;
             border: 1px solid #d97706;
-            padding: 4px 8px;
+            padding: 4px 7px;
             border-radius: 6px;
             white-space: nowrap;
             flex-shrink: 0;
@@ -267,15 +268,15 @@
         }
 
         .time-prefix {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #94a3b8;
-            margin-right: 6px;
+            margin-right: 5px;
             letter-spacing: 0.3px;
         }
 
         .time-val {
-            font-size: 1.05rem;
+            font-size: 0.98rem;
             font-weight: 800;
             color: #fbbf24;
             letter-spacing: 0.5px;
@@ -899,12 +900,6 @@
         }
 
         @media (max-width: 380px) {
-            .ship-header {
-                flex-direction: column;
-            }
-            .ship-time-badge {
-                align-self: flex-start;
-            }
             .stats-summary-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -1545,7 +1540,7 @@
     }
 
     function handleSicilInput(el) {
-        el.value = el.value.replace(/\D/g, ""); // Sadece rakam
+        el.value = el.value.replace(/\D/g, "");
         const key = document.getElementById("txtShiftKey").value.trim().toUpperCase();
 
         if (key === "1915" && el.value === "1915") {
@@ -1610,15 +1605,13 @@
     function getShiftForShip(timestamp, yonStr) {
         if (!timestamp || timestamp <= 0) return null;
         
-        // K-G devir saati: 12:00 (+0 saat)
-        // G-K devir saati: 14:00 (+2 saat gecikmeli devir)
         const isGK = isSouthNorth(yonStr);
         const shiftOffset = isGK ? (2 * 60 * 60 * 1000) : 0;
         const effectiveEpoch = SHIFT_BASE_EPOCH + shiftOffset;
 
         const diff = timestamp - effectiveEpoch;
         const cyclePosition = ((diff % CYCLE_MS) + CYCLE_MS) % CYCLE_MS;
-        const periodIndex = Math.floor(cyclePosition / FOUR_DAYS_MS); // 0, 1, 2
+        const periodIndex = Math.floor(cyclePosition / FOUR_DAYS_MS);
 
         const shiftMap = [2, 3, 1];
         return shiftMap[periodIndex];
@@ -1655,7 +1648,7 @@
     }
 
     /* =========================================================
-       ZAMAN PARSE VE TARİH YARDIMCILARI
+       ZAMAN PARSE VE TARİH YARDIMCILARI (GÜN / SAAT DÜZENİ)
        ========================================================= */
 
     function parseTimeString(timeStr) {
@@ -1726,26 +1719,26 @@
         return ageHours > maxAge;
     }
 
+    // Rozetin yan yana kalması için sadeleştirilmiş "Gün / Saat:Dk" formatı (Örn: 29 / 13:00)
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
             const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
-            if (pMatch) return `${pMatch[1]}.${pMatch[2]} - ${pMatch[3]}`;
+            if (pMatch) return `${pMatch[1]} / ${pMatch[3]}`;
         }
         if (!timeStr) return "-";
         if (String(timeStr).includes("T")) {
             const d = new Date(timeStr);
             if (!isNaN(d.getTime())) {
                 const day = String(d.getDate()).padStart(2, "0");
-                const month = String(d.getMonth() + 1).padStart(2, "0");
                 const hour = String(d.getHours()).padStart(2, "0");
                 const min = String(d.getMinutes()).padStart(2, "0");
-                return `${day}.${month} - ${hour}:${min}`;
+                return `${day} / ${hour}:${min}`;
             }
         }
         const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/);
-        if (fullMatch) return `${fullMatch[1]}.${fullMatch[2]} - ${fullMatch[3]}`;
+        if (fullMatch) return `${fullMatch[1]} / ${fullMatch[3]}`;
         const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}:\d{2})/);
-        if (shortMatch) return `${shortMatch[1]}.${shortMatch[2]} - ${shortMatch[3]}`;
+        if (shortMatch) return `${shortMatch[1]} / ${shortMatch[3]}`;
         const timeOnly = String(timeStr).match(/(\d{1,2}:\d{2})/);
         if (timeOnly) return timeOnly[1];
         return timeStr;
@@ -1927,7 +1920,7 @@
         document.getElementById("supportModal").style.display = "flex";
         document.getElementById("supportDirection").value = direction || "K-G";
 
-        // Saati bir sonraki 15 dakikalık çeyreğe üste yuvarlama mantığı
+        // Saati bir sonraki 15 dakikalık çeyreğe üste yuvarlama
         const now = new Date();
         const remainder = now.getMinutes() % 15;
         const minutesToAdd = remainder === 0 ? 0 : (15 - remainder);
@@ -2091,21 +2084,21 @@
 
     function calculateDynamicSupportNeeds(bogaz) {
         const now = Date.now();
-        const DURATION_KG_MS = 3.0 * 60 * 60 * 1000; // 3 saat
-        const DURATION_GK_MS = 3.5 * 60 * 60 * 1000; // 3.5 saat
-        const ROAD_TRANSIT_MS = 1.5 * 60 * 60 * 1000; // 1.5 saat karayolu intikali
-        const PREDICTION_WINDOW_MS = 3.5 * 60 * 60 * 1000; // 3.5 saate kadar olan planlı gemileri tara
+        const DURATION_KG_MS = 3.0 * 60 * 60 * 1000;
+        const DURATION_GK_MS = 3.5 * 60 * 60 * 1000;
+        const ROAD_TRANSIT_MS = 1.5 * 60 * 60 * 1000;
+        const PREDICTION_WINDOW_MS = 3.5 * 60 * 60 * 1000;
 
-        let n1_kg_finished = 0; // K-G etabını bitirmişler (>= 3 sa)
-        let n2_kg_active = 0;   // K-G boğazdakiler (< 3 sa)
-        let n3_gk_active = 0;   // G-K boğazdakiler (< 3.5 sa)
-        let n_gk_finished = 0;  // G-K etabını bitirmişler (>= 3.5 sa)
+        let n1_kg_finished = 0;
+        let n2_kg_active = 0;
+        let n3_gk_active = 0;
+        let n_gk_finished = 0;
 
-        let earliestGK_startTime = null; // G-K'da en erken binen (en erken boşa çıkacak)
-        let earliestKG_startTime = null; // K-G'de en erken binen
+        let earliestGK_startTime = null;
+        let earliestKG_startTime = null;
 
-        let nextKG_ship = null; // K-G yönlü ilk planlı/hazır gemi
-        let nextGK_ship = null; // G-K yönlü ilk planlı/hazır gemi
+        let nextKG_ship = null;
+        let nextGK_ship = null;
 
         allShips.forEach(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return;
@@ -2141,7 +2134,7 @@
                 if (isKG) {
                     if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 } else if (isGK) {
-                    if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
+                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextGK_ship = ship;
                 }
             }
         });
@@ -2298,9 +2291,9 @@
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrGK})<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
                     🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
-                    ${calc.minutesUntilDepartureGK > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                    ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
 
