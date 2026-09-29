@@ -40,7 +40,27 @@
         .header-actions {
             display: flex;
             align-items: center;
+            gap: 6px;
+        }
+
+        .btn-shift-auth {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
             gap: 4px;
+        }
+
+        .btn-shift-auth.active {
+            background: #064e3b;
+            border-color: #22c55e;
+            color: #4ade80;
         }
 
         .btn-settings,
@@ -412,7 +432,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 999;
             align-items: flex-end;
         }
@@ -527,6 +547,39 @@
             color: #e2e8f0;
             text-align: center;
             font-weight: 700;
+        }
+
+        /* =====================================================
+           VARDİYA ERİŞİM (5 + 5 KUTU) MODAL STİLLERİ
+           ===================================================== */
+
+        .auth-split-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .auth-box-field {
+            flex: 1;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid #38bdf8;
+            background: #070d1a;
+            color: #38bdf8;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .auth-box-field::placeholder {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: normal;
+            text-transform: none;
+            color: #475569;
         }
 
         /* =====================================================
@@ -668,7 +721,7 @@
         }
 
         /* =====================================================
-           AYAR
+           AYARLAR & MODAL STANDARTLARI
            ===================================================== */
 
         .settings-content {
@@ -858,10 +911,16 @@
 <body>
 
 <div class="header">
-
     <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
 
     <div class="header-actions">
+        <!-- VARDİYA ERİŞİM BUTONU / ROZETİ -->
+        <button id="btnShiftAuthBadge"
+                class="btn-shift-auth"
+                onclick="handleShiftAuthClick()"
+                title="Vardiya Girişi">
+            🔒 Giriş Yap
+        </button>
 
         <button class="btn-header-support"
                 onclick="openSupportModal()"
@@ -880,741 +939,352 @@
                 title="Ayarlar">
             ⚙️
         </button>
-
     </div>
-
 </div>
 
-
 <div class="nav-tabs">
-
     <button id="tabLive"
             class="btn-tab active"
             onclick="switchMode('live')">
-
         📋 Canlı Planlama
-
     </button>
 
     <button id="tabHistory"
             class="btn-tab"
             onclick="switchMode('history')">
-
         📜 Kılavuzlu Geçiş Logu
-
     </button>
-
 </div>
 
-
 <div class="filter-card">
-
     <input type="text"
            id="txtShipSearch"
            class="search-box"
            placeholder="🔍 Gemi Adı Ara..."
            oninput="renderCurrentView()">
 
-
     <div class="filter-row">
-
-        <select id="selBogaz"
-                onchange="renderCurrentView()">
-
-            <option value="ÇANAKKALE">
-                ÇANAKKALE
-            </option>
-
-            <option value="İSTANBUL">
-                İSTANBUL
-            </option>
-
+        <select id="selBogaz" onchange="renderCurrentView()">
+            <option value="ÇANAKKALE">ÇANAKKALE</option>
+            <option value="İSTANBUL">İSTANBUL</option>
         </select>
 
-
-        <select id="selYon"
-                onchange="renderCurrentView()">
-
-            <option value="GÜNEY-KUZEY">
-                GÜNEY-KUZEY
-            </option>
-
-            <option value="KUZEY-GÜNEY">
-                KUZEY-GÜNEY
-            </option>
-
+        <select id="selYon" onchange="renderCurrentView()">
+            <option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
+            <option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
         </select>
-
     </div>
 
-
-    <select id="selHareket"
-            onchange="renderCurrentView()">
-
-        <option value="PLAN. GEÇİŞ">
-            PLAN. GEÇİŞ
-        </option>
-
-        <option value="GEÇİŞE HAZIR">
-            GEÇİŞE HAZIR
-        </option>
-
-        <option value="BOĞAZDA">
-            BOĞAZDA
-        </option>
-
+    <select id="selHareket" onchange="renderCurrentView()">
+        <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
+        <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
+        <option value="BOĞAZDA">BOĞAZDA</option>
     </select>
 
-
-    <div id="logRangeBox"
-         class="log-range-row">
-
-        <button class="btn-range active"
-                id="btnRange6"
-                onclick="setLogHours(6)">
-
-            Son 6 Saat
-
-        </button>
-
-        <button class="btn-range"
-                id="btnRange12"
-                onclick="setLogHours(12)">
-
-            Son 12 Saat
-
-        </button>
-
-        <button class="btn-range"
-                id="btnRange24"
-                onclick="setLogHours(24)">
-
-            Son 24 Saat
-
-        </button>
-
+    <div id="logRangeBox" class="log-range-row">
+        <button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
+        <button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
+        <button class="btn-range" id="btnRange24" onclick="setLogHours(24)">Son 24 Saat</button>
     </div>
 
-
-    <button class="btn-search"
-            onclick="loadAllData()">
-
+    <button class="btn-search" onclick="loadAllData()">
         Listeyi Yenile
-
     </button>
-
 </div>
 
-
-<div id="shipContainer"
-     class="ship-list">
-
-    <div class="status-msg">
-        Veriler yükleniyor...
-    </div>
-
+<div id="shipContainer" class="ship-list">
+    <div class="status-msg">Veriler yükleniyor...</div>
 </div>
 
-
-<div class="telemetry-footer"
-     onclick="triggerSecretDiagnosis()">
-
+<div class="telemetry-footer" onclick="triggerSecretDiagnosis()">
     ● NMEA-0183 Telemetri Aktif [v2.4.1] | Port: 4001
-
 </div>
 
+<!-- =========================================================
+     VARDİYA ERİŞİM (5 + 5 HANELİ) MODALI
+     ========================================================= -->
+
+<div id="shiftAuthModal"
+     class="modal-overlay"
+     onclick="closeShiftAuthModal(event)">
+    <div class="modal-content settings-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3>🔐 Vardiya & Sicil Girişi</h3>
+            <button class="btn-close" onclick="closeShiftAuthModal()">✕</button>
+        </div>
+
+        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
+            Kılavuz atama ve vardiya işlemlerine erişmek için <strong>5 haneli Vardiya Kodu</strong> ve <strong>5 haneli Kurum Sicil No</strong> giriniz:
+        </div>
+
+        <div class="auth-split-inputs">
+            <input type="password"
+                   id="txtShiftKey"
+                   class="auth-box-field"
+                   maxlength="5"
+                   placeholder="V-KOD"
+                   autocomplete="off"
+                   oninput="handleShiftKeyInput(this)">
+
+            <input type="text"
+                   id="txtShiftSicil"
+                   class="auth-box-field"
+                   maxlength="5"
+                   placeholder="SİCİL"
+                   autocomplete="off"
+                   inputmode="numeric"
+                   oninput="handleSicilInput(this)">
+        </div>
+
+        <div id="authErrMsg" style="color:#ef4444; font-size:0.75rem; text-align:center; min-height:16px;"></div>
+
+        <button class="btn-search" style="margin-top:4px;" onclick="submitShiftAuth()">
+            Giriş Yap
+        </button>
+    </div>
+</div>
 
 <!-- =========================================================
      PİLOT SEÇİM MODALI
      ========================================================= -->
 
-<div id="pilotModal"
-     class="modal-overlay"
-     onclick="closeModal(event)">
-
-    <div class="modal-content"
-         onclick="event.stopPropagation()">
-
+<div id="pilotModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
-
-            <h3 id="modalShipTitle">
-                Kılavuz Kaptan Ata
-            </h3>
-
-            <button class="btn-close"
-                    onclick="closeModal()">
-
-                ✕
-
-            </button>
-
+            <h3 id="modalShipTitle">Kılavuz Kaptan Ata</h3>
+            <button class="btn-close" onclick="closeModal()">✕</button>
         </div>
 
-
-        <button id="btnPilotless"
-                class="btn-pilot-item btn-pilotless"
-                onclick="markShipAsPilotless()">
-
+        <button id="btnPilotless" class="btn-pilot-item btn-pilotless" onclick="markShipAsPilotless()">
             🚫 BU GEMİ PİLOTSUZ
-
         </button>
 
-
-        <div style="
-            font-size:0.72rem;
-            color:#94a3b8;
-            line-height:1.3;
-            text-align:center;
-            margin-top:-3px;
-            margin-bottom:2px;
-        ">
-
-            Pilotsuz işaretlenen gemi kılavuzlu geçiş
-            logunda ve istatistiklerde gösterilmez.
-
+        <div style="font-size:0.72rem; color:#94a3b8; line-height:1.3; text-align:center; margin-top:-3px; margin-bottom:2px;">
+            Pilotsuz işaretlenen gemi kılavuzlu geçiş logunda ve istatistiklerde gösterilmez.
         </div>
 
-
-        <div class="vardiya-tabs">
-
-            <button id="tabV1"
-                    class="btn-v-tab active"
-                    onclick="switchVardiya(1)">
-
-                Çanakkale-1
-
-            </button>
-
-            <button id="tabV2"
-                    class="btn-v-tab"
-                    onclick="switchVardiya(2)">
-
-                Çanakkale-2
-
-            </button>
-
-            <button id="tabV3"
-                    class="btn-v-tab"
-                    onclick="switchVardiya(3)">
-
-                Çanakkale-3
-
-            </button>
-
+        <div class="vardiya-tabs" id="pilotModalVardiyaTabs">
+            <button id="tabV1" class="btn-v-tab active" onclick="switchVardiya(1)">Çanakkale-1</button>
+            <button id="tabV2" class="btn-v-tab" onclick="switchVardiya(2)">Çanakkale-2</button>
+            <button id="tabV3" class="btn-v-tab" onclick="switchVardiya(3)">Çanakkale-3</button>
         </div>
 
-
-        <div id="pilotListContainer"
-             class="pilot-list-box">
-        </div>
-
+        <div id="pilotListContainer" class="pilot-list-box"></div>
     </div>
-
 </div>
-
 
 <!-- =========================================================
      TAKVİYE MODALI (ANALİZ + 5 GÜNLÜK LİSTE + SEÇİM)
      ========================================================= -->
 
-<div id="supportModal"
-     class="modal-overlay"
-     onclick="closeSupportModal(event)">
-
-    <div class="modal-content support-modal-content"
-         onclick="event.stopPropagation()">
-
+<div id="supportModal" class="modal-overlay" onclick="closeSupportModal(event)">
+    <div class="modal-content support-modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
-
-            <h3 style="color:#fbbf24;">
-                🚐 ANLIK TAKVİYE DURUMU
-            </h3>
-
-            <button class="btn-close"
-                    onclick="closeSupportModal()">
-
-                ✕
-
-            </button>
-
+            <h3 style="color:#fbbf24;">🚐 ANLIK TAKVİYE DURUMU</h3>
+            <button class="btn-close" onclick="closeSupportModal()">✕</button>
         </div>
 
-        <!-- ANALİZ PANELİ VE 5 GÜNLÜK GEÇMİŞ (MODAL İÇİNDE) -->
         <div id="modalSupportAnalysisContainer"></div>
 
-        <div class="support-form-label" style="margin-top:6px;">
-            Yön
-        </div>
-
+        <div class="support-form-label" style="margin-top:6px;">Yön</div>
         <select id="supportDirection">
             <option value="K-G">KUZEY → GÜNEY</option>
             <option value="G-K">GÜNEY → KUZEY</option>
         </select>
 
+        <div class="support-form-label">Saat (15 dk aralıklarla)</div>
+        <input type="time" id="supportTime" step="900">
 
-        <div class="support-form-label">
-            Saat (15 dk aralıklarla)
-        </div>
-
-        <!-- 15 dakikalık dilimler için step="900" eklendi -->
-        <input type="time"
-               id="supportTime"
-               step="900">
-
-
-        <div class="support-form-label">
-            Vardiya Seçimi (Takviye Giden Kaptanlar İçin)
-        </div>
-
-        <div class="vardiya-tabs">
+        <div class="support-form-label">Vardiya Seçimi (Takviye Giden Kaptanlar İçin)</div>
+        <div class="vardiya-tabs" id="supportModalVardiyaTabs">
             <button id="supportTabV1" class="btn-v-tab active" onclick="switchSupportVardiya(1)">Vardiya-1</button>
             <button id="supportTabV2" class="btn-v-tab" onclick="switchSupportVardiya(2)">Vardiya-2</button>
             <button id="supportTabV3" class="btn-v-tab" onclick="switchSupportVardiya(3)">Vardiya-3</button>
         </div>
 
+        <div id="supportPilotList" class="support-pilot-list"></div>
 
-        <!-- Çoklu seçilebilir onay kutulu pilot listesi kutusu -->
-        <div id="supportPilotList"
-             class="support-pilot-list">
-        </div>
-
-
-        <div id="supportSelectedCount"
-             class="support-selected-count" style="color:#fbbf24; font-weight:800; font-size:0.8rem; text-align:center;">
+        <div id="supportSelectedCount" style="color:#fbbf24; font-weight:800; font-size:0.8rem; text-align:center;">
             0 kılavuz seçildi.
         </div>
 
-
-        <button class="btn-search btn-support"
-                onclick="saveSupportRecord()">
+        <button class="btn-search btn-support" onclick="saveSupportRecord()">
             🚐 TAKVİYEYİ KAYDET
         </button>
-
     </div>
-
 </div>
-
 
 <!-- =========================================================
      AYAR / GITHUB TOKEN MODALI
      ========================================================= -->
 
-<div id="settingsModal"
-     class="modal-overlay"
-     onclick="closeSettingsModal(event)">
-
-    <div class="modal-content settings-content"
-         onclick="event.stopPropagation()">
-
+<div id="settingsModal" class="modal-overlay" onclick="closeSettingsModal(event)">
+    <div class="modal-content settings-content" onclick="event.stopPropagation()">
         <div class="modal-header">
-
-            <h3>
-                GitHub Bulut Senkronizasyonu
-            </h3>
-
-            <button class="btn-close"
-                    onclick="closeSettingsModal()">
-
-                ✕
-
-            </button>
-
+            <h3>GitHub Bulut Senkronizasyonu</h3>
+            <button class="btn-close" onclick="closeSettingsModal()">✕</button>
         </div>
 
-
-        <div style="
-            font-size:0.8rem;
-            color:#94a3b8;
-            line-height:1.4;
-        ">
-
-            Atamaların ve TAKVİYE kayıtlarının tüm
-            cihazlarda kalıcı olması için GitHub Token
-            kodunu kaydedin:
-
+        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
+            Atamaların ve TAKVİYE kayıtlarının tüm cihazlarda kalıcı olması için GitHub Token kodunu kaydedin:
         </div>
 
-
-        <input type="password"
-               id="txtGithubToken"
-               placeholder="github_pat_..."
-               style="margin-top:6px;">
-
-
-        <button class="btn-search"
-                onclick="saveSettings()">
-
-            Kaydet ve Bağlan
-
-        </button>
-
+        <input type="password" id="txtGithubToken" placeholder="github_pat_..." style="margin-top:6px;">
+        <button class="btn-search" onclick="saveSettings()">Kaydet ve Bağlan</button>
     </div>
-
 </div>
 
-
 <!-- =========================================================
-     SAHTE HATA MODALI
+     SAHTE HATA MODALI (SYSADMIN 1915)
      ========================================================= -->
 
-<div id="fakeErrorModal"
-     class="modal-overlay"
-     onclick="closeFakeErrorModal(event)">
-
-    <div class="modal-content fake-error-content"
-         onclick="event.stopPropagation()">
-
-        <div class="modal-header"
-             style="border-bottom-color:#7f1d1d;">
-
-            <span class="fake-error-title">
-                ⚠️ SYSTEM EXCEPTION: 0x800403
-            </span>
-
-            <button class="btn-close"
-                    style="color:#ef4444;"
-                    onclick="closeFakeErrorModal()">
-
-                ✕
-
-            </button>
-
+<div id="fakeErrorModal" class="modal-overlay" onclick="closeFakeErrorModal(event)">
+    <div class="modal-content fake-error-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="border-bottom-color:#7f1d1d;">
+            <span class="fake-error-title">⚠️ SYSTEM EXCEPTION: 0x800403</span>
+            <button class="btn-close" style="color:#ef4444;" onclick="closeFakeErrorModal()">✕</button>
         </div>
 
-
-        <div style="
-            font-size:0.75rem;
-            color:#f87171;
-            line-height:1.4;
-            font-family:monospace;
-        ">
-
+        <div style="font-size:0.75rem; color:#f87171; line-height:1.4; font-family:monospace;">
             ERR_TELEMETRY_ACCESS_RESTRICTED<br>
-
-            Yetkisiz telemetri terminali engellendi.
-            SysAdmin Key giriniz:
-
+            Yetkisiz telemetri terminali engellendi. SysAdmin Key giriniz:
         </div>
 
+        <input type="password" id="txtSecretPin" placeholder="Key / PIN..."
+               style="background:#180606; border-color:#991b1b; color:#fca5a5; font-family:monospace; margin-top:4px;">
 
-        <input type="password"
-               id="txtSecretPin"
-               placeholder="Key / PIN..."
-               style="
-                   background:#180606;
-                   border-color:#991b1b;
-                   color:#fca5a5;
-                   font-family:monospace;
-                   margin-top:4px;
-               ">
-
-
-        <button class="btn-search"
-                style="background:#dc2626;"
-                onclick="verifySecretPin()">
-
+        <button class="btn-search" style="background:#dc2626;" onclick="verifySecretPin()">
             Terminal Doğrula
-
         </button>
-
     </div>
-
 </div>
 
-
 <!-- =========================================================
-     GİZLİ İSTATİSTİK PANELİ
+     GİZLİ İSTATİSTİK PANELİ (VARDİYA METRİKLERİ ENTEGRE)
      ========================================================= -->
 
-<div id="secretStatsModal"
-     class="modal-overlay"
-     onclick="closeStatsModal(event)">
-
-    <div class="modal-content stats-content"
-         onclick="event.stopPropagation()">
-
-        <div class="modal-header"
-             style="border-bottom-color:#22c55e;">
-
-            <h3 style="color:#4ade80;">
-                📊 Kılavuz Geçiş İstatistik & Döküm
-            </h3>
-
-            <button class="btn-close"
-                    onclick="closeStatsModal()">
-
-                ✕
-
-            </button>
-
+<div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
+    <div class="modal-content stats-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="border-bottom-color:#22c55e;">
+            <h3 style="color:#4ade80;">📊 Kılavuz Geçiş İstatistik & Döküm</h3>
+            <button class="btn-close" onclick="closeStatsModal()">✕</button>
         </div>
 
-
-        <div style="
-            display:flex;
-            flex-direction:column;
-            gap:6px;
-        ">
-
+        <div style="display:flex; flex-direction:column; gap:6px;">
             <div style="display:flex; gap:6px;">
-
-                <select id="statFilterPeriod"
-                        onchange="calcStats()">
-
-                    <option value="12h">
-                        Bu Vardiya (12 Saat)
-                    </option>
-
-                    <option value="24h">
-                        Son 24 Saat
-                    </option>
-
-                    <option value="month">
-                        Bu Ay
-                    </option>
-
-                    <option value="year">
-                        Bu Yıl
-                    </option>
-
-                    <option value="all">
-                        Tüm Geçmiş
-                    </option>
-
+                <select id="statFilterPeriod" onchange="calcStats()">
+                    <option value="current_shift">Aktif Vardiya Periyodu (4 Gün)</option>
+                    <option value="12h">Son 12 Saat</option>
+                    <option value="24h">Son 24 Saat</option>
+                    <option value="month">Bu Ay</option>
+                    <option value="year">Bu Yıl</option>
+                    <option value="all">Tüm Geçmiş</option>
                 </select>
 
-
-                <select id="statFilterPilot"
-                        onchange="calcStats()">
-
-                    <option value="ALL">
-                        Tüm Pilotlar
-                    </option>
-
+                <select id="statFilterShift" onchange="calcStats()">
+                    <option value="ALL">Tüm Vardiyalar</option>
+                    <option value="1">Vardiya 1</option>
+                    <option value="2">Vardiya 2</option>
+                    <option value="3">Vardiya 3</option>
                 </select>
-
             </div>
 
+            <select id="statFilterPilot" onchange="calcStats()">
+                <option value="ALL">Tüm Pilotlar</option>
+            </select>
         </div>
-
 
         <div class="stats-summary-grid">
-
             <div class="stat-box">
-
-                <div id="statTotalCount"
-                     class="stat-val">
-                    0
-                </div>
-
-                <div class="stat-lbl">
-                    Toplam Gemi
-                </div>
-
+                <div id="statTotalCount" class="stat-val">0</div>
+                <div class="stat-lbl">Toplam Gemi</div>
             </div>
 
-
             <div class="stat-box">
-
-                <div id="statNsCount"
-                     class="stat-val"
-                     style="color:#a78bfa;">
-                    0
-                </div>
-
-                <div class="stat-lbl">
-                    K ➔ G
-                </div>
-
+                <div id="statNsCount" class="stat-val" style="color:#a78bfa;">0</div>
+                <div class="stat-lbl">K ➔ G</div>
             </div>
 
-
             <div class="stat-box">
-
-                <div id="statSnCount"
-                     class="stat-val"
-                     style="color:#fbbf24;">
-                    0
-                </div>
-
-                <div class="stat-lbl">
-                    G ➔ K
-                </div>
-
+                <div id="statSnCount" class="stat-val" style="color:#fbbf24;">0</div>
+                <div class="stat-lbl">G ➔ K</div>
             </div>
-
         </div>
-
 
         <div class="stats-table-box">
-
             <table class="stats-table">
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Tarih/Saat
-                        </th>
-
-                        <th>
-                            Gemi Adı
-                        </th>
-
-                        <th>
-                            Yön
-                        </th>
-
-                        <th>
-                            Kılavuz Kaptan
-                        </th>
-
+                        <th>Tarih/Saat</th>
+                        <th>Gemi Adı</th>
+                        <th>Yön / V.</th>
+                        <th>Kılavuz Kaptan</th>
                     </tr>
-
                 </thead>
-
-
                 <tbody id="statsTableBody"></tbody>
-
             </table>
-
         </div>
 
-
-        <button class="btn-search"
-                style="
-                    background:#15803d;
-                    margin-top:4px;
-                "
-                onclick="exportStatsToCSV()">
-
+        <button class="btn-search" style="background:#15803d; margin-top:4px;" onclick="exportStatsToCSV()">
             📥 Kılavuz Logu CSV
-
         </button>
-
-
-        <!-- TAKVİYE İSTATİSTİĞİ -->
 
         <div class="support-stats-box">
-
-            <div class="support-stats-header">
-
-                🚐 TAKVİYE İSTATİSTİKLERİ (TÜM ARŞİV)
-
-            </div>
-
-
+            <div class="support-stats-header">🚐 TAKVİYE İSTATİSTİKLERİ</div>
             <div class="support-stats-summary">
-
                 <div class="support-mini-stat">
-
-                    <div id="supportStatTotal"
-                         class="support-mini-val">
-
-                        0
-
-                    </div>
-
-                    <div class="support-mini-label">
-                        Toplam
-                    </div>
-
+                    <div id="supportStatTotal" class="support-mini-val">0</div>
+                    <div class="support-mini-label">Toplam</div>
                 </div>
-
-
                 <div class="support-mini-stat">
-
-                    <div id="supportStatKG"
-                         class="support-mini-val">
-
-                        0
-
-                    </div>
-
-                    <div class="support-mini-label">
-                        K → G
-                    </div>
-
+                    <div id="supportStatKG" class="support-mini-val">0</div>
+                    <div class="support-mini-label">K → G</div>
                 </div>
-
-
                 <div class="support-mini-stat">
-
-                    <div id="supportStatGK"
-                         class="support-mini-val">
-
-                        0
-
-                    </div>
-
-                    <div class="support-mini-label">
-                        G → K
-                    </div>
-
+                    <div id="supportStatGK" class="support-mini-val">0</div>
+                    <div class="support-mini-label">G → K</div>
                 </div>
-
             </div>
-
-
-            <div id="supportPilotStats"
-                 class="support-pilot-stat-list">
-
-            </div>
-
+            <div id="supportPilotStats" class="support-pilot-stat-list"></div>
         </div>
 
-
-        <button class="btn-search"
-                style="
-                    background:#92400e;
-                    margin-top:6px;
-                "
-                onclick="exportSupportStatsToCSV()">
-
+        <button class="btn-search" style="background:#92400e; margin-top:6px;" onclick="exportSupportStatsToCSV()">
             📥 TAKVİYE CSV İndir
-
         </button>
-
     </div>
-
 </div>
 
-
 <script>
-
     /* =========================================================
-       TEMEL AYARLAR
+       TEMEL AYARLAR & VARDİYA ERİŞİM SABİTLERİ
        ========================================================= */
 
-    const REPO_OWNER =
-        "suayipguler-ship-it";
+    const REPO_OWNER = "suayipguler-ship-it";
+    const REPO_NAME = "Kegm-trafik";
+    const SECRET_PIN = "1915";
+    const PILOTLESS_VALUE = "__PILOTSUZ__";
+    const MAX_LIVE_AGE_HOURS = 48;
+    const MAX_BOGAZDA_AGE_HOURS = 9;
+    const SUPPORT_FILE_NAME = "takviye.json";
 
-    const REPO_NAME =
-        "Kegm-trafik";
+    // 5 Karakterlik Bağımsız Vardiya Erişim Kodları
+    const SHIFT_AUTH_KEYS = {
+        "A2001": 1,
+        "2X002": 2,
+        "Z2003": 3
+    };
 
-    const SECRET_PIN =
-        "1915";
-
-    const PILOTLESS_VALUE =
-        "__PILOTSUZ__";
-
-    const MAX_LIVE_AGE_HOURS =
-        48;
-
-    const MAX_BOGAZDA_AGE_HOURS =
-        9;
-
-    const SUPPORT_FILE_NAME =
-        "takviye.json";
-
+    // Referans Döngü: 2 Ekim 2026 12:00 -> Vardiya 2 Başlangıcı
+    // 4 gün (96 saat) çalışma, 8 gün izin -> 12 günlük toplam döngü
+    const SHIFT_BASE_EPOCH = new Date("2026-10-02T12:00:00+03:00").getTime();
+    const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
+    const CYCLE_MS = 12 * 24 * 60 * 60 * 1000;
 
     /* =========================================================
-       VARDİYALAR
+       KILAVUZ KAPTANLAR LİSTESİ
        ========================================================= */
 
     const VARDIYALAR = {
-
         1: [
             "SELİM KANDEMİRLİ (Baş Klv. Kpt.)",
             "ENVER TAŞBUNAR",
@@ -1647,7 +1317,6 @@
             "VURAL MUCUK",
             "ZAFER ALTUNCU"
         ],
-
         2: [
             "CEM ERİNÇİN (Baş Klv. Kp.)",
             "MURAT TURAN",
@@ -1680,7 +1349,6 @@
             "UMUT ÇELİK",
             "YÜCEL AYAR"
         ],
-
         3: [
             "MUSTAFA ERÇETİN (Baş Klv. Kp.)",
             "MURAT ÖNGÜR",
@@ -1712,9 +1380,7 @@
             "TOLGA DEMİRCİ",
             "ULAŞ EMİROĞLU"
         ]
-
     };
-
 
     /* =========================================================
        GLOBAL DEĞİŞKENLER
@@ -1735,6 +1401,9 @@
     let clickTimer = null;
     let currentFilteredStats = [];
 
+    // Oturum (Vardiya Mahremiyeti)
+    let currentAuthShift = null; // 1, 2, 3
+    let currentAuthSicil = "";   // 5 haneli sicil no
 
     /* =========================================================
        NORMALİZASYON VE TOKEN
@@ -1784,9 +1453,134 @@
         loadAllData();
     }
 
+    /* =========================================================
+       VARDİYA MAHREMİYETİ & 5+5 GİRİŞ KONTROLLERİ
+       ========================================================= */
+
+    function initAuthSession() {
+        const savedShift = sessionStorage.getItem("kegm_auth_shift");
+        const savedSicil = sessionStorage.getItem("kegm_auth_sicil");
+        if (savedShift && savedSicil) {
+            currentAuthShift = parseInt(savedShift, 10);
+            currentAuthSicil = savedSicil;
+            activeVardiya = currentAuthShift;
+            supportActiveVardiya = currentAuthShift;
+        }
+        updateAuthBadgeUI();
+    }
+
+    function updateAuthBadgeUI() {
+        const badge = document.getElementById("btnShiftAuthBadge");
+        if (currentAuthShift) {
+            badge.classList.add("active");
+            badge.innerHTML = `🟢 V-${currentAuthShift} (#${currentAuthSicil})`;
+            badge.title = "Vardiya oturumunu kapatmak için tıklayın";
+        } else {
+            badge.classList.remove("active");
+            badge.innerHTML = `🔒 Vardiya Girişi`;
+            badge.title = "Vardiya ve sicil ile giriş yap";
+        }
+    }
+
+    function handleShiftAuthClick() {
+        if (currentAuthShift) {
+            const confirmed = confirm(`Vardiya ${currentAuthShift} (Sicil: ${currentAuthSicil}) oturumunu kapatmak istiyor musunuz?`);
+            if (confirmed) {
+                sessionStorage.removeItem("kegm_auth_shift");
+                sessionStorage.removeItem("kegm_auth_sicil");
+                currentAuthShift = null;
+                currentAuthSicil = "";
+                updateAuthBadgeUI();
+                renderCurrentView();
+            }
+        } else {
+            openShiftAuthModal();
+        }
+    }
+
+    function openShiftAuthModal() {
+        document.getElementById("txtShiftKey").value = "";
+        document.getElementById("txtShiftSicil").value = "";
+        document.getElementById("authErrMsg").innerText = "";
+        document.getElementById("shiftAuthModal").style.display = "flex";
+        setTimeout(() => document.getElementById("txtShiftKey").focus(), 150);
+    }
+
+    function closeShiftAuthModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        document.getElementById("shiftAuthModal").style.display = "none";
+    }
+
+    function handleShiftKeyInput(el) {
+        el.value = el.value.toUpperCase();
+        if (el.value.length === 5) {
+            document.getElementById("txtShiftSicil").focus();
+        }
+    }
+
+    function handleSicilInput(el) {
+        el.value = el.value.replace(/\D/g, ""); // Sadece rakam
+        if (el.value.length === 5 && document.getElementById("txtShiftKey").value.length === 5) {
+            submitShiftAuth();
+        }
+    }
+
+    function submitShiftAuth() {
+        const key = document.getElementById("txtShiftKey").value.trim().toUpperCase();
+        const sicil = document.getElementById("txtShiftSicil").value.trim();
+        const err = document.getElementById("authErrMsg");
+
+        if (key.length !== 5 || sicil.length !== 5) {
+            err.innerText = "Lütfen 5 hane Vardiya Kodu ve 5 hane Sicil giriniz.";
+            return;
+        }
+
+        if (!SHIFT_AUTH_KEYS[key]) {
+            err.innerText = "Hatalı Vardiya Kodu! Yetki doğrulanmadı.";
+            return;
+        }
+
+        const shiftNo = SHIFT_AUTH_KEYS[key];
+        currentAuthShift = shiftNo;
+        currentAuthSicil = sicil;
+        activeVardiya = shiftNo;
+        supportActiveVardiya = shiftNo;
+
+        sessionStorage.setItem("kegm_auth_shift", shiftNo);
+        sessionStorage.setItem("kegm_auth_sicil", sicil);
+
+        err.innerText = "";
+        document.getElementById("shiftAuthModal").style.display = "none";
+        updateAuthBadgeUI();
+        renderCurrentView();
+    }
 
     /* =========================================================
-       GİZLİ PANEL
+       VARDİYA HESAPLAMA MOTORU (DÖNEM VE YÖN SINIRLARI)
+       ========================================================= */
+
+    function getShiftForShip(timestamp, yonStr) {
+        if (!timestamp || timestamp <= 0) return null;
+        
+        // K-G devir saati: 12:00 (+0 saat)
+        // G-K devir saati: 14:00 (+2 saat gecikmeli)
+        const isGK = isSouthNorth(yonStr);
+        const shiftOffset = isGK ? (2 * 60 * 60 * 1000) : 0;
+        const effectiveEpoch = SHIFT_BASE_EPOCH + shiftOffset;
+
+        const diff = timestamp - effectiveEpoch;
+        const cyclePosition = ((diff % CYCLE_MS) + CYCLE_MS) % CYCLE_MS;
+        const periodIndex = Math.floor(cyclePosition / FOUR_DAYS_MS); // 0, 1, 2
+
+        // Periyot 0: Vardiya 2 (2 Ekim öğlen başlayan)
+        // Periyot 1: Vardiya 3
+        // Periyot 2: Vardiya 1
+        const shiftMap = [2, 3, 1];
+        return shiftMap[periodIndex];
+    }
+
+    /* =========================================================
+       GİZLİ PANEL (SYSADMIN 1915)
        ========================================================= */
 
     function triggerSecretDiagnosis() {
@@ -1815,9 +1609,8 @@
         }
     }
 
-
     /* =========================================================
-       ZAMAN FONKSİYONLARI
+       ZAMAN PARSE VE TARİH YARDIMCILARI
        ========================================================= */
 
     function parseTimeString(timeStr) {
@@ -1941,15 +1734,21 @@
         return getShipAssignment(ship) === PILOTLESS_VALUE;
     }
 
-
     /* =========================================================
-       PİLOT MODALI (CANLI LİSTE İÇİN)
+       PİLOT MODALI (VARDİYA MAHREMİYETİ İLE)
        ========================================================= */
 
     function openPilotModal(uniqueKey, shipName) {
+        if (!currentAuthShift) {
+            alert("Kılavuz Kaptan ataması yapabilmek için lütfen önce sağ üst köşeden Vardiya Girişi yapınız.");
+            openShiftAuthModal();
+            return;
+        }
+
         selectedShipKey = uniqueKey;
         document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
         document.getElementById("pilotModal").style.display = "flex";
+
         const currentAssignment = globalAssignments[uniqueKey] || "";
         const pilotlessButton = document.getElementById("btnPilotless");
         if (currentAssignment === PILOTLESS_VALUE) {
@@ -1959,6 +1758,12 @@
             pilotlessButton.classList.remove("active");
             pilotlessButton.innerText = "🚫 BU GEMİ PİLOTSUZ";
         }
+
+        // Giriş yapan vardiyayı zorunlu kıl ve sekmeleri kilitle
+        activeVardiya = currentAuthShift;
+        const tabsBox = document.getElementById("pilotModalVardiyaTabs");
+        tabsBox.style.display = "none"; // Diğer vardiyalara müdahaleyi kapat
+
         renderModalPilots();
     }
 
@@ -1994,7 +1799,7 @@
         localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
         document.getElementById("pilotModal").style.display = "none";
         renderCurrentView();
-        await syncAssignmentsToGitHub(`Pilotsuz İşaretlendi: ${selectedShipKey}`);
+        await syncAssignmentsToGitHub(`Pilotsuz İşaretlendi: ${selectedShipKey} [V-${currentAuthShift} #${currentAuthSicil}]`);
     }
 
     async function assignPilot(pilotName) {
@@ -2003,7 +1808,7 @@
         localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
         document.getElementById("pilotModal").style.display = "none";
         renderCurrentView();
-        await syncAssignmentsToGitHub(`Kılavuz Atama: ${selectedShipKey} -> ${pilotName || "Silindi"}`);
+        await syncAssignmentsToGitHub(`Kılavuz Atama: ${selectedShipKey} -> ${pilotName || "Silindi"} [V-${currentAuthShift} #${currentAuthSicil}]`);
     }
 
     function stringToBase64UTF8(str) {
@@ -2047,9 +1852,8 @@
         }
     }
 
-
     /* =========================================================
-       TAKVİYE YÖNETİMİ & 5 GÜNLÜK FİLTRELEME
+       TAKVİYE YÖNETİMİ & MAHREMİYET
        ========================================================= */
 
     function loadLocalSupportRecords() {
@@ -2066,6 +1870,12 @@
     }
 
     function openSupportModal(direction) {
+        if (!currentAuthShift) {
+            alert("Takviye kayıtlarını yönetmek için lütfen önce sağ üst köşeden Vardiya Girişi yapınız.");
+            openShiftAuthModal();
+            return;
+        }
+
         document.getElementById("supportModal").style.display = "flex";
         document.getElementById("supportDirection").value = direction || "K-G";
         const now = new Date();
@@ -2074,7 +1884,12 @@
         document.getElementById("supportTime").value = `${hh}:${mm}`;
 
         renderModalSupportAnalysis();
-        switchSupportVardiya(1);
+
+        // Takviye paneli de aktif vardiyaya kilitlenir
+        supportActiveVardiya = currentAuthShift;
+        const tabsBox = document.getElementById("supportModalVardiyaTabs");
+        tabsBox.style.display = "none";
+        renderSupportPilotList();
     }
 
     function closeSupportModal(e) {
@@ -2152,7 +1967,9 @@
             time: time,
             direction: direction,
             pilots: pilots,
-            activeCount: activeCountInput
+            activeCount: activeCountInput,
+            shift: currentAuthShift,
+            authorSicil: currentAuthSicil
         };
 
         supportRecords.unshift(record);
@@ -2162,7 +1979,7 @@
         document.getElementById("supportModal").style.display = "none";
         renderCurrentView();
 
-        await syncSupportToGitHub(`Takviye Kaydı: ${direction} ${dateText} ${time}`);
+        await syncSupportToGitHub(`Takviye: ${direction} ${dateText} ${time} [V-${currentAuthShift} #${currentAuthSicil}]`);
         if (document.getElementById("secretStatsModal").style.display === "flex") {
             renderSupportStats();
         }
@@ -2209,22 +2026,19 @@
         return direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY";
     }
 
-
     /* =========================================================
-       2 SAATLİK PENCERE & DÖNÜŞ SÜRELİ AKILLI KAPASİTE ANALİZİ
+       AKILLI KAPASİTE ANALİZİ
        ========================================================= */
 
     function calculateDynamicSupportNeeds(bogaz) {
         const now = Date.now();
         const twoHoursMs = 2 * 60 * 60 * 1000;
-        
         const returnTimeKG_to_GK = 3 * 60 * 60 * 1000; 
         const returnTimeGK_to_KG = (3 * 60 + 45) * 60 * 1000;
 
         let activeBogazdaCount = 0;
         let demandKG = 0;
         let demandGK = 0;
-
         let returnedFromKG = 0; 
         let returnedFromGK = 0; 
 
@@ -2246,9 +2060,8 @@
 
             if (isBog) activeBogazdaCount++;
 
-            const yonNorm = normalizeStr(ship.yon);
-            const isKG = yonNorm.startsWith("KUZEY") || yonNorm === "NS" || yonNorm.startsWith("K-G");
-            const isGK = yonNorm.startsWith("GUNEY") || yonNorm === "SN" || yonNorm.startsWith("G-K");
+            const isKG = isNorthSouth(ship.yon);
+            const isGK = isSouthNorth(ship.yon);
 
             if (isBog || isPastOrCurrent || inNextTwoHours) {
                 if (isKG) demandKG++;
@@ -2266,7 +2079,6 @@
         });
 
         let totalCapacity = getActiveVardiyaPilotCount();
-
         const availablePilots = Math.max(0, totalCapacity - activeBogazdaCount + Math.max(returnedFromKG, returnedFromGK));
         const totalDemand = demandKG + demandGK;
         const shortage = Math.max(0, totalDemand - availablePilots);
@@ -2361,7 +2173,6 @@
         html += `</div>`;
         document.getElementById("modalSupportAnalysisContainer").innerHTML = html;
     }
-
 
     /* =========================================================
        VERİ YÜKLEME VE GÖRÜNÜM
@@ -2459,7 +2270,13 @@
                 if (isPilotless) cardClass += " pilotless";
                 else if (isAssigned) cardClass += " assigned";
 
-                let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️ " + assignedPilot : "+ Kılavuz Kaptan Ata";
+                // Mahremiyet Maskelemesi: Giriş yapılmamışsa pilot adını gösterme
+                let pilotDisplayText = assignedPilot;
+                if (!currentAuthShift && isAssigned) {
+                    pilotDisplayText = "KILAVUZ ATANDI";
+                }
+
+                let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️ " + pilotDisplayText : "+ Kılavuz Kaptan Ata";
 
                 html += `
                     <div class="${cardClass}">
@@ -2560,6 +2377,12 @@
         if (assignedPilot === PILOTLESS_VALUE) return "";
         const isAssigned = !!assignedPilot;
         const displayTime = formatDisplayTime(ship.time, ship.planlama);
+
+        let tagText = isAssigned ? assignedPilot : "+ Ata";
+        if (!currentAuthShift && isAssigned) {
+            tagText = "KILAVUZLU";
+        }
+
         return `
             <div class="log-row-compact ${isAssigned ? "assigned" : ""}">
                 <div class="log-ship-info">
@@ -2568,15 +2391,14 @@
                 </div>
                 <div class="log-pilot-tag ${isAssigned ? "saved" : ""}"
                     onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
-                    ${isAssigned ? assignedPilot : "+ Ata"}
+                    ${tagText}
                 </div>
             </div>
         `;
     }
 
-
     /* =========================================================
-       İSTATİSTİK & ARŞİV (TÜM TAKVİYELER DAHİL)
+       İSTATİSTİK & ARŞİV (SYSADMIN 1915 + VARDİYA METRİKLERİ)
        ========================================================= */
 
     function openStatsModal() {
@@ -2608,6 +2430,10 @@
     function getStatsCutoff() {
         const period = document.getElementById("statFilterPeriod").value;
         const now = Date.now();
+        if (period === "current_shift") {
+            // Son 4 günlük blok (96 saat)
+            return now - FOUR_DAYS_MS;
+        }
         if (period === "12h") return now - (12 * 60 * 60 * 1000);
         if (period === "24h") return now - (24 * 60 * 60 * 1000);
         if (period === "month") {
@@ -2623,14 +2449,22 @@
 
     function calcStats() {
         const targetPilot = document.getElementById("statFilterPilot").value;
+        const targetShift = document.getElementById("statFilterShift").value;
         const cutoff = getStatsCutoff();
 
         let rawFiltered = historyShips.filter(ship => {
             const assignment = getShipAssignment(ship);
             if (!assignment || assignment === PILOTLESS_VALUE) return false;
             if (targetPilot !== "ALL" && assignment !== targetPilot) return false;
+            
             const t = getShipTimestamp(ship);
             if (cutoff > 0 && t > 0 && t < cutoff) return false;
+
+            if (targetShift !== "ALL") {
+                const s = getShiftForShip(t, ship.yon);
+                if (String(s) !== String(targetShift)) return false;
+            }
+
             return true;
         });
 
@@ -2653,11 +2487,15 @@
         currentFilteredStats.forEach(ship => {
             const pilot = getShipAssignment(ship);
             if (!pilot || pilot === PILOTLESS_VALUE) return;
+            const t = getShipTimestamp(ship);
+            const shiftNo = getShiftForShip(t, ship.yon) || "-";
+            const dir = isNorthSouth(ship.yon) ? "K-G" : "G-K";
+
             html += `
                 <tr>
                     <td>${formatDisplayTime(ship.time, ship.planlama)}</td>
                     <td style="font-weight:700;">${ship.name}</td>
-                    <td>${isNorthSouth(ship.yon) ? "K-G" : "G-K"}</td>
+                    <td>${dir} <span style="font-size:0.7rem; color:#94a3b8;">(V-${shiftNo})</span></td>
                     <td style="color:#4ade80; font-weight:600;">${pilot}</td>
                 </tr>
             `;
@@ -2670,9 +2508,12 @@
 
     function renderSupportStats() {
         const cutoff = getStatsCutoff();
+        const targetShift = document.getElementById("statFilterShift").value;
+
         const filtered = supportRecords.filter(record => {
             const t = Number(record.timestamp || 0);
             if (cutoff > 0 && t > 0 && t < cutoff) return false;
+            if (targetShift !== "ALL" && record.shift && String(record.shift) !== String(targetShift)) return false;
             return true;
         });
 
@@ -2689,7 +2530,7 @@
 
         const list = document.getElementById("supportPilotStats");
         if (pilotCount.size === 0) {
-            list.innerHTML = `<div class="support-empty">Bu dönemde TAKVİYE kaydı yok.</div>`;
+            list.innerHTML = `<div style="text-align:center; color:#64748b; padding:8px; font-size:0.75rem;">Bu dönemde TAKVİYE kaydı yok.</div>`;
             return;
         }
 
@@ -2708,15 +2549,18 @@
 
     function exportStatsToCSV() {
         if (currentFilteredStats.length === 0) { alert("Dışa aktarılacak kayıt yok."); return; }
-        let csvContent = "\uFEFFTarih/Saat;Gemi Adi;Bogaz;Yon;Boy;Tip;Kilavuz Kaptan\n";
+        let csvContent = "\uFEFFTarih/Saat;Gemi Adi;Bogaz;Yon;Vardiya;Boy;Tip;Kilavuz Kaptan\n";
         currentFilteredStats.forEach(ship => {
             const pilot = getShipAssignment(ship);
             if (!pilot || pilot === PILOTLESS_VALUE) return;
+            const t = getShipTimestamp(ship);
+            const shiftNo = getShiftForShip(t, ship.yon) || "";
             const row = [
                 `"${formatDisplayTime(ship.time, ship.planlama)}"`,
                 `"${ship.name || ""}"`,
                 `"${ship.bogaz || ""}"`,
                 `"${ship.yon || ""}"`,
+                `"Vardiya-${shiftNo}"`,
                 `"${ship.len || ""}"`,
                 `"${ship.type || ""}"`,
                 `"${pilot}"`
@@ -2735,13 +2579,15 @@
         });
 
         if (filtered.length === 0) { alert("Dışa aktarılacak TAKVİYE kaydı yok."); return; }
-        let csvContent = "\uFEFFTarih;Saat;Yon;Aktif Kaptan Sayisi;Giden Kilavuzlar\n";
+        let csvContent = "\uFEFFTarih;Saat;Yon;Vardiya;Kaydeden Sicil;Aktif Pilot Sayisi;Giden Kilavuzlar\n";
         filtered.forEach(record => {
             const pilots = Array.isArray(record.pilots) ? record.pilots.join(" | ") : "";
             csvContent += [
                 `"${record.date || ""}"`,
                 `"${record.time || ""}"`,
                 `"${record.direction || ""}"`,
+                `"${record.shift ? 'Vardiya-' + record.shift : ''}"`,
+                `"${record.authorSicil || ''}"`,
                 `"${record.activeCount || 29}"`,
                 `"${pilots}"`
             ].join(";") + "\n";
@@ -2779,8 +2625,10 @@
         renderCurrentView();
     }
 
-    window.onload = loadAllData;
-
+    window.onload = () => {
+        initAuthSession();
+        loadAllData();
+    };
 </script>
 
 </body>
