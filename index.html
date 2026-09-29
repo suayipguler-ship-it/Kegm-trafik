@@ -563,10 +563,9 @@
             flex: 1;
             text-align: center;
             font-family: monospace;
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            letter-spacing: 4px;
             border: 1px solid #38bdf8;
             background: #070d1a;
             color: #38bdf8;
@@ -575,11 +574,9 @@
         }
 
         .auth-box-field::placeholder {
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: normal;
-            text-transform: none;
-            color: #475569;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            color: #334155;
         }
 
         /* =====================================================
@@ -1014,7 +1011,7 @@
         </div>
 
         <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
-            Kılavuz atama ve vardiya işlemlerine erişmek için <strong>5 haneli Vardiya Kodu</strong> ve <strong>5 haneli Kurum Sicil No</strong> giriniz:
+            Kılavuz atama ve vardiya işlemlerine erişmek için <strong>Vardiya Kodu</strong> ve <strong>Kurum Sicil No</strong> giriniz:
         </div>
 
         <div class="auth-split-inputs">
@@ -1022,15 +1019,15 @@
                    id="txtShiftKey"
                    class="auth-box-field"
                    maxlength="5"
-                   placeholder="V-KOD / 1915"
+                   placeholder="•••••"
                    autocomplete="off"
                    oninput="handleShiftKeyInput(this)">
 
-            <input type="text"
+            <input type="password"
                    id="txtShiftSicil"
                    class="auth-box-field"
                    maxlength="5"
-                   placeholder="SİCİL / 1915"
+                   placeholder="•••••"
                    autocomplete="off"
                    inputmode="numeric"
                    oninput="handleSicilInput(this)">
@@ -1807,9 +1804,11 @@
 
         const tabsBox = document.getElementById("pilotModalVardiyaTabs");
         if (isMasterAdmin) {
+            // Süper Yetkili: Vardiya sekmeleri açık, serbest geçiş
             tabsBox.style.display = "flex";
             switchVardiya(activeVardiya || 1);
         } else {
+            // Tek Vardiya: Diğer vardiyalar kilitli
             tabsBox.style.display = "none";
             activeVardiya = currentAuthShift;
             renderModalPilots();
