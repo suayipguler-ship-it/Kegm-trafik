@@ -121318,5 +121318,25 @@
     "time": "2026-10-01T11:00:00.000Z",
     "timestamp": 1790852400000,
     "scrapedAt": "2026-10-01T05:00:46.372Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "ÇANAKKALE",
+    "yon": "GÜNEY-KUZEY",
+    "hareket": "GEÇİŞE HAZIR",
+    "planlama": "GEÇİŞE HAZIR 01.10.26 08:19",
+    "name": "MAERSK SIRAC",
+    "len": "299,92",
+    "length": 299.92,
+    "type": "CONTAINER",
+    "pilotReq": "Evet",
+    "pilotRequired": true,
+    "tug": "Hayır",
+    "tugRequired": false,
+    "sp2": "01.10.26",
+    "sp1": "28.09.26",
+    "time": "2026-10-01T08:19:00.000Z",
+    "timestamp": 1790842740000,
+    "scrapedAt": "2026-10-01T05:21:02.358Z"
   }
 ]
