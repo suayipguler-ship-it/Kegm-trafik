@@ -29,68 +29,107 @@
             padding: 12px;
         }
 
+        /* YENİLENEN ÜST HEADER ALANI */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
-            padding: 4px 6px;
+            padding: 2px 0;
+            gap: 8px;
         }
 
+        /* 2 Satırlık Sol Başlık */
         .header h1 {
-            font-size: 1.15rem;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
             color: #38bdf8;
-            letter-spacing: 1px;
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
             margin: 0;
+            user-select: none;
+            flex-shrink: 0;
         }
 
+        .header h1 span {
+            display: block;
+        }
+
+        /* Sağ Aksiyon Grubu */
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 6px; /* Butonlar ile yeşil tik / ayarlar arası mesafe */
         }
 
-        .btn-shift-auth {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: #94a3b8;
-            padding: 5px 8px;
+        /* Alt Alta Eşit Boyutlu Buton Grubu */
+        .header-btn-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-action-btn {
+            display: flex;
+            align-items: center;
+            width: 130px;
+            height: 27px;
+            padding: 0 8px 0 6px;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
+            box-sizing: border-box;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            transition: all 0.15s ease;
         }
 
+        .header-action-btn:active {
+            filter: brightness(1.2);
+        }
+
+        /* İkon Sola Yaslı */
+        .header-btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            width: 18px;
+            text-align: left;
+        }
+
+        /* Metin Kalan Alanı Ortalar */
+        .header-btn-text {
+            flex: 1;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Vardiya Giriş Butonu Durumları */
         .btn-shift-auth.active {
             background: #064e3b;
             border-color: #22c55e;
             color: #4ade80;
         }
 
-        /* YENİ KURUMSAL TAKVİYE ROZET BUTONU */
-        .btn-header-support-badge {
-            background: #171822;
-            border: 1px solid #d97706;
+        /* Takviye Butonu Özel Çizgisi ve Rengi */
+        .btn-header-support-box {
+            border-color: #f59e0b;
             color: #fbbf24;
-            padding: 5px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
+        }
+
+        /* Sağ Durum Rozetleri */
+        .header-status-group {
             display: flex;
             align-items: center;
             gap: 4px;
-            white-space: nowrap;
-        }
-
-        .btn-header-support-badge:active {
-            background: #261f10;
-            border-color: #f59e0b;
         }
 
         .btn-settings {
@@ -99,12 +138,17 @@
             font-size: 1.25rem;
             color: #94a3b8;
             cursor: pointer;
-            padding: 4px;
+            padding: 2px;
+            width: auto;
+            line-height: 1;
         }
 
         .cloud-status {
-            font-size: 0.8rem;
-            margin-right: 2px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
         }
 
         .nav-tabs {
@@ -979,42 +1023,56 @@
             .stats-summary-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+            .header-action-btn {
+                width: 120px;
+                font-size: 0.72rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
+<!-- GÜNCELLENMİŞ 2 SATIR BAŞLIK & DÜZENLİ BUTON GRUBU -->
 <div class="header">
-    <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
+    <h1>
+        <span>BOĞAZ GEÇİŞ</span>
+        <span>PLANLAMA</span>
+    </h1>
 
     <div class="header-actions">
-        <!-- VARDİYA / ROOT ERİŞİM ROZETİ -->
-        <button id="btnShiftAuthBadge"
-                class="btn-shift-auth"
-                onclick="handleShiftAuthClick()"
-                title="Vardiya Girişi">
-            🔒 Giriş Yap
-        </button>
+        <!-- Alt alta eşit ölçülü iki buton -->
+        <div class="header-btn-col">
+            <button id="btnShiftAuthBadge"
+                    class="header-action-btn btn-shift-auth"
+                    onclick="handleShiftAuthClick()"
+                    title="Vardiya Girişi">
+                <span class="header-btn-icon" id="authBadgeIcon">🔒</span>
+                <span class="header-btn-text" id="authBadgeText">Vardiya Girişi</span>
+            </button>
 
-        <!-- YENİ KURUMSAL TAKVİYE ROZET BUTONU -->
-        <button class="btn-header-support-badge"
-                onclick="openSupportModal()"
-                title="Takviye Analiz ve Kayıt">
-            🚐 Takviye
-        </button>
+            <button class="header-action-btn btn-header-support-box"
+                    onclick="openSupportModal()"
+                    title="Takviye Analiz ve Kayıt">
+                <span class="header-btn-icon">🚚</span>
+                <span class="header-btn-text">Takviye</span>
+            </button>
+        </div>
 
-        <span id="cloudStatus"
-              class="cloud-status"
-              title="Senkronizasyon Durumu">
-            ☁
-        </span>
+        <!-- Yeşil Tik / Bulut ve Ayarlar -->
+        <div class="header-status-group">
+            <span id="cloudStatus"
+                  class="cloud-status"
+                  title="Senkronizasyon Durumu">
+                ☁
+            </span>
 
-        <button class="btn-settings"
-                onclick="openSettingsModal()"
-                title="Ayarlar">
-            ⚙️
-        </button>
+            <button class="btn-settings"
+                    onclick="openSettingsModal()"
+                    title="Ayarlar">
+                ⚙️
+            </button>
+        </div>
     </div>
 </div>
 
@@ -1143,11 +1201,11 @@
     </div>
 </div>
 
-<!-- TAKVİYE MODALI (SADELEŞTİRİLMİŞ BAŞLIK & ÇIKIŞ KAPISI) -->
+<!-- TAKVİYE MODALI -->
 <div id="supportModal" class="modal-overlay" onclick="closeSupportModal(event)">
     <div class="modal-content support-modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <h3 style="color:#fbbf24;">🚐 TAKVİYE DURUMU</h3>
+            <h3 style="color:#fbbf24;">🚚 TAKVİYE DURUMU</h3>
             <button class="btn-close" onclick="closeSupportModal()">✕</button>
         </div>
 
@@ -1176,7 +1234,7 @@
         </div>
 
         <button class="btn-search btn-support" onclick="saveSupportRecord()">
-            🚐 TAKVİYEYİ KAYDET
+            🚚 TAKVİYEYİ KAYDET
         </button>
     </div>
 </div>
@@ -1185,7 +1243,7 @@
 <div id="editSupportModal" class="modal-overlay" onclick="closeEditSupportModal(event)">
     <div class="modal-content edit-support-content" onclick="event.stopPropagation()">
         <div class="modal-header" style="border-bottom-color:#334155;">
-            <h3 style="color:#fbbf24;">✏️ Takviye Kaydını Düzenle</h3>
+            <h3 style="color:#fbbf24;">✏ Takviye Kaydını Düzenle</h3>
             <button class="btn-close" onclick="closeEditSupportModal()">✕</button>
         </div>
 
@@ -1331,7 +1389,7 @@
         </button>
 
         <div class="support-stats-box">
-            <div class="support-stats-header">🚐 TAKVİYE İSTATİSTİKLERİ</div>
+            <div class="support-stats-header">🚚 TAKVİYE İSTATİSTİKLERİ</div>
             <div class="support-stats-summary">
                 <div class="support-mini-stat">
                     <div id="supportStatTotal" class="support-mini-val">0</div>
@@ -1530,7 +1588,7 @@
         if (status === "syncing") el.innerText = "🔄";
         else if (status === "ok") el.innerText = "☁️✅";
         else if (status === "error") el.innerText = "⚠️";
-        else el.innerText = "☁️️";
+        else el.innerText = "☁️";
     }
 
     function openSettingsModal() {
@@ -1573,23 +1631,29 @@
 
     function updateAuthBadgeUI() {
         const badge = document.getElementById("btnShiftAuthBadge");
+        const iconSpan = document.getElementById("authBadgeIcon");
+        const textSpan = document.getElementById("authBadgeText");
+
         if (isMasterAdmin) {
             badge.classList.add("active");
             badge.style.borderColor = "#f59e0b";
             badge.style.color = "#fbbf24";
-            badge.innerHTML = `👑 ROOT (1915)`;
+            if (iconSpan) iconSpan.innerText = "👑";
+            if (textSpan) textSpan.innerText = "ROOT (1915)";
             badge.title = "Süper Yönetici Oturumunu Kapat";
         } else if (currentAuthShift) {
             badge.classList.add("active");
             badge.style.borderColor = "#22c55e";
             badge.style.color = "#4ade80";
-            badge.innerHTML = `🟢 V-${currentAuthShift} (#${currentAuthSicil})`;
+            if (iconSpan) iconSpan.innerText = "🟢";
+            if (textSpan) textSpan.innerText = `V-${currentAuthShift} (#${currentAuthSicil})`;
             badge.title = "Vardiya oturumunu kapatmak için tıklayın";
         } else {
             badge.classList.remove("active");
             badge.style.borderColor = "#334155";
             badge.style.color = "#94a3b8";
-            badge.innerHTML = `🔒 Vardiya Girişi`;
+            if (iconSpan) iconSpan.innerText = "🔒";
+            if (textSpan) textSpan.innerText = "Vardiya Girişi";
             badge.title = "Vardiya ve sicil ile giriş yap";
         }
     }
@@ -1800,7 +1864,6 @@
         return ageHours > maxAge;
     }
 
-    // Rozetin yan yana kalması için sadeleştirilmiş "Gün / Saat:Dk" formatı (Örn: 29 / 13:00)
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
             const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
@@ -1972,7 +2035,7 @@
     }
 
     /* =========================================================
-       TAKVİYE YÖNETİMİ & DÜZENLEME & MAHREMİYET
+       TAKVİYE YÖNETİMİ & DÜZENLEME
        ========================================================= */
 
     function loadLocalSupportRecords() {
@@ -2112,10 +2175,6 @@
             renderSupportStats();
         }
     }
-
-    /* =========================================================
-       TAKVİYE DÜZENLEME & SİLME PANELİ (TIKLAMA / DÜZENLE)
-       ========================================================= */
 
     function populateEditPilotDropdown() {
         const sel = document.getElementById("selAddPilotToSupport");
@@ -2334,7 +2393,7 @@
                 if (isKG) {
                     if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
                 } else if (isGK) {
-                    if (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship)) nextKG_ship = ship;
+                    if (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship)) nextGK_ship = ship;
                 }
             }
         });
@@ -2406,7 +2465,7 @@
             if (isCapacityExhaustedGK && !canKGRelieve) {
                 warningGK = true;
                 if (minutesUntilDepartureGK <= 0) {
-                    isCriticalKG = true;
+                    isCriticalGK = true;
                 }
             }
         }
@@ -2486,16 +2545,16 @@
             if (calc.warningKG) {
                 html += `
                     <strong>🧭 K-G Hedef:</strong> ${calc.targetShipNameKG} (${calc.targetShipTimeStrKG})<br>
-                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
+                    🚚 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
                     ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
 
             if (calc.warningGK) {
                 html += `
-                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
-                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
-                    ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
+                    <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrGK})<br>
+                    🚚 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
+                    ${calc.minutesUntilDepartureGK > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
 
@@ -2629,7 +2688,6 @@
                 const isPilotless = assignedPilot === PILOTLESS_VALUE;
                 const isAssigned = !!assignedPilot && !isPilotless;
 
-                // Doğrudan Canlı AIS Haritası Açma Linki
                 const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
                 const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
 
