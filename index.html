@@ -63,6 +63,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            white-space: nowrap;
         }
 
         .btn-shift-auth.active {
@@ -71,18 +72,34 @@
             color: #4ade80;
         }
 
-        .btn-settings,
-        .btn-header-support {
+        /* YENİ KURUMSAL TAKVİYE ROZET BUTONU */
+        .btn-header-support-badge {
+            background: #171822;
+            border: 1px solid #d97706;
+            color: #fbbf24;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .btn-header-support-badge:active {
+            background: #261f10;
+            border-color: #f59e0b;
+        }
+
+        .btn-settings {
             background: none;
             border: none;
             font-size: 1.25rem;
             color: #94a3b8;
             cursor: pointer;
             padding: 4px;
-        }
-
-        .btn-header-support {
-            color: #f59e0b;
         }
 
         .cloud-status {
@@ -972,6 +989,7 @@
     <h1>BOĞAZ GEÇİŞ PLANLAMA</h1>
 
     <div class="header-actions">
+        <!-- VARDİYA / ROOT ERİŞİM ROZETİ -->
         <button id="btnShiftAuthBadge"
                 class="btn-shift-auth"
                 onclick="handleShiftAuthClick()"
@@ -979,10 +997,11 @@
             🔒 Giriş Yap
         </button>
 
-        <button class="btn-header-support"
+        <!-- YENİ KURUMSAL TAKVİYE ROZET BUTONU -->
+        <button class="btn-header-support-badge"
                 onclick="openSupportModal()"
                 title="Takviye Analiz ve Kayıt">
-            🚐
+            🚐 Takviye
         </button>
 
         <span id="cloudStatus"
@@ -1166,7 +1185,7 @@
 <div id="editSupportModal" class="modal-overlay" onclick="closeEditSupportModal(event)">
     <div class="modal-content edit-support-content" onclick="event.stopPropagation()">
         <div class="modal-header" style="border-bottom-color:#334155;">
-            <h3 style="color:#fbbf24;">✏️️ Takviye Kaydını Düzenle</h3>
+            <h3 style="color:#fbbf24;">✏️ Takviye Kaydını Düzenle</h3>
             <button class="btn-close" onclick="closeEditSupportModal()">✕</button>
         </div>
 
@@ -1511,7 +1530,7 @@
         if (status === "syncing") el.innerText = "🔄";
         else if (status === "ok") el.innerText = "☁️✅";
         else if (status === "error") el.innerText = "⚠️";
-        else el.innerText = "☁️";
+        else el.innerText = "☁️️";
     }
 
     function openSettingsModal() {
@@ -2095,7 +2114,7 @@
     }
 
     /* =========================================================
-       TAKVİYE DÜZENLEME & SİLME PANELİ (UZUN BASMA / TIKLAMA)
+       TAKVİYE DÜZENLEME & SİLME PANELİ (TIKLAMA / DÜZENLE)
        ========================================================= */
 
     function populateEditPilotDropdown() {
@@ -2475,7 +2494,7 @@
             if (calc.warningGK) {
                 html += `
                     <strong>🧭 G-K Hedef:</strong> ${calc.targetShipNameGK} (${calc.targetShipTimeStrKG})<br>
-                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeGK)} 
+                    🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.departureTimeKG)} 
                     ${calc.minutesUntilDepartureKG > 0 ? `(Kalan: <strong>${calc.minutesUntilDepartureKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>
                 `;
             }
