@@ -319,11 +319,16 @@
             text-decoration: none;
             font-size: 0.95rem;
             font-weight: 700;
-            display: inline-block;
             line-height: 1.3;
-            word-break: break-word;
             flex: 1;
             min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ship-name-link:active {
+            color: #38bdf8;
         }
 
         .ais-icon {
@@ -685,7 +690,6 @@
             Bu panel yalnızca sistem yöneticisine aittir. Kılavuz kaptan listelerini tek tıkla Firestore'a aktarabilirsiniz.
         </div>
 
-        <!-- İŞTE ARADIĞINIZ GİZLİ TOPLU AKTARIM BUTONU -->
         <button class="btn-search" 
                 style="background: #4f46e5; border: 1px solid #6366f1; padding: 12px; margin-top: 10px; font-weight: 800; font-size: 0.85rem;" 
                 onclick="topluKaptanYukle()">
@@ -760,6 +764,33 @@
     }
 
     /* =========================================================
+       ZAMAN FORMATLAMA FONKSİYONU (KISA VE DÜZGÜN GÖRÜNÜM)
+       ========================================================= */
+    function formatDisplayTime(timeStr, planlamaStr) {
+        if (planlamaStr) {
+            const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
+            if (pMatch) return `${pMatch[1]} / ${pMatch[3]}`;
+        }
+        if (!timeStr) return "-";
+        if (String(timeStr).includes("T")) {
+            const d = new Date(timeStr);
+            if (!isNaN(d.getTime())) {
+                const day = String(d.getDate()).padStart(2, "0");
+                const hour = String(d.getHours()).padStart(2, "0");
+                const min = String(d.getMinutes()).padStart(2, "0");
+                return `${day} / ${hour}:${min}`;
+            }
+        }
+        const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/);
+        if (fullMatch) return `${fullMatch[1]} / ${fullMatch[3]}`;
+        const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}:\d{2})/);
+        if (shortMatch) return `${shortMatch[1]} / ${shortMatch[3]}`;
+        const timeOnly = String(timeStr).match(/(\d{1,2}:\d{2})/);
+        if (timeOnly) return timeOnly[1];
+        return timeStr;
+    }
+
+    /* =========================================================
        CİHAZ PARMAK İZİ (UUID)
        ========================================================= */
     function getDeviceUUID() {
@@ -789,7 +820,6 @@
 
         const batch = db.batch();
         let toplamSayac = 0;
-
         const BENIM_SICILIM = "52181";
 
         for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
@@ -808,7 +838,7 @@
                     name: kaptanAdi,
                     sicil: sicilNo,
                     shift: Number(vardiyaNo),
-                    pass: "1915", // İlk şifre
+                    pass: "1915",
                     deviceId: (sicilNo === BENIM_SICILIM) ? getDeviceUUID() : "", 
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
@@ -819,7 +849,7 @@
 
         try {
             await batch.commit();
-            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptan Firestore'a aktarıldı.\nŞuayip Güler: 52181 (Cihazınız otomatik bağlandı)\nDiğer Kaptanlar: 10001, 20001, vb. (İlk şifre: 1915)`);
+            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptan Firestore'a aktarıldı.\nŞuayip Güler: 52181 (Cihazınız bağlandı)\nDiğer Kaptanlar: 10001, 20001, vb. (İlk şifre: 1915)`);
         } catch (err) {
             alert("Firestore yükleme hatası: " + err.message);
         }
@@ -1000,6 +1030,9 @@
         filtered.forEach(ship => {
             const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
             const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
+            
+            // Formatlı kısa saat: Örn "02 / 22:30"
+            const displayTime = formatDisplayTime(ship.time, ship.planlama);
 
             html += `
                 <div class="ship-card">
@@ -1009,7 +1042,7 @@
                         </a>
                         <div class="ship-time-badge">
                             <span class="time-prefix">${ship.hareket || "PLAN"}</span>
-                            <span class="time-val">${ship.time || "--:--"}</span>
+                            <span class="time-val">${displayTime}</span>
                         </div>
                     </div>
                     <div class="ship-details">
