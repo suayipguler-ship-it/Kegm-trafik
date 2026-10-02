@@ -504,6 +504,7 @@
             font-weight: 700;
         }
 
+        /* MODALLAR */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -624,10 +625,96 @@
             font-weight: 700;
         }
 
-        /* TAKVİYE MODAL STİLLERİ */
-        .support-modal-content {
-            max-height: 96vh;
-            border-top-color: #f59e0b;
+        /* 1.5 SAAT İNTİKALLİ ERKEN UYARI PANELİ */
+        .support-panel {
+            background: #101827;
+            border: 1px solid #334155;
+            border-left: 5px solid #22c55e;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+        }
+
+        .support-panel.warning {
+            border-left-color: #ef4444;
+            background: #21100d;
+        }
+
+        .support-panel.caution {
+            border-left-color: #f59e0b;
+            background: #1c1912;
+        }
+
+        .support-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .support-count-badge-btn {
+            background: #1e293b;
+            border: 1px solid #f59e0b;
+            color: #fbbf24;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .support-count-badge-btn:active {
+            background: #334155;
+        }
+
+        .support-info-line {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .active-support-item {
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-top: 6px;
+            position: relative;
+        }
+
+        .active-support-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .btn-record-action {
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            width: auto;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .btn-edit-record {
+            background: #1e3a5f;
+            border: 1px solid #38bdf8;
+            color: #7dd3fc;
+        }
+
+        .btn-delete-record {
+            background: #450a0a;
+            border: 1px solid #ef4444;
+            color: #fca5a5;
         }
 
         .support-form-label {
@@ -677,20 +764,38 @@
             font-weight: 600;
         }
 
-        .active-support-item {
-            background: #0b1329;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            padding: 8px 10px;
-            margin-top: 6px;
-        }
-
-        .active-support-top {
+        /* MEVCUT KILAVUZ EKLE-ÇIKAR MODALI */
+        .capacity-pilot-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.78rem;
-            font-weight: 800;
+            padding: 8px 10px;
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .capacity-pilot-item.active {
+            border-color: #22c55e;
+            background: #06281e;
+            color: #86efac;
+        }
+
+        .capacity-pilot-item.off {
+            border-color: #ef4444;
+            background: #250b0b;
+            color: #fca5a5;
+        }
+
+        .capacity-badge-state {
+            font-size: 0.72rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
         }
 
         .auth-split-inputs {
@@ -840,7 +945,7 @@
                 <span class="header-btn-text" id="authBadgeText">Giriş Yap</span>
             </button>
 
-            <!-- ARTIK TÜM KULLANICILARA AÇIK TAKVİYE BUTONU -->
+            <!-- TÜM KULLANICILARA AÇIK TAKVİYE BUTONU -->
             <button class="header-action-btn btn-header-support-box"
                     onclick="openSupportModal()"
                     title="Takviye Durumu ve Kayıt">
@@ -898,7 +1003,7 @@
     </div>
 </div>
 
-<!-- YETKİSİZ / KİLİTLİ EKRAN (3. KİŞİLERİN VE ACENTELERİN GÖRDÜĞÜ ALAN) -->
+<!-- YETKİSİZ / KİLİTLİ EKRAN -->
 <div id="lockScreen" class="auth-lock-card">
     <div class="auth-lock-icon">🛡️</div>
     <div class="auth-lock-title">Yetkili Cihaz Erişimi Gerekli</div>
@@ -941,13 +1046,16 @@
     </div>
 </div>
 
-<!-- TÜM KULLANICILARA AÇILAN TAKVİYE MODALI -->
+<!-- GELİŞMİŞ TAKVİYE MODALI -->
 <div id="supportModal" class="modal-overlay" onclick="closeSupportModal(event)">
-    <div class="modal-content support-modal-content" onclick="event.stopPropagation()">
+    <div class="modal-content" style="max-height: 96vh; border-top-color: #f59e0b;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <h3 style="color:#fbbf24;">🚚 TAKVİYE DURUMU VE KAYIT</h3>
+            <h3 style="color:#fbbf24;">🚐 ANLIK TAKVİYE DURUMU</h3>
             <button class="btn-close" onclick="closeSupportModal()">✕</button>
         </div>
+
+        <!-- ERKEN UYARI VE HAVUZ BİLGİ ALANI -->
+        <div id="modalSupportAnalysisContainer"></div>
 
         <div class="support-form-label" style="margin-top:6px;">Yön</div>
         <select id="supportDirection">
@@ -958,7 +1066,7 @@
         <div class="support-form-label">Saat</div>
         <input type="time" id="supportTime" step="900">
 
-        <div class="support-form-label">Vardiya Seçimi</div>
+        <div class="support-form-label">Vardiya Seçimi (Takviye Giden Kaptanlar İçin)</div>
         <div class="vardiya-tabs" id="supportModalVardiyaTabs">
             <button id="supportTabV1" class="btn-v-tab active" onclick="switchSupportVardiya(1)">Vardiya-1</button>
             <button id="supportTabV2" class="btn-v-tab" onclick="switchSupportVardiya(2)">Vardiya-2</button>
@@ -974,11 +1082,71 @@
         <button class="btn-search" style="background:#f59e0b; color:#000; font-weight:800;" onclick="saveSupportRecord()">
             🚚 TAKVİYEYİ KAYDET
         </button>
+    </div>
+</div>
 
-        <div style="border-top:1px solid #334155; padding-top:8px; margin-top:8px;">
-            <div style="font-size:0.8rem; color:#fbbf24; font-weight:800; margin-bottom:4px;">Kayıtlı Son Takviyeler:</div>
-            <div id="supportHistoryList"></div>
+<!-- GEÇMİŞ TAKVİYE KILAVUZLARINI DÜZENLEME (EKLE/ÇIKAR) MODALI -->
+<div id="editSupportPilotsModal" class="modal-overlay" onclick="closeEditSupportPilotsModal(event)">
+    <div class="modal-content" style="max-height: 92vh; border-top-color: #38bdf8;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️ Takviye Kılavuzlarını Düzenle</h3>
+            <button class="btn-close" onclick="closeEditSupportPilotsModal()">✕</button>
         </div>
+
+        <div style="font-size:0.78rem; color:#94a3b8; line-height:1.4;">
+            Bu takviye kaydındaki kılavuzları işaretleyerek <strong>ekleyebilir</strong> veya tikini kaldırarak <strong>çıkarabilirsiniz</strong>:
+        </div>
+
+        <div class="vardiya-tabs" style="margin-top:4px;">
+            <button id="editSuppTabV1" class="btn-v-tab active" onclick="switchEditSupportVardiya(1)">V-1</button>
+            <button id="editSuppTabV2" class="btn-v-tab" onclick="switchEditSupportVardiya(2)">V-2</button>
+            <button id="editSuppTabV3" class="btn-v-tab" onclick="switchEditSupportVardiya(3)">V-3</button>
+        </div>
+
+        <div id="editSupportPilotListBox" class="support-pilot-list" style="max-height:300px;"></div>
+
+        <div id="editSupportSelectedCount" style="color:#38bdf8; font-weight:800; font-size:0.8rem; text-align:center;">
+            0 kılavuz seçili.
+        </div>
+
+        <button class="btn-search" style="background:#0284c7; font-weight:800;" onclick="saveEditedSupportPilots()">
+            💾 Değişiklikleri Kaydet
+        </button>
+    </div>
+</div>
+
+<!-- MEVCUT KILAVUZ HAVUZU EKLE / ÇIKAR MODALI -->
+<div id="capacityManageModal" class="modal-overlay" onclick="closeCapacityManageModal(event)">
+    <div class="modal-content" style="max-height: 92vh; border-top-color: #38bdf8;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3 style="color:#38bdf8;">👥 Vardiya Mevcudu & İzinli Yönetimi</h3>
+            <button class="btn-close" onclick="closeCapacityManageModal()">✕</button>
+        </div>
+
+        <div style="font-size:0.78rem; color:#94a3b8; line-height:1.4;">
+            Vardiyadaki kılavuzların üzerine dokunarak <strong>Görevde / İzinli</strong> durumunu değiştirebilirsiniz. Havuz otomatik güncellenir:
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#0b1329; border:1px solid #1e293b; padding:8px 12px; border-radius:8px;">
+            <span style="font-weight:700; color:#e2e8f0; font-size:0.85rem;">Aktif Mevcut:</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <button style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;" onclick="adjustCapacityDelta(-1)">-</button>
+                <span id="capacityManageCurrentCount" style="font-size:1.1rem; font-weight:800; color:#fbbf24; min-width:30px; text-align:center;">30</span>
+                <button style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;" onclick="adjustCapacityDelta(1)">+</button>
+            </div>
+        </div>
+
+        <div class="vardiya-tabs" style="margin-top:4px;">
+            <button id="capTabV1" class="btn-v-tab active" onclick="switchCapacityVardiya(1)">V-1</button>
+            <button id="capTabV2" class="btn-v-tab" onclick="switchCapacityVardiya(2)">V-2</button>
+            <button id="capTabV3" class="btn-v-tab" onclick="switchCapacityVardiya(3)">V-3</button>
+        </div>
+
+        <div id="capacityPilotListContainer" style="display:flex; flex-direction:column; gap:6px; max-height:48vh; overflow-y:auto; padding-right:4px;"></div>
+
+        <button class="btn-search" style="background:#0284c7; margin-top:6px;" onclick="closeCapacityManageModal()">
+            Tamamla ve Kapat
+        </button>
     </div>
 </div>
 
@@ -1115,7 +1283,7 @@
     const MY_SPECIAL_SICIL = "52181";
     const SECRET_PIN = "1915";
 
-    /* KILAVUZ KAPTANLAR */
+    /* KILAVUZ KAPTANLAR LİSTESİ */
     const VARDIYALAR = {
         1: [
             "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
@@ -1249,7 +1417,7 @@
         }
         const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/);
         if (fullMatch) return `${fullMatch[1]} / ${fullMatch[3]}`;
-        const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}:\d{2})/);
+        const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/);
         if (shortMatch) return `${shortMatch[1]} / ${shortMatch[3]}`;
         const timeOnly = String(timeStr).match(/(\d{1,2}:\d{2})/);
         if (timeOnly) return timeOnly[1];
@@ -1272,10 +1440,14 @@
     let historyShips = [];
     let globalAssignments = {};
     let supportRecords = [];
+    let inactivePilotsSet = new Set();
     let currentMode = "live";
     let logHours = 6;
     let activeVardiya = 1;
     let supportActiveVardiya = 1;
+    let capacityActiveVardiya = 1;
+    let editSupportActiveVardiya = 1;
+    let currentEditingSupportId = null;
     let selectedShipKey = "";
     let clickCount = 0;
     let clickTimer = null;
@@ -1292,7 +1464,7 @@
         return "";
     }
 
-    /* VERİ YÜKLEME */
+    /* VERİLERİ YÜKLE */
     async function loadAllData() {
         if (!authenticatedCaptain) return;
 
@@ -1303,9 +1475,11 @@
             try {
                 globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
                 supportRecords = JSON.parse(localStorage.getItem("kegm_support_store") || "[]");
+                inactivePilotsSet = new Set(JSON.parse(localStorage.getItem("kegm_inactive_pilots") || "[]"));
             } catch (e) {
                 globalAssignments = {};
                 supportRecords = [];
+                inactivePilotsSet = new Set();
             }
 
             const [liveRes, histRes, assignRes, suppRes] = await Promise.all([
@@ -1340,15 +1514,10 @@
 
     function renderCurrentView() {
         if (!authenticatedCaptain) return;
-
-        if (currentMode === "live") {
-            renderLiveList();
-        } else {
-            renderHistoryList();
-        }
+        if (currentMode === "live") renderLiveList();
+        else renderHistoryList();
     }
 
-    /* CANLI PLANLAMA LİSTESİ */
     function renderLiveList() {
         const container = document.getElementById("shipContainer");
         const bogaz = document.getElementById("selBogaz").value;
@@ -1363,9 +1532,7 @@
             const matchHareket = normalizeStr(ship.hareket) === normalizeStr(hareket);
 
             if (!matchBogaz || !matchYon || !matchHareket) return false;
-            if (searchQuery.length > 0) {
-                return (ship.name || "").toLowerCase().includes(searchQuery);
-            }
+            if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
             return true;
         });
 
@@ -1421,7 +1588,6 @@
         container.innerHTML = html;
     }
 
-    /* KILAVUZLU GEÇİŞ LOGU LİSTESİ */
     function renderHistoryList() {
         const container = document.getElementById("shipContainer");
         const bogaz = document.getElementById("selBogaz").value;
@@ -1437,9 +1603,7 @@
             if (!hasAssignedPilot && !isBogazda) return false;
             const timeVal = getShipTimestamp(ship);
             if (cutoffTime > 0 && timeVal > 0 && timeVal < cutoffTime) return false;
-            if (searchQuery.length > 0) {
-                return (ship.name || "").toLowerCase().includes(searchQuery);
-            }
+            if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
             return true;
         });
 
@@ -1457,9 +1621,7 @@
                 const currentAssignment = getShipAssignment(ship);
                 const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
                 const currentHasPilot = !!currentAssignment && currentAssignment !== PILOTLESS_VALUE;
-                if (!existingHasPilot && currentHasPilot) {
-                    uniqueMap.set(dedupKey, ship);
-                }
+                if (!existingHasPilot && currentHasPilot) uniqueMap.set(dedupKey, ship);
             }
         });
 
@@ -1527,13 +1689,8 @@
         renderCurrentView();
     }
 
-    /* PİLOT MODALI */
     function openPilotModal(uniqueKey, shipName) {
-        if (!authenticatedCaptain) {
-            alert("Lütfen önce giriş yapınız.");
-            return;
-        }
-
+        if (!authenticatedCaptain) { alert("Lütfen önce giriş yapınız."); return; }
         selectedShipKey = uniqueKey;
         document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
         document.getElementById("pilotModal").style.display = "flex";
@@ -1594,8 +1751,175 @@
     }
 
     /* =========================================================
-       TAKVİYE YÖNETİMİ (TÜM GİRİŞ YAPAN KULLANICILARA AÇIK)
+       GELİŞMİŞ TAKVİYE ANALİZİ & 1.5 SAAT İNTİKALLİ ERKEN UYARI
        ========================================================= */
+    function getActiveCapacity() {
+        const saved = localStorage.getItem("kegm_manual_capacity");
+        if (saved !== null && !isNaN(parseInt(saved, 10))) {
+            return parseInt(saved, 10);
+        }
+        const vPilots = VARDIYALAR[authenticatedCaptain ? authenticatedCaptain.shift : 1] || [];
+        const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
+        return activeCount > 0 ? activeCount : 30;
+    }
+
+    function calculateDynamicSupportNeeds(bogaz) {
+        const now = Date.now();
+        const DURATION_KG_MS = 3.0 * 60 * 60 * 1000;
+        const DURATION_GK_MS = 3.5 * 60 * 60 * 1000;
+        const ROAD_TRANSIT_MS = 1.5 * 60 * 60 * 1000;
+        const PREDICTION_WINDOW_MS = 3.5 * 60 * 60 * 1000;
+
+        let n2_kg_active = 0;
+        let n3_gk_active = 0;
+        let nextKG_ship = null;
+        let nextGK_ship = null;
+
+        allShips.forEach(ship => {
+            if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return;
+            if (isShipTooOldForLive(ship)) return;
+            if (getShipAssignment(ship) === PILOTLESS_VALUE) return;
+
+            const isBog = isBogazdaShip(ship);
+            const shipTime = getShipTimestamp(ship);
+            const isKG = isNorthSouth(ship.yon);
+            const isGK = isSouthNorth(ship.yon);
+
+            if (isBog && shipTime > 0) {
+                const elapsed = now - shipTime;
+                if (isKG && elapsed < DURATION_KG_MS) n2_kg_active++;
+                if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
+            } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
+                if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
+                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship;
+            }
+        });
+
+        const totalActivePilots = getActiveCapacity();
+        const totalInTransit = n2_kg_active + n3_gk_active;
+        const isCapacityExhausted = totalInTransit >= totalActivePilots;
+
+        let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
+        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsGK = 0;
+
+        if (nextKG_ship && isCapacityExhausted) {
+            const shipTime = getShipTimestamp(nextKG_ship);
+            depTimeKG = new Date(shipTime - ROAD_TRANSIT_MS);
+            remMinsKG = Math.round((depTimeKG.getTime() - now) / 60000);
+            warningKG = true;
+            if (remMinsKG <= 0) criticalKG = true;
+        }
+
+        if (nextGK_ship && isCapacityExhausted) {
+            const shipTime = getShipTimestamp(nextGK_ship);
+            depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
+            remMinsGK = Math.round((depTimeGK.getTime() - now) / 60000);
+            warningGK = true;
+            if (remMinsGK <= 0) criticalGK = true;
+        }
+
+        return {
+            totalActivePilots,
+            n2_kg_active,
+            n3_gk_active,
+            totalInTransit,
+            warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
+            warningGK, criticalGK, depTimeGK, remMinsGK, nextGK_ship,
+            hasWarning: warningKG || warningGK
+        };
+    }
+
+    function formatClock(d) {
+        if (!d) return "--:--";
+        return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    }
+
+    function renderModalSupportAnalysis() {
+        const bogaz = document.getElementById("selBogaz").value;
+        const calc = calculateDynamicSupportNeeds(bogaz);
+        const container = document.getElementById("modalSupportAnalysisContainer");
+
+        const isCritical = calc.criticalKG || calc.criticalGK;
+        let panelClass = "support-panel";
+        if (isCritical) panelClass += " warning";
+        else if (calc.hasWarning) panelClass += " caution";
+
+        let html = `
+            <div class="${panelClass}">
+                <div class="support-header-row">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:0.85rem; font-weight:800; color:#fbbf24;">🚐 1.5 SAAT İNTİKALLİ ERKEN UYARI SİSTEMİ</span>
+                    </div>
+                    <!-- MEVCUT KUTUCUĞUNA TIKLAYINCA DÜZENLEME MODALI AÇILIR -->
+                    <div style="display:flex; align-items:center; gap:4px;">
+                        <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
+                            <span>${calc.totalActivePilots}</span> ✏️
+                        </button>
+                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
+                    </div>
+                </div>
+        `;
+
+        if (calc.hasWarning) {
+            html += `
+                <div style="color:${isCritical ? '#fca5a5' : '#fbbf24'}; font-size:0.82rem; font-weight:800; margin-bottom:4px;">
+                    ${isCritical ? '🚨 ACİL: TAKVİYE ARACI HEMEN ÇIKMALI!' : '⏳ DİKKAT: 2-3 SAAT İÇİNDE TAKVİYE GEREKECEK'}
+                </div>
+                <div class="support-info-line">
+            `;
+            if (calc.warningKG && calc.nextKG_ship) {
+                html += `<strong>Hedef Gemi (K-G):</strong> ${calc.nextKG_ship.name} (${formatDisplayTime(calc.nextKG_ship.time, calc.nextKG_ship.planlama)})<br>
+                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeKG)} 
+                         ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
+            }
+            if (calc.warningGK && calc.nextGK_ship) {
+                html += `<strong>Hedef Gemi (G-K):</strong> ${calc.nextGK_ship.name} (${formatDisplayTime(calc.nextGK_ship.time, calc.nextGK_ship.planlama)})<br>
+                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeGK)} 
+                         ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
+            }
+            html += `Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong></div>`;
+        } else {
+            html += `
+                <div style="color:#86efac; font-size:0.82rem; font-weight:700; margin-bottom:4px;">
+                    ✅ Önümüzdeki 3.5 Saatte Takviye İhtiyacı Görünmüyor
+                </div>
+                <div class="support-info-line">
+                    İstasyonlarda serbest kılavuz mevcut.<br>
+                    Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong>
+                </div>
+            `;
+        }
+
+        // Son 5 Gün İçindeki Takviye Kayıtları (Düzenleme & Silme Butonlu)
+        const fiveDaysMs = 5 * 24 * 60 * 60 * 1000;
+        const recentRecords = supportRecords.filter(r => (Date.now() - (r.timestamp || 0)) <= fiveDaysMs);
+
+        if (recentRecords.length > 0) {
+            html += `<div style="border-top:1px solid #334155; padding-top:6px; margin-top:4px;">
+                        <span style="font-size:0.75rem; color:#fbbf24; font-weight:700;">Son 5 Gün İçindeki Takviye Kayıtları:</span>`;
+            recentRecords.slice(0, 5).forEach(rec => {
+                const pilotText = Array.isArray(rec.pilots) ? rec.pilots.join(", ") : "";
+                html += `
+                    <div class="active-support-item">
+                        <div class="active-support-top">
+                            <span style="color:#38bdf8;">${rec.direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY"} (${rec.pilots.length} Kişi)</span>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="color:#fbbf24;">${rec.date || ""} ${rec.time || ""}</span>
+                                <button class="btn-record-action btn-edit-record" onclick="openEditSupportPilotsModal('${rec.id}')" title="Kılavuzları Düzenle (Ekle/Çıkar)">✏️ Düzenle</button>
+                                <button class="btn-record-action btn-delete-record" onclick="deleteSupportRecord('${rec.id}')" title="Bu takviyeyi sil">🗑️ Sil</button>
+                            </div>
+                        </div>
+                        <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍✈️ ${pilotText}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+
     function openSupportModal() {
         if (!authenticatedCaptain) {
             alert("Takviye modülünü kullanmak için lütfen önce giriş yapınız.");
@@ -1612,7 +1936,7 @@
 
         supportActiveVardiya = authenticatedCaptain.shift || 1;
         switchSupportVardiya(supportActiveVardiya);
-        renderSupportHistoryList();
+        renderModalSupportAnalysis();
     }
 
     function closeSupportModal(e) {
@@ -1676,31 +2000,167 @@
         localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
 
         alert("Takviye kaydı başarıyla eklendi.");
-        renderSupportHistoryList();
+        renderModalSupportAnalysis();
     }
 
-    function renderSupportHistoryList() {
-        const container = document.getElementById("supportHistoryList");
-        if (supportRecords.length === 0) {
-            container.innerHTML = '<div style="color:#64748b; font-size:0.75rem;">Henüz takviye kaydı yok.</div>';
+    function deleteSupportRecord(recId) {
+        if (!confirm("Bu takviye kaydını silmek istediğinize emin misiniz?")) return;
+        supportRecords = supportRecords.filter(r => r.id !== recId);
+        localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
+        renderModalSupportAnalysis();
+    }
+
+    /* =========================================================
+       GEÇMİŞ TAKVİYEDE KILAVUZ EKLE/ÇIKAR (DÜZENLEME) MODÜLÜ
+       ========================================================= */
+    let tempEditingPilots = new Set();
+
+    function openEditSupportPilotsModal(recId) {
+        const targetRec = supportRecords.find(r => r.id === recId);
+        if (!targetRec) return;
+
+        currentEditingSupportId = recId;
+        tempEditingPilots = new Set(targetRec.pilots || []);
+
+        document.getElementById("editSupportModalTitle").innerText = `✏️ Takviye Düzenle (${targetRec.direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY"} - ${targetRec.time})`;
+        editSupportActiveVardiya = authenticatedCaptain ? authenticatedCaptain.shift : 1;
+        switchEditSupportVardiya(editSupportActiveVardiya);
+
+        document.getElementById("editSupportPilotsModal").style.display = "flex";
+    }
+
+    function closeEditSupportPilotsModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        document.getElementById("editSupportPilotsModal").style.display = "none";
+        currentEditingSupportId = null;
+    }
+
+    function switchEditSupportVardiya(vNum) {
+        editSupportActiveVardiya = vNum;
+        document.getElementById("editSuppTabV1").classList.toggle("active", vNum === 1);
+        document.getElementById("editSuppTabV2").classList.toggle("active", vNum === 2);
+        document.getElementById("editSuppTabV3").classList.toggle("active", vNum === 3);
+        renderEditSupportPilotList();
+    }
+
+    function renderEditSupportPilotList() {
+        const container = document.getElementById("editSupportPilotListBox");
+        const list = VARDIYALAR[editSupportActiveVardiya] || [];
+        let html = "";
+
+        list.forEach((pilot, index) => {
+            const isChecked = tempEditingPilots.has(pilot);
+            const id = `editsupp_${editSupportActiveVardiya}_${index}`;
+            html += `
+                <label class="support-pilot-check">
+                    <input type="checkbox" value="${pilot.replace(/"/g, "&quot;")}" ${isChecked ? 'checked' : ''} onchange="toggleEditPilotChoice(this)" id="${id}">
+                    <span>${pilot}</span>
+                </label>
+            `;
+        });
+
+        container.innerHTML = html;
+        updateEditSupportSelectedCountDisplay();
+    }
+
+    function toggleEditPilotChoice(checkbox) {
+        const pilotName = checkbox.value;
+        if (checkbox.checked) {
+            tempEditingPilots.add(pilotName);
+        } else {
+            tempEditingPilots.delete(pilotName);
+        }
+        updateEditSupportSelectedCountDisplay();
+    }
+
+    function updateEditSupportSelectedCountDisplay() {
+        document.getElementById("editSupportSelectedCount").innerText = `${tempEditingPilots.size} kılavuz seçili.`;
+    }
+
+    function saveEditedSupportPilots() {
+        if (!currentEditingSupportId) return;
+        const targetRec = supportRecords.find(r => r.id === currentEditingSupportId);
+        if (!targetRec) return;
+
+        if (tempEditingPilots.size === 0) {
+            if (!confirm("Takviyedeki tüm kılavuzları çıkardınız. Takviye kaydını tamamen silmek istiyor musunuz?")) return;
+            deleteSupportRecord(currentEditingSupportId);
+            document.getElementById("editSupportPilotsModal").style.display = "none";
             return;
         }
 
+        targetRec.pilots = Array.from(tempEditingPilots);
+        localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
+
+        alert("Takviye kılavuz listesi başarıyla güncellendi.");
+        document.getElementById("editSupportPilotsModal").style.display = "none";
+        renderModalSupportAnalysis();
+    }
+
+    /* =========================================================
+       MEVCUT KILAVUZ EKLE-ÇIKAR / İZİNLİ YÖNETİMİ
+       ========================================================= */
+    function openCapacityManageModal() {
+        capacityActiveVardiya = authenticatedCaptain ? authenticatedCaptain.shift : 1;
+        switchCapacityVardiya(capacityActiveVardiya);
+        document.getElementById("capacityManageModal").style.display = "flex";
+    }
+
+    function closeCapacityManageModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        document.getElementById("capacityManageModal").style.display = "none";
+        renderModalSupportAnalysis();
+    }
+
+    function switchCapacityVardiya(vNum) {
+        capacityActiveVardiya = vNum;
+        document.getElementById("capTabV1").classList.toggle("active", vNum === 1);
+        document.getElementById("capTabV2").classList.toggle("active", vNum === 2);
+        document.getElementById("capTabV3").classList.toggle("active", vNum === 3);
+        renderCapacityPilotList();
+    }
+
+    function renderCapacityPilotList() {
+        const container = document.getElementById("capacityPilotListContainer");
+        const list = VARDIYALAR[capacityActiveVardiya] || [];
         let html = "";
-        supportRecords.slice(0, 5).forEach(rec => {
-            const pilotsStr = Array.isArray(rec.pilots) ? rec.pilots.join(", ") : "";
+
+        list.forEach(pilot => {
+            const isOff = inactivePilotsSet.has(pilot);
             html += `
-                <div class="active-support-item">
-                    <div class="active-support-top">
-                        <span style="color:#38bdf8;">${rec.direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY"} (${rec.pilots.length} Kişi)</span>
-                        <span style="color:#fbbf24;">${rec.date || ""} ${rec.time || ""}</span>
-                    </div>
-                    <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍✈️ ${pilotsStr}</div>
-                    <div style="color:#64748b; font-size:0.65rem; margin-top:2px;">Kaydeden: ${rec.author || "-"}</div>
+                <div class="capacity-pilot-item ${isOff ? 'off' : 'active'}" onclick="togglePilotCapacityStatus('${pilot.replace(/'/g, "\\'")}')">
+                    <span>${pilot}</span>
+                    <span class="capacity-badge-state" style="background:${isOff ? '#7f1d1d' : '#065f46'}; color:${isOff ? '#fecaca' : '#a7f3d0'};">
+                        ${isOff ? '🚫 İZİNLİ / YOK' : '🟢 GÖREVDE'}
+                    </span>
                 </div>
             `;
         });
+
         container.innerHTML = html;
+        document.getElementById("capacityManageCurrentCount").innerText = getActiveCapacity();
+    }
+
+    function togglePilotCapacityStatus(pilotName) {
+        if (inactivePilotsSet.has(pilotName)) {
+            inactivePilotsSet.delete(pilotName);
+        } else {
+            inactivePilotsSet.add(pilotName);
+        }
+        localStorage.setItem("kegm_inactive_pilots", JSON.stringify(Array.from(inactivePilotsSet)));
+        
+        const vPilots = VARDIYALAR[capacityActiveVardiya] || [];
+        const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
+        localStorage.setItem("kegm_manual_capacity", activeCount);
+
+        renderCapacityPilotList();
+    }
+
+    function adjustCapacityDelta(delta) {
+        let cur = getActiveCapacity() + delta;
+        if (cur < 1) cur = 1;
+        localStorage.setItem("kegm_manual_capacity", cur);
+        document.getElementById("capacityManageCurrentCount").innerText = cur;
     }
 
     /* =========================================================
@@ -1712,7 +2172,6 @@
     }
 
     function triggerSecretDiagnosis() {
-        // YALNIZCA 52181 VEYA 1915 GİRİŞ YAPMIŞSA TETİKLENİR
         if (!isSuperAdminUser()) {
             alert("Yetkisiz erişim: Bu terminal yalnızca sistem yöneticisine aittir.");
             return;
