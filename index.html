@@ -405,6 +405,13 @@
             font-weight: 700;
         }
 
+        .btn-assign-badge.pilotless {
+            background: #450a0a;
+            border-color: #ef4444;
+            color: #fca5a5;
+            font-weight: 700;
+        }
+
         .pilotless-info {
             display: none;
             padding: 7px 9px;
@@ -420,6 +427,86 @@
 
         .pilotless-info.visible {
             display: block;
+        }
+
+        /* KILAVUZLU GEÇİŞ LOGU ÖZEL STİLLERİ */
+        .direction-section {
+            margin-bottom: 16px;
+        }
+
+        .direction-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #38bdf8;
+            padding: 6px 10px;
+            background: #0f172a;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border-left: 4px solid #0284c7;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .log-row-compact {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: #0b1329;
+            border: 1px solid #1e293b;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .log-row-compact.assigned {
+            border-left: 4px solid #22c55e;
+        }
+
+        .log-ship-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .log-ship-name-plain {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .log-ship-time {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .log-pilot-tag {
+            width: 45%;
+            padding: 6px 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 5px;
+            background: #1e293b;
+            border: 1px dashed #475569;
+            color: #94a3b8;
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-shrink: 0;
+        }
+
+        .log-pilot-tag.saved {
+            background: #064e3b;
+            border: 1px solid #22c55e;
+            color: #4ade80;
+            font-weight: 700;
         }
 
         /* MODALLAR */
@@ -470,6 +557,77 @@
             color: #94a3b8;
             cursor: pointer;
             padding: 0 4px;
+        }
+
+        .vardiya-tabs {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-v-tab {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background: #0b1329;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+
+        .btn-v-tab.active {
+            background: #0284c7;
+            color: #fff;
+            border-color: #38bdf8;
+        }
+
+        .pilot-list-box {
+            overflow-y: auto;
+            max-height: 48vh;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-right: 4px;
+        }
+
+        .btn-pilot-item {
+            text-align: left;
+            padding: 9px 12px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #f8fafc;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-pilot-item:active {
+            background: #0284c7;
+        }
+
+        .btn-pilotless {
+            background: #450a0a;
+            border: 1px solid #ef4444;
+            color: #fecaca;
+            text-align: center;
+            font-weight: 800;
+            padding: 11px 12px;
+        }
+
+        .btn-pilotless.active {
+            background: #7f1d1d;
+            border-color: #f87171;
+            color: #fff;
+        }
+
+        .btn-pilot-clear {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+            text-align: center;
+            font-weight: 700;
         }
 
         .auth-split-inputs {
@@ -605,6 +763,12 @@
             <option value="BOĞAZDA">BOĞAZDA</option>
         </select>
 
+        <div id="logRangeBox" class="log-range-row">
+            <button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
+            <button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
+            <button class="btn-range" id="btnRange24" onclick="setLogHours(24)">Son 24 Saat</button>
+        </div>
+
         <button class="btn-search" onclick="loadAllData()">Listeyi Yenile</button>
     </div>
 
@@ -656,6 +820,28 @@
     </div>
 </div>
 
+<!-- PİLOT SEÇİM MODALI -->
+<div id="pilotModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3 id="modalShipTitle">Kılavuz Kaptan Ata</h3>
+            <button class="btn-close" onclick="closeModal()">✕</button>
+        </div>
+
+        <button id="btnPilotless" class="btn-pilot-item btn-pilotless" onclick="markShipAsPilotless()">
+            🚫 BU GEMİ PİLOTSUZ
+        </button>
+
+        <div class="vardiya-tabs" id="pilotModalVardiyaTabs">
+            <button id="tabV1" class="btn-v-tab active" onclick="switchVardiya(1)">Çanakkale-1</button>
+            <button id="tabV2" class="btn-v-tab" onclick="switchVardiya(2)">Çanakkale-2</button>
+            <button id="tabV3" class="btn-v-tab" onclick="switchVardiya(3)">Çanakkale-3</button>
+        </div>
+
+        <div id="pilotListContainer" class="pilot-list-box"></div>
+    </div>
+</div>
+
 <!-- SAHTE HATA MODALI (SYSADMIN 1915 GİRİŞİ) -->
 <div id="fakeErrorModal" class="modal-overlay" onclick="closeFakeErrorModal(event)">
     <div class="modal-content fake-error-content" onclick="event.stopPropagation()">
@@ -678,7 +864,7 @@
     </div>
 </div>
 
-<!-- GİZLİ ADMIN PANELİ (GİZLİ TOPLU YÜKLEME BUTONUNUN BULUNDUĞU YER) -->
+<!-- GİZLİ ADMIN PANELİ -->
 <div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
     <div class="modal-content stats-content" onclick="event.stopPropagation()">
         <div class="modal-header" style="border-bottom-color:#22c55e;">
@@ -722,6 +908,10 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    const PILOTLESS_VALUE = "__PILOTSUZ__";
+    const MAX_LIVE_AGE_HOURS = 48;
+    const MAX_BOGAZDA_AGE_HOURS = 9;
+
     /* =========================================================
        KILAVUZ KAPTANLAR LİSTESİ
        ========================================================= */
@@ -763,9 +953,84 @@
             .replace(/\s+/g, " ").trim();
     }
 
-    /* =========================================================
-       ZAMAN FORMATLAMA FONKSİYONU (KISA VE DÜZGÜN GÖRÜNÜM)
-       ========================================================= */
+    function isNorthSouth(yonStr) {
+        if (!yonStr) return false;
+        const norm = normalizeStr(yonStr);
+        return norm.startsWith("KUZEY") || norm === "NS" || norm.startsWith("K-G");
+    }
+
+    function isSouthNorth(yonStr) {
+        if (!yonStr) return false;
+        const norm = normalizeStr(yonStr);
+        return norm.startsWith("GUNEY") || norm === "SN" || norm.startsWith("G-K");
+    }
+
+    function parseTimeString(timeStr) {
+        if (!timeStr) return 0;
+        const str = String(timeStr).trim();
+        if (str.includes("T")) {
+            const iso = new Date(str).getTime();
+            if (!isNaN(iso) && iso > 0) return iso;
+        }
+        let match = str.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s*[- ]\s*(\d{1,2}):(\d{2})/);
+        if (!match) match = str.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s+(\d{1,2}):(\d{2})/);
+        if (match) {
+            const day = parseInt(match[1], 10);
+            const month = parseInt(match[2], 10) - 1;
+            let year = parseInt(match[3], 10);
+            if (year < 100) year += 2000;
+            const hour = parseInt(match[4], 10);
+            const minute = parseInt(match[5], 10);
+            return new Date(year, month, day, hour, minute).getTime();
+        }
+        const shortMatch = str.match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/);
+        if (shortMatch) {
+            const day = parseInt(shortMatch[1], 10);
+            const month = parseInt(shortMatch[2], 10) - 1;
+            const hour = parseInt(shortMatch[3], 10);
+            const minute = parseInt(shortMatch[4], 10);
+            const now = new Date();
+            let year = now.getFullYear();
+            let candidate = new Date(year, month, day, hour, minute);
+            if (candidate.getTime() - now.getTime() > 36 * 60 * 60 * 1000) {
+                candidate = new Date(year - 1, month, day, hour, minute);
+            }
+            return candidate.getTime();
+        }
+        const timeOnlyMatch = str.match(/(\d{1,2}):(\d{2})/);
+        if (timeOnlyMatch) {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(timeOnlyMatch[1], 10), parseInt(timeOnlyMatch[2], 10)).getTime();
+        }
+        return 0;
+    }
+
+    function getShipTimestamp(ship) {
+        if (!ship) return 0;
+        const candidates = [ship.timestamp, ship.entryTimestamp, ship.time, ship.planlama];
+        for (const value of candidates) {
+            if (value === undefined || value === null || value === "") continue;
+            const numeric = Number(value);
+            if (!isNaN(numeric) && numeric > 1000000000) return numeric;
+            const parsed = parseTimeString(value);
+            if (parsed && parsed > 0) return parsed;
+        }
+        return 0;
+    }
+
+    function isBogazdaShip(ship) {
+        return normalizeStr(ship && ship.hareket).includes("BOGAZDA");
+    }
+
+    function isShipTooOldForLive(ship) {
+        const shipTime = getShipTimestamp(ship);
+        if (!shipTime) return false;
+        const ageHours = (Date.now() - shipTime) / (1000 * 60 * 60);
+        if (ageHours < 0) return false;
+        const maxAge = isBogazdaShip(ship) ? MAX_BOGAZDA_AGE_HOURS : MAX_LIVE_AGE_HOURS;
+        return ageHours > maxAge;
+    }
+
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
             const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
@@ -790,9 +1055,6 @@
         return timeStr;
     }
 
-    /* =========================================================
-       CİHAZ PARMAK İZİ (UUID)
-       ========================================================= */
     function getDeviceUUID() {
         let uuid = localStorage.getItem("kegm_device_fingerprint");
         if (!uuid) {
@@ -806,14 +1068,325 @@
 
     let authenticatedCaptain = null;
     let allShips = [];
+    let historyShips = [];
+    let globalAssignments = {};
     let currentMode = "live";
+    let logHours = 6;
+    let activeVardiya = 1;
+    let selectedShipKey = "";
     let clickCount = 0;
     let clickTimer = null;
     const SECRET_PIN = "1915";
 
-    /* =========================================================
-       GİZLİ ADMIN TOPLU YÜKLEME FONKSİYONU
-       ========================================================= */
+    function getShipKey(ship) {
+        return `${ship.name}_${ship.time}`;
+    }
+
+    function getShipAssignment(ship) {
+        if (!ship) return "";
+        const key = getShipKey(ship);
+        if (Object.prototype.hasOwnProperty.call(globalAssignments, key)) return globalAssignments[key];
+        if (Object.prototype.hasOwnProperty.call(globalAssignments, ship.name)) return globalAssignments[ship.name];
+        return "";
+    }
+
+    function isShipPilotless(ship) {
+        return getShipAssignment(ship) === PILOTLESS_VALUE;
+    }
+
+    /* VERİ YÜKLEME */
+    async function loadAllData() {
+        if (!authenticatedCaptain) return;
+
+        const container = document.getElementById("shipContainer");
+        container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
+
+        try {
+            try {
+                globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
+            } catch (e) {
+                globalAssignments = {};
+            }
+
+            const [liveRes, histRes, assignRes] = await Promise.all([
+                fetch("ships.json?t=" + Date.now()).catch(() => ({ ok: false })),
+                fetch("history.json?t=" + Date.now()).catch(() => ({ ok: false })),
+                fetch("assignments.json?t=" + Date.now()).catch(() => ({ ok: false }))
+            ]);
+
+            if (liveRes.ok) allShips = await liveRes.json();
+            if (histRes.ok) historyShips = await histRes.json();
+
+            if (assignRes.ok) {
+                const cloudAssignments = await assignRes.json();
+                globalAssignments = { ...globalAssignments, ...cloudAssignments };
+                localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
+            }
+
+            renderCurrentView();
+        } catch (e) {
+            container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
+        }
+    }
+
+    function renderCurrentView() {
+        if (!authenticatedCaptain) return;
+
+        if (currentMode === "live") {
+            renderLiveList();
+        } else {
+            renderHistoryList();
+        }
+    }
+
+    /* CANLI PLANLAMA LİSTESİ */
+    function renderLiveList() {
+        const container = document.getElementById("shipContainer");
+        const bogaz = document.getElementById("selBogaz").value;
+        const yon = document.getElementById("selYon").value;
+        const hareket = document.getElementById("selHareket").value;
+        const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
+
+        let filtered = allShips.filter(ship => {
+            if (isShipTooOldForLive(ship)) return false;
+            const matchBogaz = normalizeStr(ship.bogaz) === normalizeStr(bogaz);
+            const matchYon = normalizeStr(ship.yon) === normalizeStr(yon);
+            const matchHareket = normalizeStr(ship.hareket) === normalizeStr(hareket);
+
+            if (!matchBogaz || !matchYon || !matchHareket) return false;
+            if (searchQuery.length > 0) {
+                return (ship.name || "").toLowerCase().includes(searchQuery);
+            }
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="status-msg">Bu kritere uygun aktif gemi bulunamadı.</div>';
+            return;
+        }
+
+        filtered.sort((a, b) => (getShipTimestamp(a) || 0) - (getShipTimestamp(b) || 0));
+
+        let html = "";
+        filtered.forEach(ship => {
+            const uniqueKey = getShipKey(ship);
+            const assignedPilot = getShipAssignment(ship);
+            const isPilotless = assignedPilot === PILOTLESS_VALUE;
+            const isAssigned = !!assignedPilot && !isPilotless;
+
+            const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
+            const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
+            const displayTime = formatDisplayTime(ship.time, ship.planlama);
+
+            let cardClass = "ship-card";
+            if (isPilotless) cardClass += " pilotless";
+            else if (isAssigned) cardClass += " assigned";
+
+            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️ " + assignedPilot : "+ Kılavuz Kaptan Ata";
+
+            html += `
+                <div class="${cardClass}">
+                    <div class="ship-header">
+                        <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
+                            ${ship.name || "-"} <span class="ais-icon">↗</span>
+                        </a>
+                        <div class="ship-time-badge">
+                            <span class="time-prefix">${ship.hareket || "PLAN"}</span>
+                            <span class="time-val">${displayTime}</span>
+                        </div>
+                    </div>
+                    ${isPilotless ? `<div class="pilotless-info visible">🚫 BU GEMİ PİLOTSUZ OLARAK İŞARETLENDİ</div>` : ""}
+                    <div class="ship-details">
+                        Boy: <span>${ship.len || "-"} m</span> | Tip: <span>${ship.type || "-"}</span><br>
+                        Kılavuz: <span>${ship.pilotReq || "-"}</span> | Römorkör: <span>${ship.tug || "-"}</span>
+                    </div>
+                    <div class="pilot-row">
+                        <button class="btn-assign-badge ${isPilotless ? "pilotless" : isAssigned ? "saved" : ""}"
+                            onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
+                            ${assignmentButtonText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    /* KILAVUZLU GEÇİŞ LOGU LİSTESİ */
+    function renderHistoryList() {
+        const container = document.getElementById("shipContainer");
+        const bogaz = document.getElementById("selBogaz").value;
+        const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
+        const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
+
+        let rawList = historyShips.filter(ship => {
+            if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
+            const assignment = getShipAssignment(ship);
+            if (assignment === PILOTLESS_VALUE) return false;
+            const hasAssignedPilot = !!assignment;
+            const isBogazda = isBogazdaShip(ship);
+            if (!hasAssignedPilot && !isBogazda) return false;
+            const timeVal = getShipTimestamp(ship);
+            if (cutoffTime > 0 && timeVal > 0 && timeVal < cutoffTime) return false;
+            if (searchQuery.length > 0) {
+                return (ship.name || "").toLowerCase().includes(searchQuery);
+            }
+            return true;
+        });
+
+        rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
+        const uniqueMap = new Map();
+        rawList.forEach(ship => {
+            const cleanName = normalizeStr(ship.name);
+            const dirKey = isNorthSouth(ship.yon) ? "NS" : "SN";
+            const dedupKey = `${cleanName}_${dirKey}`;
+            if (!uniqueMap.has(dedupKey)) {
+                uniqueMap.set(dedupKey, ship);
+            } else {
+                const existing = uniqueMap.get(dedupKey);
+                const existingAssignment = getShipAssignment(existing);
+                const currentAssignment = getShipAssignment(ship);
+                const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
+                const currentHasPilot = !!currentAssignment && currentAssignment !== PILOTLESS_VALUE;
+                if (!existingHasPilot && currentHasPilot) {
+                    uniqueMap.set(dedupKey, ship);
+                }
+            }
+        });
+
+        const baseList = Array.from(uniqueMap.values());
+        let html = "";
+        if (baseList.length === 0) {
+            html += `<div class="status-msg">Son ${logHours} saat içinde atanmış veya geçiş yapmış kılavuzlu gemi yok.</div>`;
+        } else {
+            const nsList = baseList.filter(s => isNorthSouth(s.yon));
+            const snList = baseList.filter(s => isSouthNorth(s.yon));
+
+            html += `<div class="direction-section"><div class="direction-title"><span>🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span></div>`;
+            if (nsList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+            else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+            html += `</div>`;
+
+            html += `<div class="direction-section"><div class="direction-title"><span>🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
+            if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+            else snList.forEach(ship => { html += buildCompactLogRow(ship); });
+            html += `</div>`;
+        }
+
+        container.innerHTML = html;
+    }
+
+    function buildCompactLogRow(ship) {
+        const uniqueKey = getShipKey(ship);
+        const assignedPilot = getShipAssignment(ship);
+        if (assignedPilot === PILOTLESS_VALUE) return "";
+        const isAssigned = !!assignedPilot;
+        const displayTime = formatDisplayTime(ship.time, ship.planlama);
+        let tagText = isAssigned ? assignedPilot : "+ Ata";
+
+        return `
+            <div class="log-row-compact ${isAssigned ? "assigned" : ""}">
+                <div class="log-ship-info">
+                    <span class="log-ship-name-plain">${ship.name}</span>
+                    <span class="log-ship-time">🕒 ${displayTime}</span>
+                </div>
+                <div class="log-pilot-tag ${isAssigned ? "saved" : ""}"
+                    onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
+                    ${tagText}
+                </div>
+            </div>
+        `;
+    }
+
+    /* MOD MODÜLÜ (CANLI / LOG) */
+    function switchMode(m) {
+        currentMode = m;
+        document.getElementById("tabLive").classList.toggle("active", m === "live");
+        document.getElementById("tabHistory").classList.toggle("active", m === "history");
+
+        // Log modunda yön ve hareket filtreleri gizlenip saat filtreleri açılır
+        document.getElementById("selYon").style.display = m === "live" ? "block" : "none";
+        document.getElementById("selHareket").style.display = m === "live" ? "block" : "none";
+        document.getElementById("logRangeBox").style.display = m === "history" ? "flex" : "none";
+
+        renderCurrentView();
+    }
+
+    function setLogHours(hours) {
+        logHours = hours;
+        document.getElementById("btnRange6").classList.toggle("active", hours === 6);
+        document.getElementById("btnRange12").classList.toggle("active", hours === 12);
+        document.getElementById("btnRange24").classList.toggle("active", hours === 24);
+        renderCurrentView();
+    }
+
+    /* PİLOT SEÇİM MODALI */
+    function openPilotModal(uniqueKey, shipName) {
+        if (!authenticatedCaptain) {
+            alert("Lütfen önce giriş yapınız.");
+            return;
+        }
+
+        selectedShipKey = uniqueKey;
+        document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
+        document.getElementById("pilotModal").style.display = "flex";
+
+        const currentAssignment = globalAssignments[uniqueKey] || "";
+        const pilotlessButton = document.getElementById("btnPilotless");
+        if (currentAssignment === PILOTLESS_VALUE) {
+            pilotlessButton.classList.add("active");
+            pilotlessButton.innerText = "🚫 PİLOTSUZ OLARAK İŞARETLENDİ";
+        } else {
+            pilotlessButton.classList.remove("active");
+            pilotlessButton.innerText = "🚫 BU GEMİ PİLOTSUZ";
+        }
+
+        activeVardiya = authenticatedCaptain.shift || 1;
+        switchVardiya(activeVardiya);
+    }
+
+    function closeModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        document.getElementById("pilotModal").style.display = "none";
+    }
+
+    function switchVardiya(vNum) {
+        activeVardiya = vNum;
+        document.getElementById("tabV1").classList.toggle("active", vNum === 1);
+        document.getElementById("tabV2").classList.toggle("active", vNum === 2);
+        document.getElementById("tabV3").classList.toggle("active", vNum === 3);
+        renderModalPilots();
+    }
+
+    function renderModalPilots() {
+        const container = document.getElementById("pilotListContainer");
+        const list = VARDIYALAR[activeVardiya] || [];
+        let html = `<button class="btn-pilot-item btn-pilot-clear" onclick="assignPilot('')">✖ Atamayı Kaldır / Temizle</button>`;
+        list.forEach(p => {
+            const safePilot = p.replace(/'/g, "\\'");
+            html += `<button class="btn-pilot-item" onclick="assignPilot('${safePilot}')">${p}</button>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function markShipAsPilotless() {
+        if (!selectedShipKey) return;
+        if (!confirm("Bu gemi PİLOTSUZ olarak işaretlenecek. Onaylıyor musunuz?")) return;
+        globalAssignments[selectedShipKey] = PILOTLESS_VALUE;
+        localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
+        document.getElementById("pilotModal").style.display = "none";
+        renderCurrentView();
+    }
+
+    function assignPilot(pilotName) {
+        if (pilotName) globalAssignments[selectedShipKey] = pilotName;
+        else delete globalAssignments[selectedShipKey];
+        localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
+        document.getElementById("pilotModal").style.display = "none";
+        renderCurrentView();
+    }
+
+    /* GİZLİ ADMIN TOPLU YÜKLEME */
     async function topluKaptanYukle() {
         const onay = confirm("Tüm kılavuz kaptan listesi Firebase Firestore'a otomatik aktarılacak. Onaylıyor musunuz?");
         if (!onay) return;
@@ -855,7 +1428,7 @@
         }
     }
 
-    /* TELEMETRİYE 3 KEZ TIKLAMA İLE GİZLİ PANEL AÇILMASI */
+    /* TELEMETRİ / SAHTE HATA MODALI */
     function triggerSecretDiagnosis() {
         clickCount++;
         clearTimeout(clickTimer);
@@ -986,92 +1559,12 @@
         document.getElementById("authModal").style.display = "none";
     }
 
-    async function loadAllData() {
-        if (!authenticatedCaptain) return;
-
-        const container = document.getElementById("shipContainer");
-        container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
-
-        try {
-            const res = await fetch("ships.json?t=" + Date.now());
-            if (res.ok) {
-                allShips = await res.json();
-                renderCurrentView();
-            } else {
-                container.innerHTML = '<div class="status-msg">Gemi verisi okunamadı.</div>';
-            }
-        } catch (e) {
-            container.innerHTML = '<div class="status-msg">Bağlantı hatası.</div>';
-        }
-    }
-
-    function renderCurrentView() {
-        if (!authenticatedCaptain) return;
-
-        const container = document.getElementById("shipContainer");
-        const bogaz = document.getElementById("selBogaz").value;
-        const yon = document.getElementById("selYon").value;
-        const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-
-        let filtered = allShips.filter(s => {
-            const mB = String(s.bogaz || "").toUpperCase().includes(bogaz);
-            const mY = String(s.yon || "").toUpperCase().includes(yon);
-            if (!mB || !mY) return false;
-            if (searchQuery) return (s.name || "").toLowerCase().includes(searchQuery);
-            return true;
-        });
-
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="status-msg">Kritere uygun gemi bulunamadı.</div>';
-            return;
-        }
-
-        let html = "";
-        filtered.forEach(ship => {
-            const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
-            const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
-            
-            // Formatlı kısa saat: Örn "02 / 22:30"
-            const displayTime = formatDisplayTime(ship.time, ship.planlama);
-
-            html += `
-                <div class="ship-card">
-                    <div class="ship-header">
-                        <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
-                            ${ship.name || "-"} <span class="ais-icon">↗</span>
-                        </a>
-                        <div class="ship-time-badge">
-                            <span class="time-prefix">${ship.hareket || "PLAN"}</span>
-                            <span class="time-val">${displayTime}</span>
-                        </div>
-                    </div>
-                    <div class="ship-details">
-                        Boy: <span>${ship.len || "-"} m</span> | Tip: <span>${ship.type || "-"}</span><br>
-                        Kılavuz: <span>${ship.pilotReq || "-"}</span> | Römorkör: <span>${ship.tug || "-"}</span>
-                    </div>
-                    <div class="pilot-row">
-                        <button class="btn-assign-badge">
-                            + Kılavuz Kaptan Ata
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-
     function openSupportNotice() {
         alert("Takviye durumu ve analizleri yalnızca nöbetçi vardiya yetkisiyle yönetilebilir.");
     }
 
     function openDevInfo() {
         alert("Onaylı Cihaz Parmak İziniz (UUID):\n" + getDeviceUUID());
-    }
-
-    function switchMode(m) {
-        currentMode = m;
-        document.getElementById("tabLive").classList.toggle("active", m === "live");
-        document.getElementById("tabHistory").classList.toggle("active", m === "history");
     }
 
     window.onload = () => {
