@@ -7,7 +7,7 @@
 
     <title>BOĞAZ GEÇİŞ PLANLAMA</title>
 
-    <!-- PWA & Mobil Uygulama Desteği -->
+    <!-- PWA & Mobil Desteği -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050b14">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,54 +16,7 @@
 
     <!-- Firebase SDK (v9 Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://Firebase yapılandırma bilgileriniz sisteme entegre edildi. 
-
-Bu mimaride sistem şöyle çalışacak:
-1. **Dışarıya Karşı Tam Kilit:** Kullanıcı yetkili bir cihazla ve sicil şifresiyle oturum açmadığı sürece arayüzdeki gemi listesi, hareket planı ve kılavuz bilgileri gizli kalır (`ships.json` vb. çağrılmaz).
-2. **Cihaz Eşleme (Hardware Binding):** Kaptan ilk girişini kendi telefonundan yaptığında cihaza özel benzersiz bir kimlik (UUID) üretilir ve Firestore üzerindeki `authorized_users/{sicil}` kaydına bağlanır.
-3. **Başka Cihazdan Giriş Engeli:** Aynı şifre ve sicil başka bir telefonda ya da bilgisayarda girildiğinde cihaz kimliği uyuşmayacağı için erişim anında reddedilir.
-
----
-
-### 1. Firebase Konsolunda Yapılacak Tek İşlem (Kullanıcı Tanımlama)
-
-Firebase Konsolunda **Firestore Database** bölümüne gelin:
-1. **Start collection** diyerek koleksiyon adına `authorized_users` yazın.
-2. **Document ID** alanına kaptanın sicilini yazın (Örn: `10452`).
-3. Alanları ekleyin:
-   * `name` (string): Kaptanın Adı (Örn: `Şuayip Güler`)
-   * `pass` (string): Belirlediğiniz şifre (Örn: `1915`)
-   * `shift` (number): Vardiya no (Örn: `2`)
-   * `deviceId` (string): İlk başta **boş** bırakın `""` (Kaptan ilk girdiğinde cihazını otomatik buraya mühürleyecek).
-
-*(Not: Firestore Rules sekmesinde `allow read, write: if true;` kuralının açık olduğundan emin olun.)*
-
----
-
-### 2. Güncellenmiş Tam `index.html` Kodu
-
-Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapınız korunmuş, üzerine Firebase kimlik & cihaz doğrulama katmanı entegre edilmiştir:
-
-```html
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="robots" content="noindex, nofollow, noarchive">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>BOĞAZ GEÇİŞ PLANLAMA</title>
-
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#050b14">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="[https://cdn-icons-png.flaticon.com/512/2942/2942076.png](https://cdn-icons-png.flaticon.com/512/2942/2942076.png)">
-
-    <!-- Firebase SDK (v9 Compat) -->
-    <script src="[https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js](https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js)"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
         * {
@@ -302,7 +255,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
             gap: 10px;
         }
 
-        /* GİRİŞ YAPILMAMIŞSA KORUMA EKRANI */
+        /* GİRİŞ KİLİT EKRANI */
         .auth-lock-card {
             background: #0f172a;
             border: 1px solid #1e293b;
@@ -447,13 +400,6 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
             font-weight: 700;
         }
 
-        .btn-assign-badge.pilotless {
-            background: #450a0a;
-            border-color: #ef4444;
-            color: #fca5a5;
-            font-weight: 700;
-        }
-
         .pilotless-info {
             display: none;
             padding: 7px 9px;
@@ -521,71 +467,6 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
             padding: 0 4px;
         }
 
-        .vardiya-tabs {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-v-tab {
-            flex: 1;
-            padding: 8px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            background: #0b1329;
-            color: #94a3b8;
-            cursor: pointer;
-        }
-
-        .btn-v-tab.active {
-            background: #0284c7;
-            color: #fff;
-            border-color: #38bdf8;
-        }
-
-        .pilot-list-box {
-            overflow-y: auto;
-            max-height: 48vh;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding-right: 4px;
-        }
-
-        .btn-pilot-item {
-            text-align: left;
-            padding: 9px 12px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            color: #f8fafc;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-pilot-item:active {
-            background: #0284c7;
-        }
-
-        .btn-pilotless {
-            background: #450a0a;
-            border: 1px solid #ef4444;
-            color: #fecaca;
-            text-align: center;
-            font-weight: 800;
-            padding: 11px 12px;
-        }
-
-        .btn-pilot-clear {
-            background: #334155;
-            border-color: #475569;
-            color: #e2e8f0;
-            text-align: center;
-            font-weight: 700;
-        }
-
         .auth-split-inputs {
             display: flex;
             gap: 10px;
@@ -615,6 +496,28 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
             border: 1px solid #334155;
         }
 
+        .fake-error-content {
+            border-radius: 12px;
+            margin: auto;
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid #dc2626;
+            background: #090202;
+            font-family: monospace;
+        }
+
+        .fake-error-title {
+            color: #ef4444;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .stats-content {
+            max-height: 94vh;
+            background: #090f1d;
+            border-top: 3px solid #22c55e;
+        }
+
         .telemetry-footer {
             text-align: center;
             margin-top: 32px;
@@ -622,6 +525,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
             font-size: 0.7rem;
             color: #334155;
             font-family: monospace;
+            cursor: pointer;
             user-select: none;
         }
 
@@ -636,6 +540,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
 
 <body>
 
+<!-- ÜST HEADER -->
 <div class="header">
     <h1>
         <span>BOĞAZ GEÇİŞ</span>
@@ -662,7 +567,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
 
         <div class="header-status-group">
             <span id="cloudStatus" class="cloud-status" title="Firebase Bağlantısı">☁</span>
-            <button class="btn-settings" onclick="openDevInfo()" title="Bilgi">⚙️</button>
+            <button class="btn-settings" onclick="openDevInfo()" title="Ayarlar">⚙️</button>
         </div>
     </div>
 </div>
@@ -716,8 +621,9 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
     </button>
 </div>
 
-<div class="telemetry-footer">
-    ● KEGM Güvenli Kılavuzluk Portalı [v3.0 Cihaz Korumalı]
+<!-- TELEMETRİ / GİZLİ TETİKLEME YAZISI (3 KEZ TIKLAMA) -->
+<div class="telemetry-footer" onclick="triggerSecretDiagnosis()">
+    ● NMEA-0183 Telemetri Aktif [v2.4.1] | Port: 4001
 </div>
 
 <!-- KİŞİSEL CİHAZ DOĞRULAMA MODALI -->
@@ -745,28 +651,63 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
     </div>
 </div>
 
-<!-- PİLOT SEÇİM MODALI -->
-<div id="pilotModal" class="modal-overlay" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <h3 id="modalShipTitle">Kılavuz Kaptan Ata</h3>
-            <button class="btn-close" onclick="closeModal()">✕</button>
+<!-- SAHTE HATA MODALI (SYSADMIN 1915 GİRİŞİ) -->
+<div id="fakeErrorModal" class="modal-overlay" onclick="closeFakeErrorModal(event)">
+    <div class="modal-content fake-error-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="border-bottom-color:#7f1d1d;">
+            <span class="fake-error-title">⚠️ SYSTEM EXCEPTION: 0x800403</span>
+            <button class="btn-close" style="color:#ef4444;" onclick="closeFakeErrorModal()">✕</button>
         </div>
-        <button id="btnPilotless" class="btn-pilot-item btn-pilotless" onclick="markShipAsPilotless()">
-            🚫 BU GEMİ PİLOTSUZ
+
+        <div style="font-size:0.75rem; color:#f87171; line-height:1.4; font-family:monospace;">
+            ERR_TELEMETRY_ACCESS_RESTRICTED<br>
+            Yetkisiz telemetri terminali engellendi. SysAdmin Key giriniz:
+        </div>
+
+        <input type="password" id="txtSecretPin" placeholder="Key / PIN..."
+               style="background:#180606; border-color:#991b1b; color:#fca5a5; font-family:monospace; margin-top:4px;">
+
+        <button class="btn-search" style="background:#dc2626;" onclick="verifySecretPin()">
+            Terminal Doğrula
         </button>
-        <div id="pilotListContainer" class="pilot-list-box" style="margin-top:6px;"></div>
+    </div>
+</div>
+
+<!-- GİZLİ ADMIN PANELİ (GİZLİ TOPLU YÜKLEME BUTONUNUN BULUNDUĞU YER) -->
+<div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
+    <div class="modal-content stats-content" onclick="event.stopPropagation()">
+        <div class="modal-header" style="border-bottom-color:#22c55e;">
+            <h3 style="color:#4ade80;">👑 SysAdmin & Telemetri Yönetimi</h3>
+            <button class="btn-close" onclick="closeStatsModal()">✕</button>
+        </div>
+
+        <div style="font-size:0.8rem; color:#cbd5e1; line-height:1.4;">
+            Bu panel yalnızca sistem yöneticisine aittir. Kılavuz kaptan listelerini tek tıkla Firestore'a aktarabilirsiniz.
+        </div>
+
+        <!-- İŞTE ARADIĞINIZ GİZLİ TOPLU AKTARIM BUTONU -->
+        <button class="btn-search" 
+                style="background: #4f46e5; border: 1px solid #6366f1; padding: 12px; margin-top: 10px; font-weight: 800; font-size: 0.85rem;" 
+                onclick="topluKaptanYukle()">
+            ⚡ Kılavuz Kaptanları Firestore'a Otomatik Yükle (Toplu)
+        </button>
+
+        <button class="btn-search" 
+                style="background: #334155; margin-top: 6px;" 
+                onclick="closeStatsModal()">
+            Kapat
+        </button>
     </div>
 </div>
 
 <script>
     /* =========================================================
-       FIREBASE BAĞLANTISI (SİZE AİT PROJE BİLGİLERİYLE)
+       FIREBASE BAĞLANTISI
        ========================================================= */
     const firebaseConfig = {
       apiKey: "AIzaSyBf46wFFITOfb-WV_rBDjzk6S53wMsVdd0",
       authDomain: "kegm-planlama.firebaseapp.com",
-      databaseURL: "[https://kegm-planlama-default-rtdb.europe-west1.firebasedatabase.app](https://kegm-planlama-default-rtdb.europe-west1.firebasedatabase.app)",
+      databaseURL: "https://kegm-planlama-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "kegm-planlama",
       storageBucket: "kegm-planlama.firebasestorage.app",
       messagingSenderId: "732016157047",
@@ -778,7 +719,48 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
     const db = firebase.firestore();
 
     /* =========================================================
-       CİHAZ KİMLİĞİ (DEVICE FINGERPRINT / HARDWARE UUID)
+       KILAVUZ KAPTANLAR LİSTESİ
+       ========================================================= */
+    const VARDIYALAR = {
+        1: [
+            "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
+            "AHMET ENDER SEVİM", "CANER GÜRSOY", "CİHAT DEVRİM", "ÇETİNER ÖNDÜL", "DENİZ YÜCEEFEGÜÇ",
+            "ENİS OKUTAN", "GÖKHAN BAHTİYAR", "GÖKSENİN KAPLAN", "GÜNAY GÜR", "HAKAN ÖZSOY",
+            "İLKAY MARTLI", "İLKER GÜNDOĞAN", "İRFAN İLKE ÖZÜARI", "MEHMET ALİ ÇAMLI",
+            "MURAT EMRE ERDEMİR", "RAHMİ ALPASLAN SOYUER", "SERDAR AKKOCA", "SERDİNÇ KOÇ",
+            "SONER ÇAYAN", "ŞERİF DOĞRUER", "ŞÜKRÜ ERBİL OĞUZHAN", "TAMER YAĞIZ",
+            "TAMER YILDIRIM", "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU"
+        ],
+        2: [
+            "CEM ERİNÇİN (Baş Klv. Kp.)", "MURAT TURAN", "ADNAN KEREM YALÇIN", "AHMET UYGUN",
+            "ALİ GÜL", "ALİ RIZA URAZ", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ",
+            "BÜLENT MEMİŞ", "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK", "ERÇİN GÖNÜLCAN",
+            "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK", "GÖKHAN KARSLI", "KEREM GÜL",
+            "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ", "MERT ATAYILMAZ", "MERTOL AKOĞLAN",
+            "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN",
+            "VEHBİ DEMİR", "UMUT ÇELİK", "YÜCEL AYAR"
+        ],
+        3: [
+            "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
+            "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU", "ERKAN ÇETİN",
+            "GÜLTEKİN ÖZDEMİR", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ", "MEHMET ÖZGÜR ŞAHİN",
+            "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN", "ONUR KAYA", "ÖZER ORAL",
+            "ÖZKAN BERK", "RIZA ÇETİN", "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR",
+            "TANSEL OREL", "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
+        ]
+    };
+
+    function normalizeStr(str) {
+        if (!str) return "";
+        return String(str)
+            .toLocaleUpperCase("tr-TR")
+            .replace(/İ/g, "I").replace(/Ş/g, "S").replace(/Ğ/g, "G")
+            .replace(/Ü/g, "U").replace(/Ö/g, "O").replace(/Ç/g, "C")
+            .replace(/\s+/g, " ").trim();
+    }
+
+    /* =========================================================
+       CİHAZ PARMAK İZİ (UUID)
        ========================================================= */
     function getDeviceUUID() {
         let uuid = localStorage.getItem("kegm_device_fingerprint");
@@ -794,10 +776,88 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
     let authenticatedCaptain = null;
     let allShips = [];
     let currentMode = "live";
-    let selectedShipKey = "";
-    let globalAssignments = {};
+    let clickCount = 0;
+    let clickTimer = null;
+    const SECRET_PIN = "1915";
 
-    /* GİRİŞ VE CİHAZ DOĞRULAMA ÇEKİRDEĞİ */
+    /* =========================================================
+       GİZLİ ADMIN TOPLU YÜKLEME FONKSİYONU
+       ========================================================= */
+    async function topluKaptanYukle() {
+        const onay = confirm("Tüm kılavuz kaptan listesi Firebase Firestore'a otomatik aktarılacak. Onaylıyor musunuz?");
+        if (!onay) return;
+
+        const batch = db.batch();
+        let toplamSayac = 0;
+
+        const BENIM_SICILIM = "52181";
+
+        for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
+            kaptanListesi.forEach((kaptanAdi, index) => {
+                let sicilNo;
+
+                if (normalizeStr(kaptanAdi).includes("SUAYIP GULER")) {
+                    sicilNo = BENIM_SICILIM;
+                } else {
+                    sicilNo = String(Number(vardiyaNo) * 10000 + (index + 1));
+                }
+
+                const docRef = db.collection("authorized_users").doc(sicilNo);
+
+                batch.set(docRef, {
+                    name: kaptanAdi,
+                    sicil: sicilNo,
+                    shift: Number(vardiyaNo),
+                    pass: "1915", // İlk şifre
+                    deviceId: (sicilNo === BENIM_SICILIM) ? getDeviceUUID() : "", 
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+
+                toplamSayac++;
+            });
+        }
+
+        try {
+            await batch.commit();
+            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptan Firestore'a aktarıldı.\nŞuayip Güler: 52181 (Cihazınız otomatik bağlandı)\nDiğer Kaptanlar: 10001, 20001, vb. (İlk şifre: 1915)`);
+        } catch (err) {
+            alert("Firestore yükleme hatası: " + err.message);
+        }
+    }
+
+    /* TELEMETRİYE 3 KEZ TIKLAMA İLE GİZLİ PANEL AÇILMASI */
+    function triggerSecretDiagnosis() {
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+        if (clickCount >= 3) {
+            clickCount = 0;
+            document.getElementById("txtSecretPin").value = "";
+            document.getElementById("fakeErrorModal").style.display = "flex";
+        }
+    }
+
+    function closeFakeErrorModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        document.getElementById("fakeErrorModal").style.display = "none";
+    }
+
+    function verifySecretPin() {
+        const pin = document.getElementById("txtSecretPin").value.trim();
+        if (pin === SECRET_PIN) {
+            document.getElementById("fakeErrorModal").style.display = "none";
+            document.getElementById("secretStatsModal").style.display = "flex";
+        } else {
+            alert("HATA: GEÇERSİZ SYSADMIN KEY.");
+        }
+    }
+
+    function closeStatsModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        document.getElementById("secretStatsModal").style.display = "none";
+    }
+
+    /* GİRİŞ & CİHAZ DOĞRULAMA */
     async function submitDeviceAuth() {
         const sicil = document.getElementById("txtSicil").value.trim();
         const pass = document.getElementById("txtPassword").value.trim();
@@ -826,20 +886,16 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
                 return;
             }
 
-            // Cihaz Eşleme Kontrolü
             if (!data.deviceId || data.deviceId === "") {
-                // İlk giriş: Cihazı bu sicile kilitle
                 await db.collection("authorized_users").doc(sicil).update({
                     deviceId: deviceId,
                     firstBoundAt: new Date().toISOString()
                 });
             } else if (data.deviceId !== deviceId) {
-                // Şifre doğru olsa dahi yabancı cihaz engeli!
-                errEl.innerText = "❌ YETKİSİZ CİHAZ! Bu hesap başka bir telefona mühürlü. Acenteler ve yabancı cihazlar erişemez.";
+                errEl.innerText = "❌ YETKİSİZ CİHAZ! Bu hesap başka bir telefona mühürlü.";
                 return;
             }
 
-            // Başarılı Giriş
             authenticatedCaptain = {
                 sicil: sicil,
                 name: data.name || "Kılavuz Kaptan",
@@ -864,7 +920,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
             const badge = document.getElementById("btnShiftAuthBadge");
             badge.classList.add("active");
             document.getElementById("authBadgeIcon").innerText = "🟢";
-            document.getElementById("authBadgeText").innerText = `V-${authenticatedCaptain.shift} (${authenticatedCaptain.sicil})`;
+            document.getElementById("authBadgeText").innerText = `V-${authenticatedCaptain.shift} (#${authenticatedCaptain.sicil})`;
         } else {
             document.getElementById("protectedContent").style.display = "none";
             document.getElementById("lockScreen").style.display = "flex";
@@ -900,15 +956,13 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
         document.getElementById("authModal").style.display = "none";
     }
 
-    /* VERİLERİ YALNIZCA YETKİLİ KULLANICIYA YÜKLE */
     async function loadAllData() {
         if (!authenticatedCaptain) return;
 
         const container = document.getElementById("shipContainer");
-        container.innerHTML = '<div class="status-msg">Veriler güvenli hattan yükleniyor...</div>';
+        container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
 
         try {
-            // Canlı gemileri sadece yetki varsa çek
             const res = await fetch("ships.json?t=" + Date.now());
             if (res.ok) {
                 allShips = await res.json();
@@ -917,7 +971,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
                 container.innerHTML = '<div class="status-msg">Gemi verisi okunamadı.</div>';
             }
         } catch (e) {
-            container.innerHTML = '<div class="status-msg">Sunucu bağlantı hatası.</div>';
+            container.innerHTML = '<div class="status-msg">Bağlantı hatası.</div>';
         }
     }
 
@@ -944,9 +998,8 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
 
         let html = "";
         filtered.forEach(ship => {
-            const key = `${ship.name}_${ship.time}`;
             const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
-            const aisUrl = `[https://www.vesselfinder.com/?ship=$](https://www.vesselfinder.com/?ship=$){encodeURIComponent(targetQuery)}`;
+            const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
 
             html += `
                 <div class="ship-card">
@@ -964,7 +1017,7 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
                         Kılavuz: <span>${ship.pilotReq || "-"}</span> | Römorkör: <span>${ship.tug || "-"}</span>
                     </div>
                     <div class="pilot-row">
-                        <button class="btn-assign-badge" onclick="openPilotModal('${key}', '${ship.name}')">
+                        <button class="btn-assign-badge">
                             + Kılavuz Kaptan Ata
                         </button>
                     </div>
@@ -974,31 +1027,24 @@ Mevcut tüm buton yerleşimleriniz, takviye hesaplamalarınız ve arayüz yapın
         container.innerHTML = html;
     }
 
-    function openPilotModal(key, shipName) {
-        selectedShipKey = key;
-        document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
-        document.getElementById("pilotModal").style.display = "flex";
-    }
-
-    function closeModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        document.getElementById("pilotModal").style.display = "none";
-    }
-
     function openSupportNotice() {
-        alert("Takviye durumu kayıt ve bildirimleri yalnızca nöbetçi kılavuz kaptanlar tarafından düzenlenebilir.");
+        alert("Takviye durumu ve analizleri yalnızca nöbetçi vardiya yetkisiyle yönetilebilir.");
     }
 
     function openDevInfo() {
-        alert("Cihaz Kimliğiniz (UUID):\n" + getDeviceUUID() + "\n\nBu kod veri tabanınızdaki onaylı cihazınızdır.");
+        alert("Onaylı Cihaz Parmak İziniz (UUID):\n" + getDeviceUUID());
+    }
+
+    function switchMode(m) {
+        currentMode = m;
+        document.getElementById("tabLive").classList.toggle("active", m === "live");
+        document.getElementById("tabHistory").classList.toggle("active", m === "history");
     }
 
     window.onload = () => {
         const savedSession = sessionStorage.getItem("kegm_active_pilot");
         if (savedSession) {
-            try {
-                authenticatedCaptain = JSON.parse(savedSession);
-            } catch(e) {}
+            try { authenticatedCaptain = JSON.parse(savedSession); } catch(e) {}
         }
         applyAuthenticatedState();
         if (authenticatedCaptain) {
