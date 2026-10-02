@@ -125718,5 +125718,25 @@
     "time": "2026-10-02T08:30:00.000Z",
     "timestamp": 1790929800000,
     "scrapedAt": "2026-10-02T02:12:24.368Z"
+  },
+  {
+    "source": "KEGM",
+    "bogaz": "İSTANBUL",
+    "yon": "KUZEY-GÜNEY",
+    "hareket": "BOĞAZDA",
+    "planlama": "BOĞAZDA 02.10.26 05:40",
+    "name": "ATLANTA",
+    "len": "140,3",
+    "length": 140.3,
+    "type": "GENERAL CARGO",
+    "pilotReq": "Evet",
+    "pilotRequired": true,
+    "tug": "Hayır",
+    "tugRequired": false,
+    "sp2": "01.10.26",
+    "sp1": "30.09.26",
+    "time": "2026-10-02T05:40:00.000Z",
+    "timestamp": 1790919600000,
+    "scrapedAt": "2026-10-02T02:47:03.130Z"
   }
 ]
