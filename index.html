@@ -1475,7 +1475,8 @@
             "ERGÜN ÖZGÜN", "FATİH IŞIK", "GÖKHAN KARSLI", "KEREM GÜL",
             "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ", "MERT ATAYILMAZ", "MERTOL AKOĞLAN",
             "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR",
-            "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR", "VEHBİ DEMİR"
+            "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR", "VEHBİ DEMİR",
+            "ALİ RIZA URAZ"
         ],
         3: [
             "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
@@ -1484,7 +1485,8 @@
             "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
-            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
+            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
+            "GÜLTEKİN ÖZDEMİR"
         ]
     };
 
@@ -1498,7 +1500,7 @@
         "RAHMI ALPASLAN SOYUER": "50978", "SERDAR AKKOCA": "50988", "SONER CAYAN": "52746",
         "SERIF DOGRUER": "52704", "SUKRU ERBIL OGUZHAN": "52738", "TAMER YAGIZ": "52934",
         "VOLKAN OZSOY": "53754", "VURAL MUCUK": "52360", "ZAFER ALTUNCU": "53884",
-        "BARIS TUNCER": "54056", "RIZA DURNA": "52815", "SERDINC KOC": "52815",
+        "BARIS TUNCER": "54056", "SERDINC KOC": "52815",
         "CEM ERINCIN": "51788", "MURAT TURAN": "51794", "ADNAN KEREM YALCIN": "52350",
         "AHMET UYGUN": "52179", "ALI GUL": "50976", "BERAT ERKAN ALSANCAK": "53209",
         "BURAK REIS YAVUZ": "51811", "BULENT MEMIS": "51042", "CAGLAR ALBAYRAK": "53889",
@@ -1508,7 +1510,7 @@
         "MERT ATAYILMAZ": "52960", "MERTOL AKOGLAN": "52570", "SUNAY IRMAK": "51805",
         "SUAYIP GULER": "52181", "SUKRU KURUN": "52219", "TAYFUN GUR": "52480",
         "TOYGAR SEZGIN": "52223", "UMUT CELIK": "52935", "YUCEL AYAR": "52822",
-        "VEHBI DEMIR": "52938",
+        "VEHBI DEMIR": "52938", "ALI RIZA URAZ": "53078",
         "MUSTAFA ERCETIN": "51809", "MURAT ONGUR": "50875", "ABDULBAKI PEKSERT": "51334",
         "ALI DURSUN OZDEMIR": "52702", "BURCIN ERLEVENT": "51039", "DENIZ EKINCI": "53885",
         "ERCAN SEVINC": "51780", "ERHAN CEVRIOGLU": "51313", "ERKAN CETIN": "52715",
@@ -1518,7 +1520,7 @@
         "OZKAN BERK": "52351", "RIZA CETIN": "52947", "SECA MATLAR": "53198",
         "SERCAN KUTLUER": "52957", "TANSEL AKPINAR": "52352", "TANSEL OREL": "51714",
         "T. ENDER YALCIN": "50782", "TAYLAN OLPAK": "52800", "TUNA UN": "52787",
-        "TOLGA DEMIRCI": "52356", "ULAS EMIROGLU": "52180"
+        "TOLGA DEMIRCI": "52356", "ULAS EMIROGLU": "52180", "GULTEKIN OZDEMIR": "52944"
     };
 
     function normalizeStr(str) {
@@ -1920,7 +1922,7 @@
 
             html += `<div class="direction-section"><div class="direction-title"><span>🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
             if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-            else snList.forEach(ship => { html += buildCompactLogRow(ship); });
+            else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
             html += `</div>`;
         }
 
@@ -2106,7 +2108,7 @@
                 if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
+                if (isGK && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextGK_ship = ship;
             }
         });
 
@@ -2591,10 +2593,8 @@
         setStatPeriod("shift");
         if (isSuperAdminUser()) {
             document.getElementById("manPilotBox").style.display = "block";
-            document.getElementById("btnBulkUpload").style.display = "block";
         } else {
             document.getElementById("manPilotBox").style.display = "none";
-            document.getElementById("btnBulkUpload").style.display = "none";
         }
         pushModalHistory("secretStatsModal");
         document.getElementById("secretStatsModal").style.display = "flex";
