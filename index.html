@@ -1059,8 +1059,8 @@
 
         <div class="support-form-label">Vardiya Seçimi (Takviye Giden Kaptanlar İçin)</div>
         <div class="vardiya-tabs" id="supportModalVardiyaTabs">
-            <button id="supportTabV1" class="btn-v-tab active" onclick="switchSupportVardiya(1)">Vardiya-1</button>
-            <button id="supportTabV2" class="btn-v-tab" onclick="switchSupportVardiya(2)">Vardiya-2</button>
+            <button id="supportTabV1" class="btn-v-tab" onclick="switchSupportVardiya(1)">Vardiya-1</button>
+            <button id="supportTabV2" class="btn-v-tab active" onclick="switchSupportVardiya(2)">Vardiya-2</button>
             <button id="supportTabV3" class="btn-v-tab" onclick="switchSupportVardiya(3)">Vardiya-3</button>
         </div>
 
@@ -1089,8 +1089,8 @@
         </div>
 
         <div class="vardiya-tabs" style="margin-top:4px;">
-            <button id="editSuppTabV1" class="btn-v-tab active" onclick="switchEditSupportVardiya(1)">V-1</button>
-            <button id="editSuppTabV2" class="btn-v-tab" onclick="switchEditSupportVardiya(2)">V-2</button>
+            <button id="editSuppTabV1" class="btn-v-tab" onclick="switchEditSupportVardiya(1)">V-1</button>
+            <button id="editSuppTabV2" class="btn-v-tab active" onclick="switchEditSupportVardiya(2)">V-2</button>
             <button id="editSuppTabV3" class="btn-v-tab" onclick="switchEditSupportVardiya(3)">V-3</button>
         </div>
 
@@ -1128,8 +1128,8 @@
         </div>
 
         <div class="vardiya-tabs" style="margin-top:4px;">
-            <button id="capTabV1" class="btn-v-tab active" onclick="switchCapacityVardiya(1)">V-1</button>
-            <button id="capTabV2" class="btn-v-tab" onclick="switchCapacityVardiya(2)">V-2</button>
+            <button id="capTabV1" class="btn-v-tab" onclick="switchCapacityVardiya(1)">V-1</button>
+            <button id="capTabV2" class="btn-v-tab active" onclick="switchCapacityVardiya(2)">V-2</button>
             <button id="capTabV3" class="btn-v-tab" onclick="switchCapacityVardiya(3)">V-3</button>
         </div>
 
@@ -1154,8 +1154,8 @@
         </button>
 
         <div class="vardiya-tabs" id="pilotModalVardiyaTabs">
-            <button id="tabV1" class="btn-v-tab active" onclick="switchVardiya(1)">Çanakkale-1</button>
-            <button id="tabV2" class="btn-v-tab" onclick="switchVardiya(2)">Çanakkale-2</button>
+            <button id="tabV1" class="btn-v-tab" onclick="switchVardiya(1)">Çanakkale-1</button>
+            <button id="tabV2" class="btn-v-tab active" onclick="switchVardiya(2)">Çanakkale-2</button>
             <button id="tabV3" class="btn-v-tab" onclick="switchVardiya(3)">Çanakkale-3</button>
         </div>
 
@@ -1185,7 +1185,7 @@
     </div>
 </div>
 
-<!-- GİZLİ İSTATİSTİK & YÖNETİCİ PANELİ (SADECE 52181 VE 1915 ADMIN) -->
+<!-- GİZLİ İSTATİSTİK & YÖNETİCİ PANELİ -->
 <div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
     <div class="modal-content stats-content" onclick="event.stopPropagation()">
         <div class="modal-header" style="border-bottom-color:#22c55e;">
@@ -1275,7 +1275,7 @@
     const SECRET_PIN = "1915";
 
     /* =========================================================
-       RESMÎ VE EN GÜNCEL KILAVUZ KAPTANLAR LİSTESİ
+       RESMÎ KILAVUZ KAPTANLAR LİSTESİ
        ========================================================= */
     const VARDIYALAR = {
         1: [
@@ -1308,7 +1308,6 @@
         ]
     };
 
-    /* RESMÎ ÇİZELGEDEKİ GERÇEK KURUM SİCİLLERİ EŞLEŞTİRMESİ */
     const GERCEK_SICIL_HARITASI = {
         // 1. Vardiya
         "SELIM KANDEMIR": "52216", "ENVER TASBUNAR": "51227", "ALI YILMAZ": "52943",
@@ -1436,7 +1435,7 @@
 
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
-            const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}):(\d{2})/);
+            const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
             if (pMatch) return `${pMatch[1]} / ${pMatch[3]}`;
         }
         if (!timeStr) return "-";
@@ -1449,7 +1448,7 @@
                 return `${day} / ${hour}:${min}`;
             }
         }
-        const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}):(\d{2})/);
+        const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/);
         if (fullMatch) return `${fullMatch[1]} / ${fullMatch[3]}`;
         const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/);
         if (shortMatch) return `${shortMatch[1]} / ${shortMatch[3]}`;
@@ -1498,6 +1497,50 @@
         return "";
     }
 
+    /* =========================================================
+       FIRESTORE CANLI DİNLEYİCİLERİ (BİRBİRİNİN DEĞİŞİKLİĞİNİ GÖRME)
+       ========================================================= */
+    let unsubs = [];
+
+    function setupRealtimeListeners() {
+        // Eski dinleyicileri temizle
+        unsubs.forEach(u => typeof u === "function" && u());
+        unsubs = [];
+
+        // 1. Canlı Kılavuz Atamalarını Dinle
+        const unsubAssign = db.collection("live_assignments").onSnapshot(snapshot => {
+            snapshot.docChanges().forEach(change => {
+                const key = decodeURIComponent(change.doc.id);
+                if (change.type === "removed") {
+                    delete globalAssignments[key];
+                } else {
+                    const data = change.doc.data();
+                    globalAssignments[key] = data.pilot;
+                }
+            });
+            localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
+            document.getElementById("cloudStatus").style.color = "#22c55e";
+            renderCurrentView();
+        }, err => {
+            console.error("Atama dinleme hatası:", err);
+            document.getElementById("cloudStatus").style.color = "#ef4444";
+        });
+        unsubs.push(unsubAssign);
+
+        // 2. Canlı Takviye Kayıtlarını Dinle
+        const unsubSupport = db.collection("support_records").orderBy("timestamp", "desc").limit(30).onSnapshot(snapshot => {
+            supportRecords = [];
+            snapshot.forEach(doc => {
+                supportRecords.push({ id: doc.id, ...doc.data() });
+            });
+            localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
+            renderModalSupportAnalysis();
+        }, err => {
+            console.error("Takviye dinleme hatası:", err);
+        });
+        unsubs.push(unsubSupport);
+    }
+
     async function loadAllData() {
         if (!authenticatedCaptain) return;
 
@@ -1515,30 +1558,16 @@
                 inactivePilotsSet = new Set();
             }
 
-            const [liveRes, histRes, assignRes, suppRes] = await Promise.all([
+            const [liveRes, histRes] = await Promise.all([
                 fetch("ships.json?t=" + Date.now()).catch(() => ({ ok: false })),
-                fetch("history.json?t=" + Date.now()).catch(() => ({ ok: false })),
-                fetch("assignments.json?t=" + Date.now()).catch(() => ({ ok: false })),
-                fetch("takviye.json?t=" + Date.now()).catch(() => ({ ok: false }))
+                fetch("history.json?t=" + Date.now()).catch(() => ({ ok: false }))
             ]);
 
             if (liveRes.ok) allShips = await liveRes.json();
             if (histRes.ok) historyShips = await histRes.json();
 
-            if (assignRes.ok) {
-                const cloudAssignments = await assignRes.json();
-                globalAssignments = { ...globalAssignments, ...cloudAssignments };
-                localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
-            }
-
-            if (suppRes.ok) {
-                const cloudSupp = await suppRes.json();
-                if (Array.isArray(cloudSupp)) {
-                    supportRecords = cloudSupp;
-                    localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
-                }
-            }
-
+            // Firestore canlı dinleyicilerini başlat
+            setupRealtimeListeners();
             renderCurrentView();
         } catch (e) {
             container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
@@ -1591,7 +1620,7 @@
             if (isPilotless) cardClass += " pilotless";
             else if (isAssigned) cardClass += " assigned";
 
-            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈ " + assignedPilot : "+ Kılavuz Kaptan Ata";
+            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️ " + assignedPilot : "+ Kılavuz Kaptan Ata";
 
             html += `
                 <div class="${cardClass}">
@@ -1766,21 +1795,44 @@
         container.innerHTML = html;
     }
 
-    function markShipAsPilotless() {
+    /* FIRESTORE'A CANLI KILAVUZ ATAMA VE PİLOTSUZ İŞARETLEME */
+    async function markShipAsPilotless() {
         if (!selectedShipKey) return;
         if (!confirm("Bu gemi PİLOTSUZ olarak işaretlenecek. Onaylıyor musunuz?")) return;
-        globalAssignments[selectedShipKey] = PILOTLESS_VALUE;
-        localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
-        document.getElementById("pilotModal").style.display = "none";
-        renderCurrentView();
+        
+        const docId = encodeURIComponent(selectedShipKey);
+        try {
+            await db.collection("live_assignments").doc(docId).set({
+                shipKey: selectedShipKey,
+                pilot: PILOTLESS_VALUE,
+                updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            document.getElementById("pilotModal").style.display = "none";
+        } catch (err) {
+            alert("Kayıt hatası: " + err.message);
+        }
     }
 
-    function assignPilot(pilotName) {
-        if (pilotName) globalAssignments[selectedShipKey] = pilotName;
-        else delete globalAssignments[selectedShipKey];
-        localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
-        document.getElementById("pilotModal").style.display = "none";
-        renderCurrentView();
+    async function assignPilot(pilotName) {
+        if (!selectedShipKey) return;
+        const docId = encodeURIComponent(selectedShipKey);
+
+        try {
+            if (pilotName) {
+                await db.collection("live_assignments").doc(docId).set({
+                    shipKey: selectedShipKey,
+                    pilot: pilotName,
+                    updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } else {
+                await db.collection("live_assignments").doc(docId).delete();
+            }
+            document.getElementById("pilotModal").style.display = "none";
+        } catch (err) {
+            alert("Atama kayıt hatası: " + err.message);
+        }
     }
 
     /* =========================================================
@@ -1940,7 +1992,7 @@
                                 <button class="btn-record-action btn-delete-record" onclick="deleteSupportRecord('${rec.id}')" title="Bu takviyeyi sil">🗑️ Sil</button>
                             </div>
                         </div>
-                        <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍‍✈ ${pilotText}</div>
+                        <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍✈️ ${pilotText}</div>
                     </div>
                 `;
             });
@@ -2005,7 +2057,8 @@
         document.getElementById("supportSelectedCount").innerText = `${checks.length} kılavuz seçildi.`;
     }
 
-    function saveSupportRecord() {
+    /* FIRESTORE CANLI TAKVİYE KAYDETME */
+    async function saveSupportRecord() {
         const dir = document.getElementById("supportDirection").value;
         const time = document.getElementById("supportTime").value;
         const checks = document.querySelectorAll("#supportPilotList input[type='checkbox']:checked");
@@ -2018,7 +2071,6 @@
         const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
 
         const newRec = {
-            id: "SUP-" + Date.now(),
             date: dateStr,
             time: time,
             direction: dir,
@@ -2027,18 +2079,25 @@
             timestamp: Date.now()
         };
 
-        supportRecords.unshift(newRec);
-        localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
-
-        alert("Takviye kaydı başarıyla eklendi.");
-        renderModalSupportAnalysis();
+        try {
+            await db.collection("support_records").add(newRec);
+            alert("Takviye kaydı başarıyla eklendi ve tüm cihazlara gönderildi.");
+            // Seçimleri temizle
+            checks.forEach(c => c.checked = false);
+            updateSupportSelectedCount();
+        } catch (err) {
+            alert("Takviye kayıt hatası: " + err.message);
+        }
     }
 
-    function deleteSupportRecord(recId) {
+    /* FIRESTORE CANLI TAKVİYE SİLME */
+    async function deleteSupportRecord(recId) {
         if (!confirm("Bu takviye kaydını silmek istediğinize emin misiniz?")) return;
-        supportRecords = supportRecords.filter(r => r.id !== recId);
-        localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
-        renderModalSupportAnalysis();
+        try {
+            await db.collection("support_records").doc(recId).delete();
+        } catch (err) {
+            alert("Silme hatası: " + err.message);
+        }
     }
 
     /* GEÇMİŞ TAKVİYE KILAVUZ DÜZENLEME */
@@ -2103,24 +2162,28 @@
         document.getElementById("editSupportSelectedCount").innerText = `${tempEditingPilots.size} kılavuz seçili.`;
     }
 
-    function saveEditedSupportPilots() {
+    async function saveEditedSupportPilots() {
         if (!currentEditingSupportId) return;
-        const targetRec = supportRecords.find(r => r.id === currentEditingSupportId);
-        if (!targetRec) return;
 
         if (tempEditingPilots.size === 0) {
             if (!confirm("Takviyedeki tüm kılavuzları çıkardınız. Takviye kaydını tamamen silmek istiyor musunuz?")) return;
-            deleteSupportRecord(currentEditingSupportId);
+            await deleteSupportRecord(currentEditingSupportId);
             document.getElementById("editSupportPilotsModal").style.display = "none";
             return;
         }
 
-        targetRec.pilots = Array.from(tempEditingPilots);
-        localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
+        try {
+            await db.collection("support_records").doc(currentEditingSupportId).update({
+                pilots: Array.from(tempEditingPilots),
+                updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
+                lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
 
-        alert("Takviye kılavuz listesi başarıyla güncellendi.");
-        document.getElementById("editSupportPilotsModal").style.display = "none";
-        renderModalSupportAnalysis();
+            alert("Takviye kılavuz listesi başarıyla güncellendi.");
+            document.getElementById("editSupportPilotsModal").style.display = "none";
+        } catch (err) {
+            alert("Güncelleme hatası: " + err.message);
+        }
     }
 
     /* MEVCUT KILAVUZ HAVUZU EKLE-ÇIKAR */
@@ -2261,7 +2324,7 @@
         tbody.innerHTML = html;
     }
 
-    /* RESMÎ SİCİLLERLE TOPLU GÜNCELLEME MOTORU */
+    /* TOPLU KAPTAN AKTARIMI */
     async function topluKaptanYukle() {
         if (!isSuperAdminUser()) {
             alert("Bu işlem yalnızca sistem yöneticisine aittir.");
@@ -2391,6 +2454,7 @@
     function handleAuthBadgeClick() {
         if (authenticatedCaptain) {
             if (confirm(`${authenticatedCaptain.name} oturumunu kapatmak istiyor musunuz?`)) {
+                unsubs.forEach(u => typeof u === "function" && u());
                 sessionStorage.removeItem("kegm_active_pilot");
                 authenticatedCaptain = null;
                 applyAuthenticatedState();
