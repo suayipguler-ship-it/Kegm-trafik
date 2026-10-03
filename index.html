@@ -998,7 +998,7 @@
 </div>
 
 <div id="lockScreen" class="auth-lock-card">
-    <div class="auth-lock-icon">🛡️️</div>
+    <div class="auth-lock-icon">🛡</div>
     <div class="auth-lock-title">Yetkili Cihaz Erişimi Gerekli</div>
     <div class="auth-lock-desc">
         Bu portal yalnızca KEGM Kılavuz Kaptanlarının <strong>onaylı kişisel cihazlarına</strong> tahsis edilmiştir. 
@@ -1122,7 +1122,7 @@
             <span style="font-weight:700; color:#e2e8f0; font-size:0.85rem;">Aktif Mevcut:</span>
             <div style="display:flex; align-items:center; gap:6px;">
                 <button style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;" onclick="adjustCapacityDelta(-1)">-</button>
-                <span id="capacityManageCurrentCount" style="font-size:1.1rem; font-weight:800; color:#fbbf24; min-width:30px; text-align:center;">30</span>
+                <span id="capacityManageCurrentCount" style="font-size:1.1rem; font-weight:800; color:#fbbf24; min-width:30px; text-align:center;">28</span>
                 <button style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;" onclick="adjustCapacityDelta(1)">+</button>
             </div>
         </div>
@@ -1275,70 +1275,76 @@
     const SECRET_PIN = "1915";
 
     /* =========================================================
-       KILAVUZ KAPTANLAR LİSTESİ (ERKAN KAYA 1. VARDIYADA)
+       RESMÎ VE EN GÜNCEL KILAVUZ KAPTANLAR LİSTESİ
        ========================================================= */
     const VARDIYALAR = {
         1: [
-            "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
-            "AHMET ENDER SEVİM", "CANER GÜRSOY", "CİHAT DEVRİM", "ÇETİNER ÖNDÜL", "DENİZ YÜCEEFEGÜÇ",
-            "ENİS OKUTAN", "GÖKHAN BAHTİYAR", "GÖKSENİN KAPLAN", "GÜNAY GÜR", "HAKAN ÖZSOY",
-            "İLKAY MARTLI", "İLKER GÜNDOĞAN", "İRFAN İLKE ÖZÜARI", "MEHMET ALİ ÇAMLI",
-            "MURAT EMRE ERDEMİR", "RAHMİ ALPASLAN SOYUER", "SERDAR AKKOCA", "SERDİNÇ KOÇ",
+            "SELİM KANDEMİR (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "ALİ YILMAZ", "CANER GÜRSOY",
+            "ÇETİNER ÖNDÜL", "DENİZ YÜCEEFEGÜÇ", "ENİS OKUTAN", "ERKAN KAYA",
+            "GÖKHAN BAHTİYAR", "GÖKMEN ALTUNDOĞAN", "GÖKSENİN KAPLAN", "GÜNAY GÜR",
+            "HAKAN ÖZSOY", "İLKAY MARTLI", "İLKER GÜNDOĞAN", "İRFAN İLKE ÖZÜARI",
+            "MEHMET ALİ ÇAMLI", "MURAT EMRE ERDEMİR", "RAHMİ ALPASLAN SOYUER", "SERDAR AKKOCA",
             "SONER ÇAYAN", "ŞERİF DOĞRUER", "ŞÜKRÜ ERBİL OĞUZHAN", "TAMER YAĞIZ",
-            "TAMER YILDIRIM", "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU",
-            "ERKAN KAYA"
+            "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU", "BARIŞ TUNÇER",
+            "RIZA DURNA", "SERDİNÇ KOÇ"
         ],
         2: [
             "CEM ERİNÇİN (Baş Klv. Kp.)", "MURAT TURAN", "ADNAN KEREM YALÇIN", "AHMET UYGUN",
-            "ALİ GÜL", "ALİ RIZA URAZ", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ",
-            "BÜLENT MEMİŞ", "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK", "ERÇİN GÖNÜLCAN",
+            "ALİ GÜL", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ", "BÜLENT MEMİŞ",
+            "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK", "ERÇİN GÖNÜLCAN",
             "ERGÜN ÖZGÜN", "FATİH IŞIK", "GÖKHAN KARSLI", "KEREM GÜL",
             "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ", "MERT ATAYILMAZ", "MERTOL AKOĞLAN",
-            "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN",
-            "VEHBİ DEMİR", "UMUT ÇELİK", "YÜCEL AYAR"
+            "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR",
+            "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR", "VEHBİ DEMİR"
         ],
         3: [
             "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
-            "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU", "ERKAN ÇETİN",
-            "GÜLTEKİN ÖZDEMİR", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ", "MEHMET ÖZGÜR ŞAHİN",
-            "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN", "ONUR KAYA", "ÖZER ORAL",
-            "ÖZKAN BERK", "RIZA ÇETİN", "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR",
-            "TANSEL OREL", "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
+            "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU",
+            "ERKAN ÇETİN", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ", "HÜSEYİN KARAYTUĞ",
+            "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
+            "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
+            "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
+            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
         ]
     };
 
-    /* 2. VARDIYA GERÇEK KURUM SİCİLLERİ EŞLEŞTİRMESİ */
-    const GERCEK_SICIL_V2 = {
-        "CEM ERINCIN": "51788",
-        "MURAT TURAN": "51794",
-        "MEHMET HAKAN TURAN": "51822",
-        "M.HAKAN TURAN": "51822",
-        "SUKRU KURUN": "52219",
-        "TOYGAR SEZGIN": "52223",
-        "TAYFUN GUR": "52480",
-        "MERTOL AKOGLAN": "52570",
-        "SUNAY IRMAK": "51805",
-        "ENGIN POLAT": "52705",
-        "ENGIN SIMSEK": "52742",
-        "KEREM GUL": "52744",
-        "YUCEL AYAR": "52822",
-        "BERAT ERKAN ALSANCAK": "53209",
-        "MEHMET OZGUN UNLU": "52940",
-        "FATIH ISIK": "52952",
-        "ALI GUL": "50976",
-        "AHMET UYGUN": "52179",
-        "SUAYIP GULER": "52181",
-        "BULENT MEMIS": "51042",
-        "UMUT CELIK": "52935",
-        "ERGUN OZGUN": "52946",
+    /* RESMÎ ÇİZELGEDEKİ GERÇEK KURUM SİCİLLERİ EŞLEŞTİRMESİ */
+    const GERCEK_SICIL_HARITASI = {
+        // 1. Vardiya
+        "SELIM KANDEMIR": "52216", "ENVER TASBUNAR": "51227", "ALI YILMAZ": "52943",
+        "CANER GURSOY": "52811", "CETINER ONDUL": "52814", "DENIZ YUCEEFEGUC": "52856",
+        "ENIS OKUTAN": "53086", "ERKAN KAYA": "52710", "GOKHAN BAHTIYAR": "52821",
+        "GOKMEN ALTUNDOGAN": "53857", "GOKSENIN KAPLAN": "52807", "GUNAY GUR": "51825",
+        "HAKAN OZSOY": "52191", "ILKAY MARTLI": "53883", "ILKER GUNDOGAN": "52950",
+        "IRFAN ILKE OZUARI": "53755", "MEHMET ALI CAMLI": "52177", "MURAT EMRE ERDEMIR": "52785",
+        "RAHMI ALPASLAN SOYUER": "50978", "SERDAR AKKOCA": "50988", "SONER CAYAN": "52746",
+        "SERIF DOGRUER": "52704", "SUKRU ERBIL OGUZHAN": "52738", "TAMER YAGIZ": "52934",
+        "VOLKAN OZSOY": "53754", "VURAL MUCUK": "52360", "ZAFER ALTUNCU": "53884",
+        "BARIS TUNCER": "54056", "RIZA DURNA": "52815", "SERDINC KOC": "52815",
+
+        // 2. Vardiya
+        "CEM ERINCIN": "51788", "MURAT TURAN": "51794", "ADNAN KEREM YALCIN": "52350",
+        "AHMET UYGUN": "52179", "ALI GUL": "50976", "BERAT ERKAN ALSANCAK": "53209",
+        "BURAK REIS YAVUZ": "51811", "BULENT MEMIS": "51042", "CAGLAR ALBAYRAK": "53889",
+        "ENGIN POLAT": "52705", "ENGIN SIMSEK": "52742", "ERCIN GONULCAN": "53888",
+        "ERGUN OZGUN": "52946", "FATIH ISIK": "52952", "GOKHAN KARSLI": "53758",
+        "KEREM GUL": "52744", "MEHMET HAKAN TURAN": "51822", "MEHMET OZGUN UNLU": "52940",
+        "MERT ATAYILMAZ": "52960", "MERTOL AKOGLAN": "52570", "SUNAY IRMAK": "51805",
+        "SUAYIP GULER": "52181", "SUKRU KURUN": "52219", "TAYFUN GUR": "52480",
+        "TOYGAR SEZGIN": "52223", "UMUT CELIK": "52935", "YUCEL AYAR": "52822",
         "VEHBI DEMIR": "52938",
-        "MERT ATAYILMAZ": "52960",
-        "ADNAN KEREM YALCIN": "52350",
-        "ALI RIZA URAZ": "53078",
-        "GOKHAN KARSLI": "53758",
-        "ERCIN GONULCAN": "53888",
-        "CAGLAR ALBAYRAK": "53889",
-        "BURAK REIS YAVUZ": "51811"
+
+        // 3. Vardiya
+        "MUSTAFA ERCETIN": "51809", "MURAT ONGUR": "50875", "ABDULBAKI PEKSERT": "51334",
+        "ALI DURSUN OZDEMIR": "52702", "BURCIN ERLEVENT": "51039", "DENIZ EKINCI": "53885",
+        "ERCAN SEVINC": "51780", "ERHAN CEVRIOGLU": "51313", "ERKAN CETIN": "52715",
+        "GURCAN SOYTURK": "52222", "HAKAN BILGIC": "50985", "HUSEYIN KARAYTUG": "52713",
+        "MEHMET OZGUR SAHIN": "52178", "MUSTAFA AKMAN": "53216", "OKAN OZKECECI": "53139",
+        "OLCAY SOZEN": "50986", "ONUR KAYA": "52915", "OZER ORAL": "52703",
+        "OZKAN BERK": "52351", "RIZA CETIN": "52947", "SECA MATLAR": "53198",
+        "SERCAN KUTLUER": "52957", "TANSEL AKPINAR": "52352", "TANSEL OREL": "51714",
+        "T. ENDER YALCIN": "50782", "TAYLAN OLPAK": "52800", "TUNA UN": "52787",
+        "TOLGA DEMIRCI": "52356", "ULAS EMIROGLU": "52180"
     };
 
     function normalizeStr(str) {
@@ -1430,7 +1436,7 @@
 
     function formatDisplayTime(timeStr, planlamaStr) {
         if (planlamaStr) {
-            const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
+            const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}):(\d{2})/);
             if (pMatch) return `${pMatch[1]} / ${pMatch[3]}`;
         }
         if (!timeStr) return "-";
@@ -1443,7 +1449,7 @@
                 return `${day} / ${hour}:${min}`;
             }
         }
-        const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/);
+        const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}):(\d{2})/);
         if (fullMatch) return `${fullMatch[1]} / ${fullMatch[3]}`;
         const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/);
         if (shortMatch) return `${shortMatch[1]} / ${shortMatch[3]}`;
@@ -1471,10 +1477,10 @@
     let inactivePilotsSet = new Set();
     let currentMode = "live";
     let logHours = 6;
-    let activeVardiya = 1;
-    let supportActiveVardiya = 1;
-    let capacityActiveVardiya = 1;
-    let editSupportActiveVardiya = 1;
+    let activeVardiya = 2;
+    let supportActiveVardiya = 2;
+    let capacityActiveVardiya = 2;
+    let editSupportActiveVardiya = 2;
     let currentEditingSupportId = null;
     let selectedShipKey = "";
     let clickCount = 0;
@@ -1585,7 +1591,7 @@
             if (isPilotless) cardClass += " pilotless";
             else if (isAssigned) cardClass += " assigned";
 
-            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️️ " + assignedPilot : "+ Kılavuz Kaptan Ata";
+            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈ " + assignedPilot : "+ Kılavuz Kaptan Ata";
 
             html += `
                 <div class="${cardClass}">
@@ -1732,7 +1738,7 @@
             pilotlessButton.innerText = "🚫 BU GEMİ PİLOTSUZ";
         }
 
-        activeVardiya = authenticatedCaptain.shift || 1;
+        activeVardiya = authenticatedCaptain.shift || 2;
         switchVardiya(activeVardiya);
     }
 
@@ -1787,7 +1793,7 @@
         }
         const vPilots = VARDIYALAR[authenticatedCaptain ? authenticatedCaptain.shift : 2] || [];
         const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
-        return activeCount > 0 ? activeCount : 29;
+        return activeCount > 0 ? activeCount : 28;
     }
 
     function calculateDynamicSupportNeeds(bogaz) {
@@ -1934,7 +1940,7 @@
                                 <button class="btn-record-action btn-delete-record" onclick="deleteSupportRecord('${rec.id}')" title="Bu takviyeyi sil">🗑️ Sil</button>
                             </div>
                         </div>
-                        <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍✈️ ${pilotText}</div>
+                        <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍‍✈ ${pilotText}</div>
                     </div>
                 `;
             });
@@ -1959,7 +1965,7 @@
         const mm = String(now.getMinutes()).padStart(2, "0");
         document.getElementById("supportTime").value = `${hh}:${mm}`;
 
-        supportActiveVardiya = authenticatedCaptain.shift || 1;
+        supportActiveVardiya = authenticatedCaptain.shift || 2;
         switchSupportVardiya(supportActiveVardiya);
         renderModalSupportAnalysis();
     }
@@ -2046,7 +2052,7 @@
         tempEditingPilots = new Set(targetRec.pilots || []);
 
         document.getElementById("editSupportModalTitle").innerText = `✏️ Takviye Düzenle (${targetRec.direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY"} - ${targetRec.time})`;
-        editSupportActiveVardiya = authenticatedCaptain ? authenticatedCaptain.shift : 1;
+        editSupportActiveVardiya = authenticatedCaptain ? authenticatedCaptain.shift : 2;
         switchEditSupportVardiya(editSupportActiveVardiya);
 
         document.getElementById("editSupportPilotsModal").style.display = "flex";
@@ -2255,14 +2261,14 @@
         tbody.innerHTML = html;
     }
 
-    /* GÜNCELLENMİŞ TOPLU YÜKLEME FONKSİYONU */
+    /* RESMÎ SİCİLLERLE TOPLU GÜNCELLEME MOTORU */
     async function topluKaptanYukle() {
         if (!isSuperAdminUser()) {
             alert("Bu işlem yalnızca sistem yöneticisine aittir.");
             return;
         }
 
-        const onay = confirm("2. Vardiya gerçek kurum sicilleri ve 1. Vardiya Erkan KAYA güncellenecek. Onaylıyor musunuz?");
+        const onay = confirm("Tüm vardiyalar (1, 2, 3) resmî liste ve gerçek sicil numaralarıyla Firestore'a aktarılacak. Onaylıyor musunuz?");
         if (!onay) return;
 
         const batch = db.batch();
@@ -2270,18 +2276,17 @@
 
         for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
             kaptanListesi.forEach((kaptanAdi, index) => {
-                let sicilNo;
+                let sicilNo = null;
                 const cleanName = normalizeStr(kaptanAdi);
 
-                if (Number(vardiyaNo) === 2) {
-                    let eslesen = null;
-                    for (const [key, val] of Object.entries(GERCEK_SICIL_V2)) {
-                        if (cleanName.includes(key)) { eslesen = val; break; }
+                for (const [key, val] of Object.entries(GERCEK_SICIL_HARITASI)) {
+                    if (cleanName.includes(key)) {
+                        sicilNo = val;
+                        break;
                     }
-                    sicilNo = eslesen || String(Number(vardiyaNo) * 10000 + (index + 1));
-                } else if (cleanName.includes("ERKAN KAYA")) {
-                    sicilNo = "10031"; // 1. Vardiyaya eklenen Erkan KAYA
-                } else {
+                }
+
+                if (!sicilNo) {
                     sicilNo = String(Number(vardiyaNo) * 10000 + (index + 1));
                 }
 
@@ -2302,7 +2307,7 @@
 
         try {
             await batch.commit();
-            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptan güncellendi.\n2. Vardiya gerçek sicilleriyle mühürlendi.\nErkan KAYA 1. Vardiya (#10031) olarak eklendi.`);
+            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptanın tamamı resmî kurum sicilleriyle Firestore'a aktarıldı.\nŞuayip Güler: 52181 (Cihazınız bağlı kaldı)\nİlk şifre: 1915`);
         } catch (err) {
             alert("Firestore yükleme hatası: " + err.message);
         }
@@ -2350,7 +2355,7 @@
             authenticatedCaptain = {
                 sicil: sicil,
                 name: data.name || "Kılavuz Kaptan",
-                shift: data.shift || 1
+                shift: data.shift || 2
             };
 
             sessionStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
