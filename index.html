@@ -504,7 +504,6 @@
             font-weight: 700;
         }
 
-        /* MODALLAR */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -625,7 +624,6 @@
             font-weight: 700;
         }
 
-        /* 1.5 SAAT İNTİKALLİ ERKEN UYARI PANELİ */
         .support-panel {
             background: #101827;
             border: 1px solid #334155;
@@ -764,7 +762,6 @@
             font-weight: 600;
         }
 
-        /* MEVCUT KILAVUZ EKLE-ÇIKAR MODALI */
         .capacity-pilot-item {
             display: flex;
             justify-content: space-between;
@@ -928,7 +925,6 @@
 
 <body>
 
-<!-- ÜST HEADER -->
 <div class="header">
     <h1>
         <span>BOĞAZ GEÇİŞ</span>
@@ -945,7 +941,6 @@
                 <span class="header-btn-text" id="authBadgeText">Giriş Yap</span>
             </button>
 
-            <!-- TÜM KULLANICILARA AÇIK TAKVİYE BUTONU -->
             <button class="header-action-btn btn-header-support-box"
                     onclick="openSupportModal()"
                     title="Takviye Durumu ve Kayıt">
@@ -966,7 +961,6 @@
     <button id="tabHistory" class="btn-tab" onclick="switchMode('history')">📜 Kılavuzlu Geçiş Logu</button>
 </div>
 
-<!-- KORUMALI VERİ ALANI: SADECE YETKİLİ CİHAZ GÖRÜR -->
 <div id="protectedContent" style="display: none;">
     <div class="filter-card">
         <input type="text" id="txtShipSearch" class="search-box" placeholder="🔍 Gemi Adı Ara..." oninput="renderCurrentView()">
@@ -1003,9 +997,8 @@
     </div>
 </div>
 
-<!-- YETKİSİZ / KİLİTLİ EKRAN -->
 <div id="lockScreen" class="auth-lock-card">
-    <div class="auth-lock-icon">🛡️</div>
+    <div class="auth-lock-icon">🛡️️</div>
     <div class="auth-lock-title">Yetkili Cihaz Erişimi Gerekli</div>
     <div class="auth-lock-desc">
         Bu portal yalnızca KEGM Kılavuz Kaptanlarının <strong>onaylı kişisel cihazlarına</strong> tahsis edilmiştir. 
@@ -1016,7 +1009,6 @@
     </button>
 </div>
 
-<!-- TELEMETRİ / SADECE 52181 VE ADMIN ERİŞEBİLİR -->
 <div class="telemetry-footer" onclick="triggerSecretDiagnosis()">
     ● NMEA-0183 Telemetri Aktif [v2.4.1] | Port: 4001
 </div>
@@ -1054,7 +1046,6 @@
             <button class="btn-close" onclick="closeSupportModal()">✕</button>
         </div>
 
-        <!-- ERKEN UYARI VE HAVUZ BİLGİ ALANI -->
         <div id="modalSupportAnalysisContainer"></div>
 
         <div class="support-form-label" style="margin-top:6px;">Yön</div>
@@ -1283,7 +1274,9 @@
     const MY_SPECIAL_SICIL = "52181";
     const SECRET_PIN = "1915";
 
-    /* KILAVUZ KAPTANLAR LİSTESİ */
+    /* =========================================================
+       KILAVUZ KAPTANLAR LİSTESİ (ERKAN KAYA 1. VARDIYADA)
+       ========================================================= */
     const VARDIYALAR = {
         1: [
             "SELİM KANDEMİRLİ (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "CÜNEYT ÇAVDAR", "ALİ YILMAZ",
@@ -1292,13 +1285,14 @@
             "İLKAY MARTLI", "İLKER GÜNDOĞAN", "İRFAN İLKE ÖZÜARI", "MEHMET ALİ ÇAMLI",
             "MURAT EMRE ERDEMİR", "RAHMİ ALPASLAN SOYUER", "SERDAR AKKOCA", "SERDİNÇ KOÇ",
             "SONER ÇAYAN", "ŞERİF DOĞRUER", "ŞÜKRÜ ERBİL OĞUZHAN", "TAMER YAĞIZ",
-            "TAMER YILDIRIM", "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU"
+            "TAMER YILDIRIM", "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU",
+            "ERKAN KAYA"
         ],
         2: [
             "CEM ERİNÇİN (Baş Klv. Kp.)", "MURAT TURAN", "ADNAN KEREM YALÇIN", "AHMET UYGUN",
             "ALİ GÜL", "ALİ RIZA URAZ", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ",
             "BÜLENT MEMİŞ", "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK", "ERÇİN GÖNÜLCAN",
-            "ERGÜN ÖZGÜN", "ERKAN KAYA", "FATİH IŞIK", "GÖKHAN KARSLI", "KEREM GÜL",
+            "ERGÜN ÖZGÜN", "FATİH IŞIK", "GÖKHAN KARSLI", "KEREM GÜL",
             "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ", "MERT ATAYILMAZ", "MERTOL AKOĞLAN",
             "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR", "TOYGAR SEZGİN",
             "VEHBİ DEMİR", "UMUT ÇELİK", "YÜCEL AYAR"
@@ -1311,6 +1305,40 @@
             "ÖZKAN BERK", "RIZA ÇETİN", "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR",
             "TANSEL OREL", "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU"
         ]
+    };
+
+    /* 2. VARDIYA GERÇEK KURUM SİCİLLERİ EŞLEŞTİRMESİ */
+    const GERCEK_SICIL_V2 = {
+        "CEM ERINCIN": "51788",
+        "MURAT TURAN": "51794",
+        "MEHMET HAKAN TURAN": "51822",
+        "M.HAKAN TURAN": "51822",
+        "SUKRU KURUN": "52219",
+        "TOYGAR SEZGIN": "52223",
+        "TAYFUN GUR": "52480",
+        "MERTOL AKOGLAN": "52570",
+        "SUNAY IRMAK": "51805",
+        "ENGIN POLAT": "52705",
+        "ENGIN SIMSEK": "52742",
+        "KEREM GUL": "52744",
+        "YUCEL AYAR": "52822",
+        "BERAT ERKAN ALSANCAK": "53209",
+        "MEHMET OZGUN UNLU": "52940",
+        "FATIH ISIK": "52952",
+        "ALI GUL": "50976",
+        "AHMET UYGUN": "52179",
+        "SUAYIP GULER": "52181",
+        "BULENT MEMIS": "51042",
+        "UMUT CELIK": "52935",
+        "ERGUN OZGUN": "52946",
+        "VEHBI DEMIR": "52938",
+        "MERT ATAYILMAZ": "52960",
+        "ADNAN KEREM YALCIN": "52350",
+        "ALI RIZA URAZ": "53078",
+        "GOKHAN KARSLI": "53758",
+        "ERCIN GONULCAN": "53888",
+        "CAGLAR ALBAYRAK": "53889",
+        "BURAK REIS YAVUZ": "51811"
     };
 
     function normalizeStr(str) {
@@ -1464,7 +1492,6 @@
         return "";
     }
 
-    /* VERİLERİ YÜKLE */
     async function loadAllData() {
         if (!authenticatedCaptain) return;
 
@@ -1558,7 +1585,7 @@
             if (isPilotless) cardClass += " pilotless";
             else if (isAssigned) cardClass += " assigned";
 
-            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️ " + assignedPilot : "+ Kılavuz Kaptan Ata";
+            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️️ " + assignedPilot : "+ Kılavuz Kaptan Ata";
 
             html += `
                 <div class="${cardClass}">
@@ -1758,9 +1785,9 @@
         if (saved !== null && !isNaN(parseInt(saved, 10))) {
             return parseInt(saved, 10);
         }
-        const vPilots = VARDIYALAR[authenticatedCaptain ? authenticatedCaptain.shift : 1] || [];
+        const vPilots = VARDIYALAR[authenticatedCaptain ? authenticatedCaptain.shift : 2] || [];
         const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
-        return activeCount > 0 ? activeCount : 30;
+        return activeCount > 0 ? activeCount : 29;
     }
 
     function calculateDynamicSupportNeeds(bogaz) {
@@ -1850,7 +1877,6 @@
                     <div style="display:flex; align-items:center; gap:6px;">
                         <span style="font-size:0.85rem; font-weight:800; color:#fbbf24;">🚐 1.5 SAAT İNTİKALLİ ERKEN UYARI SİSTEMİ</span>
                     </div>
-                    <!-- MEVCUT KUTUCUĞUNA TIKLAYINCA DÜZENLEME MODALI AÇILIR -->
                     <div style="display:flex; align-items:center; gap:4px;">
                         <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
                             <span>${calc.totalActivePilots}</span> ✏️
@@ -1890,7 +1916,6 @@
             `;
         }
 
-        // Son 5 Gün İçindeki Takviye Kayıtları (Düzenleme & Silme Butonlu)
         const fiveDaysMs = 5 * 24 * 60 * 60 * 1000;
         const recentRecords = supportRecords.filter(r => (Date.now() - (r.timestamp || 0)) <= fiveDaysMs);
 
@@ -2010,9 +2035,7 @@
         renderModalSupportAnalysis();
     }
 
-    /* =========================================================
-       GEÇMİŞ TAKVİYEDE KILAVUZ EKLE/ÇIKAR (DÜZENLEME) MODÜLÜ
-       ========================================================= */
+    /* GEÇMİŞ TAKVİYE KILAVUZ DÜZENLEME */
     let tempEditingPilots = new Set();
 
     function openEditSupportPilotsModal(recId) {
@@ -2065,11 +2088,8 @@
 
     function toggleEditPilotChoice(checkbox) {
         const pilotName = checkbox.value;
-        if (checkbox.checked) {
-            tempEditingPilots.add(pilotName);
-        } else {
-            tempEditingPilots.delete(pilotName);
-        }
+        if (checkbox.checked) tempEditingPilots.add(pilotName);
+        else tempEditingPilots.delete(pilotName);
         updateEditSupportSelectedCountDisplay();
     }
 
@@ -2097,11 +2117,9 @@
         renderModalSupportAnalysis();
     }
 
-    /* =========================================================
-       MEVCUT KILAVUZ EKLE-ÇIKAR / İZİNLİ YÖNETİMİ
-       ========================================================= */
+    /* MEVCUT KILAVUZ HAVUZU EKLE-ÇIKAR */
     function openCapacityManageModal() {
-        capacityActiveVardiya = authenticatedCaptain ? authenticatedCaptain.shift : 1;
+        capacityActiveVardiya = authenticatedCaptain ? authenticatedCaptain.shift : 2;
         switchCapacityVardiya(capacityActiveVardiya);
         document.getElementById("capacityManageModal").style.display = "flex";
     }
@@ -2142,11 +2160,8 @@
     }
 
     function togglePilotCapacityStatus(pilotName) {
-        if (inactivePilotsSet.has(pilotName)) {
-            inactivePilotsSet.delete(pilotName);
-        } else {
-            inactivePilotsSet.add(pilotName);
-        }
+        if (inactivePilotsSet.has(pilotName)) inactivePilotsSet.delete(pilotName);
+        else inactivePilotsSet.add(pilotName);
         localStorage.setItem("kegm_inactive_pilots", JSON.stringify(Array.from(inactivePilotsSet)));
         
         const vPilots = VARDIYALAR[capacityActiveVardiya] || [];
@@ -2163,9 +2178,7 @@
         document.getElementById("capacityManageCurrentCount").innerText = cur;
     }
 
-    /* =========================================================
-       GİZLİ YÖNETİCİ & İSTATİSTİK (SADECE 52181 VE ADMIN)
-       ========================================================= */
+    /* GİZLİ YÖNETİCİ & İSTATİSTİK */
     function isSuperAdminUser() {
         if (!authenticatedCaptain) return false;
         return authenticatedCaptain.sicil === MY_SPECIAL_SICIL || authenticatedCaptain.sicil === "1915";
@@ -2242,13 +2255,14 @@
         tbody.innerHTML = html;
     }
 
+    /* GÜNCELLENMİŞ TOPLU YÜKLEME FONKSİYONU */
     async function topluKaptanYukle() {
         if (!isSuperAdminUser()) {
             alert("Bu işlem yalnızca sistem yöneticisine aittir.");
             return;
         }
 
-        const onay = confirm("Tüm kılavuz kaptan listesi Firebase Firestore'a otomatik aktarılacak. Onaylıyor musunuz?");
+        const onay = confirm("2. Vardiya gerçek kurum sicilleri ve 1. Vardiya Erkan KAYA güncellenecek. Onaylıyor musunuz?");
         if (!onay) return;
 
         const batch = db.batch();
@@ -2257,9 +2271,16 @@
         for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
             kaptanListesi.forEach((kaptanAdi, index) => {
                 let sicilNo;
+                const cleanName = normalizeStr(kaptanAdi);
 
-                if (normalizeStr(kaptanAdi).includes("SUAYIP GULER")) {
-                    sicilNo = MY_SPECIAL_SICIL;
+                if (Number(vardiyaNo) === 2) {
+                    let eslesen = null;
+                    for (const [key, val] of Object.entries(GERCEK_SICIL_V2)) {
+                        if (cleanName.includes(key)) { eslesen = val; break; }
+                    }
+                    sicilNo = eslesen || String(Number(vardiyaNo) * 10000 + (index + 1));
+                } else if (cleanName.includes("ERKAN KAYA")) {
+                    sicilNo = "10031"; // 1. Vardiyaya eklenen Erkan KAYA
                 } else {
                     sicilNo = String(Number(vardiyaNo) * 10000 + (index + 1));
                 }
@@ -2281,7 +2302,7 @@
 
         try {
             await batch.commit();
-            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptan Firestore'a aktarıldı.\nŞuayip Güler: 52181 (Cihazınız bağlandı)\nDiğer Kaptanlar: 10001, 20001, vb. (İlk şifre: 1915)`);
+            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptan güncellendi.\n2. Vardiya gerçek sicilleriyle mühürlendi.\nErkan KAYA 1. Vardiya (#10031) olarak eklendi.`);
         } catch (err) {
             alert("Firestore yükleme hatası: " + err.message);
         }
