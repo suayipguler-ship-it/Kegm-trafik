@@ -2,7 +2,8 @@ name: KEGM Trafik Senkronizasyonu
 
 on:
   schedule:
-    - cron: '*/22 * * * *'
+    # Kuyruğa takılmamak için 7, 22, 37, 52 dakikalarında çalışır
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -35,20 +36,20 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Geçici paket dosyalarını temizle
-          git reset HEAD package.json package-lock.json node_modules 2>/dev/null || true
+
+          # 1. Paket kurulumundan kalan tüm yan değişiklikleri tamamen çöpe at
           git checkout -- package.json package-lock.json 2>/dev/null || true
-          
-          # Sadece veri dosyalarını ekle
+          git clean -fd 2>/dev/null || true
+
+          # 2. Sadece çekilen yeni verileri ekle
           git add ships.json history.json
-          
-          # Değişiklik varsa commit at
+
+          # 3. Veri değiştiyse güvenli şekilde gönder
           if git diff --staged --quiet; then
             echo "Verilerde değişiklik yok, push atlanıyor."
           else
             git commit -m "Oto-Trafik Güncellemesi [skip ci]"
-            # Sizin yaptığınız index.html değişikliklerini ezmemek için önce en son commitleri çekip birleştirir:
-            git pull --rebase origin main
-            git push origin main
+            # Sizin webden yaptığınız güncellemeleri ezmeden birleştir:
+            git pull origin main --rebase --autostash || true
+            git push origin HEAD:main
           fi
