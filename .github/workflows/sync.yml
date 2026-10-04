@@ -33,12 +33,22 @@ jobs:
 
       - name: Değişiklikleri Kaydet ve Gönder
         run: |
-          set +e
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git reset HEAD package.json package-lock.json node_modules 2>/dev/null
-          git checkout -- package.json package-lock.json 2>/dev/null
+          
+          # Geçici paket dosyalarını temizle
+          git reset HEAD package.json package-lock.json node_modules 2>/dev/null || true
+          git checkout -- package.json package-lock.json 2>/dev/null || true
+          
+          # Sadece veri dosyalarını ekle
           git add ships.json history.json
-          git commit -m "Oto-Trafik Güncellemesi [skip ci]"
-          git push origin HEAD:main --force
-          exit 0
+          
+          # Değişiklik varsa commit at
+          if git diff --staged --quiet; then
+            echo "Verilerde değişiklik yok, push atlanıyor."
+          else
+            git commit -m "Oto-Trafik Güncellemesi [skip ci]"
+            # Sizin yaptığınız index.html değişikliklerini ezmemek için önce en son commitleri çekip birleştirir:
+            git pull --rebase origin main
+            git push origin main
+          fi
