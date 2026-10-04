@@ -1227,7 +1227,7 @@
     <div class="modal-content" style="border-top-color: #38bdf8;" onclick="event.stopPropagation()">
         <div class="modal-header-sticky">
             <button class="btn-header-back" onclick="closeEditSupportPilotsModal()">← Geri</button>
-            <h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️ Takviye Kılavuzlarını Düzenle</h3>
+            <h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️️ Takviye Kılavuzlarını Düzenle</h3>
             <button class="btn-close" onclick="closeEditSupportPilotsModal()">✕</button>
         </div>
 
@@ -1534,7 +1534,7 @@
             "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
-            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROGLU",
+            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
             "GÜLTEKİN ÖZDEMİR"
         ]
     };
@@ -1734,7 +1734,10 @@
         return timeStr;
     }
 
+    // SADECE VE SADECE MUHABERE OPERATÖRLERİNE (99001 / 99002) GÖRÜNÜR
     function formatRemainingBadge(ship) {
+        if (!isMuhabereUser()) return "";
+
         const t = getShipTimestamp(ship);
         if (!t) return "";
         const diffMins = Math.round((t - Date.now()) / 60000);
@@ -2040,7 +2043,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2342,7 +2345,7 @@
         const isCapacityExhausted = totalInTransit >= totalActivePilots;
 
         let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
-        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsGK = 0;
+        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsKG = 0;
 
         if (nextKG_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextKG_ship);
@@ -2366,7 +2369,7 @@
             n3_gk_active,
             totalInTransit,
             warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
-            warningGK, criticalGK, depTimeGK, remMinsGK, nextGK_ship,
+            warningGK, criticalGK, depTimeGK, remMinsKG, nextGK_ship,
             hasWarning: warningKG || warningGK
         };
     }
