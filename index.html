@@ -123,7 +123,21 @@
         .header-status-group {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+        }
+
+        .btn-telegram-link {
+            background: #0284c7;
+            border: 1px solid #38bdf8;
+            color: #fff;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 3px 6px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-settings {
@@ -1074,6 +1088,7 @@
         </div>
 
         <div class="header-status-group">
+            <button id="btnTelegramLink" class="btn-telegram-link" onclick="openTelegramConnect()" title="Telegram Bildirimlerini Aç">✈️</button>
             <span id="cloudStatus" class="cloud-status" title="Firebase Bağlantısı">☁</span>
             <button class="btn-settings" onclick="openSettingsModal()" title="Ayarlar">⚙</button>
         </div>
@@ -1474,6 +1489,10 @@
     const MY_SPECIAL_SICIL = "52181";
     const SECRET_PIN = "1915";
 
+    // TELEGRAM BOT TANIMLARI
+    const TELEGRAM_BOT_TOKEN = "8514374768:AAFyhrXHuPZo26jLjx8Evr8rRvCrdUsAdEM";
+    const TELEGRAM_BOT_USERNAME = "KegmPilotBot";
+
     // 4 GÜNLÜK KALICI OTURUM SÜRESİ (96 SAAT)
     const SESSION_EXPIRY_MS = 4 * 24 * 60 * 60 * 1000;
 
@@ -1515,7 +1534,7 @@
             "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
-            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
+            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROGLU",
             "GÜLTEKİN ÖZDEMİR"
         ]
     };
@@ -1573,6 +1592,17 @@
             }
         }
         return 0;
+    }
+
+    function getPilotSicil(pilotName) {
+        if (!pilotName) return null;
+        const clean = normalizeStr(pilotName);
+        for (const [nameKey, sicilVal] of Object.entries(GERCEK_SICIL_HARITASI)) {
+            if (clean.includes(nameKey) || nameKey.includes(clean)) {
+                return sicilVal;
+            }
+        }
+        return null;
     }
 
     function isSuperAdminUser() {
@@ -1742,9 +1772,10 @@
     let editSupportActiveVardiya = 2;
     let currentEditingSupportId = null;
     let selectedShipKey = "";
+    let selectedShipObj = null;
     let clickCount = 0;
     let clickTimer = null;
-    let selectedStatPeriod = "shift"; // shift, month, year, all
+    let selectedStatPeriod = "shift";
 
     function getShipKey(ship) {
         return `${ship.name}_${ship.time}`;
@@ -1926,21 +1957,18 @@
             const timeVal = getShipTimestamp(ship);
             const assignment = getShipAssignment(ship);
 
-            // 👑 1 Vardiya (Tüm Gemiler) Modu - Sadece 52181 / 1915 Özel
             if (isShiftAllMode) {
                 if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
                 if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
                 return true;
             }
 
-            // Muhabereci yön kısıtı
             if (isMuhabereUser()) {
                 const isKG = isNorthSouth(ship.yon);
                 if (authenticatedCaptain.sicil === "99001" && !isKG) return false;
                 if (authenticatedCaptain.sicil === "99002" && isKG) return false;
             }
 
-            // Standart Saat Filtreli Mod
             if (assignment === PILOTLESS_VALUE) return false;
             const hasAssignedPilot = !!assignment;
             const isBogazda = isBogazdaShip(ship);
@@ -1956,11 +1984,8 @@
             return true;
         });
 
-        // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // AKILLI DUBLİKASYON ENGELLEME:
-        // Saatler 5-10 dk kaymış olsa bile (6 saatlik pencere içinde aynı gemi) tekilleştirir
         const uniqueMap = new Map();
         rawList.forEach(ship => {
             const cleanName = normalizeStr(ship.name);
@@ -2015,7 +2040,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2093,6 +2118,12 @@
     function openPilotModal(uniqueKey, shipName) {
         if (!authenticatedCaptain) { alert("Lütfen önce giriş yapınız."); return; }
         selectedShipKey = uniqueKey;
+
+        // Atanan geminin tüm detaylarını yakala
+        selectedShipObj = allShips.find(s => getShipKey(s) === uniqueKey) || 
+                          historyShips.find(s => getShipKey(s) === uniqueKey) || 
+                          { name: shipName };
+
         document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
 
         const tabsBox = document.getElementById("pilotModalVardiyaTabs");
@@ -2164,10 +2195,74 @@
         }
     }
 
-    // TELEGRAM VE DIŞ BİLDİRİM FONKSİYONU ALTYAPISI
-    function sendTelegramNotification(pilotName, shipKey) {
-        console.log(`[BİLDİRİM] ${pilotName} kaptana ${shipKey} gemisi için görev bildirimi tetiklendi.`);
-        // Telegram Bot Token ve Kaptan Chat ID entegrasyonu buraya bağlanacaktır.
+    // TELEGRAM KAPTAN BAĞLANTI BUTONU
+    function openTelegramConnect() {
+        if (!authenticatedCaptain) {
+            alert("Lütfen önce sicilinizle giriş yapınız.");
+            openAuthModal();
+            return;
+        }
+        if (isMuhabereUser()) {
+            alert("Muhabere operatörlerinin Telegram bildirimine kaydolması gerekmez. Bu özellik Kılavuz Kaptanlar içindir.");
+            return;
+        }
+        const deepLink = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${authenticatedCaptain.sicil}`;
+        const win = window.open(deepLink, "_blank");
+        if (!win) {
+            window.location.href = deepLink;
+        }
+    }
+
+    // TELEGRAM GÖREV BİLDİRİMİ TETİKLEYİCİSİ
+    async function sendTelegramNotification(pilotName, shipObj) {
+        try {
+            const sicil = getPilotSicil(pilotName);
+            if (!sicil) return;
+
+            const userDoc = await db.collection("authorized_users").doc(sicil).get();
+            if (!userDoc.exists) return;
+
+            const uData = userDoc.data();
+            const chatId = uData.telegramChatId;
+            if (!chatId) {
+                console.log(`[Telegram] ${pilotName} kaptanın Telegram hesabı henüz bağlı değil.`);
+                return;
+            }
+
+            const displayTime = formatDisplayTime(shipObj.time, shipObj.planlama);
+            const tMs = getShipTimestamp(shipObj);
+            let remText = "";
+            if (tMs) {
+                const diff = Math.round((tMs - Date.now()) / 60000);
+                if (diff > 0) remText = ` (~${diff} dk var)`;
+            }
+
+            const yonText = shipObj.yon || (isMuhabereUser() ? (authenticatedCaptain.sicil === "99001" ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY") : "BELİRTİLMEDİ");
+
+            const msg = `🚢 *YENİ KILAVUZLUK GÖREVİ (Çanakkale VTS)*\n\n` +
+                        `Sayın *Kpt. ${pilotName}*,\n` +
+                        `Adınıza yeni bir gemi görevlendirmesi yapılmıştır:\n\n` +
+                        `• *Gemi Adı:* ${shipObj.name || "Bilinmiyor"}\n` +
+                        `• *Geçiş Saati:* ${displayTime}${remText}\n` +
+                        `• *Yön:* ${yonText}\n` +
+                        `• *Boy / Tip:* ${shipObj.len || "-"} m / ${shipObj.type || "-"}\n` +
+                        `• *Görevlendiren:* ${authenticatedCaptain.name}\n\n` +
+                        `_Emniyetli seyirler ve iyi nöbetler dileriz._`;
+
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: msg,
+                    parse_mode: "Markdown"
+                })
+            });
+
+            console.log(`[Telegram] ${pilotName} kaptana başarıyla mesaj iletildi.`);
+        } catch (err) {
+            console.error("[Telegram Hata]:", err);
+        }
     }
 
     async function assignPilot(pilotName) {
@@ -2184,7 +2279,11 @@
                     updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                sendTelegramNotification(pilotName, selectedShipKey);
+                
+                // Telegram bildirimini arka planda gönder
+                if (selectedShipObj) {
+                    sendTelegramNotification(pilotName, selectedShipObj);
+                }
             } else {
                 await db.collection("live_assignments").doc(docId).delete();
             }
@@ -2716,7 +2815,7 @@
     }
 
     function openStatsModal() {
-        if (isMuhabereUser()) return; // Muhabereciler istatistik açamaz
+        if (isMuhabereUser()) return;
         setStatPeriod("shift");
         if (isSuperAdminUser()) {
             document.getElementById("manPilotBox").style.display = "block";
@@ -2750,7 +2849,7 @@
 
         if (selectedStatPeriod === "all") return true;
         if (selectedStatPeriod === "year") return d.getFullYear() === 2026;
-        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9; // Ekim
+        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9;
 
         if (selectedStatPeriod === "shift" || logHours === "shift_all") {
             const isKG = isNorthSouth(yon);
@@ -3025,7 +3124,6 @@
 
         errEl.innerText = "Cihaz ve yetki kontrol ediliyor...";
 
-        // 1. ÖZEL MUHABERE GİRİŞİ (99001: Kuzey / 99002: Güney)
         if (sicil === "99001" || sicil === "99002") {
             if (pass !== "1915") {
                 errEl.innerText = "Hatalı şifre girdiniz.";
@@ -3045,7 +3143,6 @@
             return;
         }
 
-        // 2. KILAVUZ KAPTAN GİRİŞİ (FIRESTORE)
         try {
             const userDoc = await db.collection("authorized_users").doc(sicil).get();
 
@@ -3098,23 +3195,22 @@
             badge.classList.add("active");
             document.getElementById("authBadgeIcon").innerText = "🟢";
 
-            // Muhabereci ise yönü kilitle ve başlıkları uyarla
             if (isMuhabereUser()) {
                 const isKuzey = (authenticatedCaptain.sicil === "99001");
                 document.getElementById("mainAppTitle").innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
                 document.getElementById("authBadgeText").innerText = `📻 ${isKuzey ? "KUZEY" : "GÜNEY"} (#${authenticatedCaptain.sicil})`;
                 
-                // Yön kutusunu kilitle
                 const selYon = document.getElementById("selYon");
                 selYon.value = isKuzey ? "KUZEY-GÜNEY" : "GÜNEY-KUZEY";
                 selYon.disabled = true;
 
-                // Takviye butonunu muhabereye gizle
                 document.getElementById("btnHeaderSupportBox").style.display = "none";
+                document.getElementById("btnTelegramLink").style.display = "none";
             } else {
                 document.getElementById("mainAppTitle").innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
                 document.getElementById("selYon").disabled = false;
                 document.getElementById("btnHeaderSupportBox").style.display = "flex";
+                document.getElementById("btnTelegramLink").style.display = "inline-flex";
 
                 let titlePrefix = `V-${authenticatedCaptain.shift}`;
                 if (isSuperAdminUser()) titlePrefix = "👑 ADMIN";
@@ -3137,6 +3233,7 @@
 
             const adminBtn = document.getElementById("btnRangeShiftAll");
             if (adminBtn) adminBtn.style.display = "none";
+            document.getElementById("btnTelegramLink").style.display = "none";
         }
     }
 
