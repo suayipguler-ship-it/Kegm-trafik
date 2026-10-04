@@ -1909,10 +1909,9 @@
 
             // 👑 1 Vardiya (Tüm Gemiler) Modu - Sadece 52181 / 1915 Özel
             if (isShiftAllMode) {
-                // Vardiya zaman penceresi kontrolü
                 if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
                 if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
-                return true; // Atanmış, atanmamış, pilotsuz hepsi gelsin
+                return true;
             }
 
             // Standart Saat Filtreli Mod
@@ -1934,21 +1933,37 @@
         // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // DUBLİKASYON ENGELLEME: Gemi adı ve zamanı üzerinden tekilleştirme
+        // AKILLI DUBLİKASYON ENGELLEME:
+        // Saatler 5-10 dk kaymış olsa bile (6 saatlik pencere içinde aynı gemi) tekilleştirir
+        // ve kılavuz ataması olan gerçek kaydı korur.
         const uniqueMap = new Map();
         rawList.forEach(ship => {
             const cleanName = normalizeStr(ship.name);
-            const dedupKey = `${cleanName}_${ship.time || ship.planlama || ''}`;
+            const shipTime = getShipTimestamp(ship) || 0;
+            const currentAssignment = getShipAssignment(ship);
+            const currentHasPilot = (!!currentAssignment && currentAssignment !== PILOTLESS_VALUE);
 
-            if (!uniqueMap.has(dedupKey)) {
-                uniqueMap.set(dedupKey, ship);
+            let existingKey = null;
+            for (let [key, existingShip] of uniqueMap.entries()) {
+                if (key.startsWith(cleanName + "_")) {
+                    const exTime = getShipTimestamp(existingShip) || 0;
+                    if (Math.abs(shipTime - exTime) < (6 * 60 * 60 * 1000)) {
+                        existingKey = key;
+                        break;
+                    }
+                }
+            }
+
+            if (!existingKey) {
+                uniqueMap.set(`${cleanName}_${shipTime}`, ship);
             } else {
-                const existing = uniqueMap.get(dedupKey);
-                const existingAssignment = getShipAssignment(existing);
-                const currentAssignment = getShipAssignment(ship);
-                // Ataması olan kaydı koru
-                if (!existingAssignment && currentAssignment) {
-                    uniqueMap.set(dedupKey, ship);
+                const existingShip = uniqueMap.get(existingKey);
+                const existingAssignment = getShipAssignment(existingShip);
+                const existingHasPilot = (!!existingAssignment && existingAssignment !== PILOTLESS_VALUE);
+
+                if (!existingHasPilot && currentHasPilot) {
+                    uniqueMap.delete(existingKey);
+                    uniqueMap.set(`${cleanName}_${shipTime}`, ship);
                 }
             }
         });
@@ -1959,7 +1974,6 @@
             const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde vardiyanıza ait atanmış kılavuzlu gemi yok.`;
             html += `<div class="status-msg">${msg}</div>`;
         } else {
-            // Yönlerin çakışmasını engelleyen kesin filtreleme
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
             const snList = baseList.filter(s => !isNorthSouth(s.yon) && isSouthNorth(s.yon));
 
@@ -2024,7 +2038,6 @@
         document.getElementById("selHareket").style.display = m === "live" ? "block" : "none";
         document.getElementById("logRangeBox").style.display = m === "history" ? "flex" : "none";
 
-        // Admin özel buton görünürlüğü
         const adminBtn = document.getElementById("btnRangeShiftAll");
         if (adminBtn) {
             adminBtn.style.display = (m === "history" && isSuperAdminUser()) ? "block" : "none";
@@ -2208,7 +2221,7 @@
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
             remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
-            if (remMinsKG <= 0) criticalGK = true;
+            if (remMinsKG <= 0) criticalKG = true;
         }
 
         return {
@@ -2677,7 +2690,7 @@
     }
 
     function closeStatsModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-header-back")) return;
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
         document.getElementById("secretStatsModal").style.display = "none";
     }
 
@@ -2851,7 +2864,7 @@
             document.getElementById("statTableCaption").innerText = "👨‍✈️ Şahsınıza Özel Kılavuzluk Performansı (Gizli):";
         } else {
             pilotsToDisplay.sort((a, b) => pilotStats[b].total - pilotStats[a].total);
-            document.getElementById("statTableCaption").innerText = "👨‍✈️️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
+            document.getElementById("statTableCaption").innerText = "👨‍✈️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
         }
 
         let tableHtml = "";
