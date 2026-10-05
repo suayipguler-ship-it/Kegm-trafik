@@ -351,10 +351,6 @@
             text-overflow: ellipsis;
         }
 
-        .ship-name-link:active {
-            color: #38bdf8;
-        }
-
         .ais-icon {
             font-size: 0.8rem;
             color: #38bdf8;
@@ -547,16 +543,18 @@
             font-weight: 700;
         }
 
+        /* MODAL VE POP-UP GARANTİ GÖRÜNÜRLÜK */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 99999;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.88);
+            z-index: 999999 !important;
             align-items: flex-end;
+            justify-content: center;
         }
 
         .modal-content {
@@ -925,7 +923,6 @@
             border-top: 3px solid #22c55e;
         }
 
-        /* GELİŞMİŞ İSTATİSTİK BİLEŞENLERİ */
         .stat-filter-row {
             display: flex;
             gap: 6px;
@@ -1063,6 +1060,31 @@
 
 <body>
 
+<!-- GİRİŞ MODALI EN ÜSTTE -->
+<div id="authModal" class="modal-overlay" onclick="closeAuthModal(event)">
+    <div class="modal-content settings-content" onclick="event.stopPropagation()">
+        <div class="modal-header-sticky">
+            <h3>🔐 Personel Kimlik & Cihaz Girişi</h3>
+            <button class="btn-close" onclick="closeAuthModal()">✕</button>
+        </div>
+
+        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
+            Sicil ve Şifrenizi giriniz:
+        </div>
+
+        <div class="auth-split-inputs">
+            <input type="text" id="txtSicil" class="auth-box-field" maxlength="6" placeholder="SİCİL" inputmode="numeric">
+            <input type="password" id="txtPassword" class="auth-box-field" maxlength="8" placeholder="ŞİFRE">
+        </div>
+
+        <div id="authError" style="color:#ef4444; font-size:0.75rem; text-align:center; min-height:16px;"></div>
+
+        <button class="btn-search" style="margin-top:4px;" onclick="submitDeviceAuth()">
+            Cihazı Doğrula & Giriş Yap
+        </button>
+    </div>
+</div>
+
 <div class="header">
     <h1 id="mainAppTitle">
         <span>BOĞAZ GEÇİŞ</span>
@@ -1143,38 +1165,13 @@
     <div class="auth-lock-desc">
         Bu portal yalnızca KEGM Kılavuz Kaptanlarına tahsis edilmiştir. Lütfen siciliniz ve şifrenizle giriş yapınız.
     </div>
-    <button class="btn-search" style="width: auto; padding: 10px 24px;" onclick="openAuthModal()">
+    <button class="btn-search" style="width: auto; padding: 12px 28px; cursor: pointer;" onclick="openAuthModal()">
         🔐 Sisteme Giriş Yap
     </button>
 </div>
 
 <div class="telemetry-footer" onclick="triggerSecretDiagnosis()">
     ● NMEA-0183 Telemetri Aktif [v2.4.1] | Port: 4001
-</div>
-
-<!-- KİŞİSEL CİHAZ DOĞRULAMA MODALI -->
-<div id="authModal" class="modal-overlay" onclick="closeAuthModal(event)">
-    <div class="modal-content settings-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <h3>🔐 Personel Kimlik & Cihaz Girişi</h3>
-            <button class="btn-close" onclick="closeAuthModal()">✕</button>
-        </div>
-
-        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
-            Sicil ve Şifrenizi giriniz:
-        </div>
-
-        <div class="auth-split-inputs">
-            <input type="text" id="txtSicil" class="auth-box-field" maxlength="6" placeholder="SİCİL" inputmode="numeric">
-            <input type="password" id="txtPassword" class="auth-box-field" maxlength="8" placeholder="ŞİFRE">
-        </div>
-
-        <div id="authError" style="color:#ef4444; font-size:0.75rem; text-align:center; min-height:16px;"></div>
-
-        <button class="btn-search" style="margin-top:4px;" onclick="submitDeviceAuth()">
-            Cihazı Doğrula & Giriş Yap
-        </button>
-    </div>
 </div>
 
 <!-- SABİT BAŞLIKLI GELİŞMİŞ TAKVİYE MODALI -->
@@ -1315,7 +1312,7 @@
     </div>
 </div>
 
-<!-- SAHTE HATA MODALI (SYSADMIN 1915 GİRİŞİ) -->
+<!-- SAHTE HATA MODALI -->
 <div id="fakeErrorModal" class="modal-overlay" onclick="closeFakeErrorModal(event)">
     <div class="modal-content fake-error-content" onclick="event.stopPropagation()">
         <div class="modal-header-sticky" style="border-bottom-color:#7f1d1d;">
@@ -1337,7 +1334,7 @@
     </div>
 </div>
 
-<!-- GİZLİ GELİŞMİŞ İSTATİSTİK & KARAR DESTEK PANELİ -->
+<!-- İSTATİSTİK MODALI -->
 <div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
     <div class="modal-content stats-content" onclick="event.stopPropagation()">
         <div class="modal-header-sticky" style="border-bottom-color:#22c55e;">
@@ -1346,7 +1343,6 @@
             <button class="btn-close" onclick="closeStatsModal()">✕</button>
         </div>
 
-        <!-- DÖNEM SEÇİCİ (ZAMAN PENCERESİ) -->
         <div class="stat-filter-row">
             <button class="stat-filter-btn active" id="btnStatPeriodShift" onclick="setStatPeriod('shift')">Bu Vardiya</button>
             <button class="stat-filter-btn" id="btnStatPeriodMonth" onclick="setStatPeriod('month')">Bu Ay</button>
@@ -1354,7 +1350,6 @@
             <button class="stat-filter-btn" id="btnStatPeriodAll" onclick="setStatPeriod('all')">Tüm Zamanlar</button>
         </div>
 
-        <!-- 1. TEMEL GEÇİŞ & KILAVUZLUK ORANI METRİKLERİ -->
         <div class="stats-summary-grid">
             <div class="stat-box">
                 <div id="statTotalTraffic" class="stat-val" style="color:#38bdf8;">0</div>
@@ -1374,7 +1369,6 @@
             </div>
         </div>
 
-        <!-- 2. VARDİYA ADALET VE YÖN DAĞILIMI (GENEL VE VARDİYA BAZLI) -->
         <div class="stat-section-card">
             <div class="stat-section-title">
                 <span>🧭 Trafik Yön Akışı & Vardiya Yük Dengesi</span>
@@ -1383,7 +1377,6 @@
             <div id="statVardiyaBalanceBox" style="font-size:0.72rem; color:#cbd5e1; line-height:1.5;"></div>
         </div>
 
-        <!-- 3. GEMİ TİPLERİ DAĞILIMI -->
         <div class="stat-section-card">
             <div class="stat-section-title">
                 <span>🚢 Gemi Tipleri Dağılımı</span>
@@ -1392,7 +1385,6 @@
             <div id="statTypeContainer" class="stat-type-grid"></div>
         </div>
 
-        <!-- 4. TAKVİYE & LOJİSTİK VERİMLİLİK ÖZETİ -->
         <div class="stat-section-card">
             <div class="stat-section-title">
                 <span>🚐 Takviye Lojistik Verimliliği</span>
@@ -1401,9 +1393,8 @@
             <div id="statSupportFlowBox" style="font-size:0.72rem; color:#94a3b8;"></div>
         </div>
 
-        <!-- 5. KILAVUZ BAZLI / KİŞİSEL PERFORMANS VE YORULMA TABLOSU -->
         <div class="stat-section-title" style="margin-top:2px; margin-bottom:4px;">
-            <span id="statTableCaption">👨‍✈️ Bireysel Kılavuzluk Performansı (Adalet / İş Yükü):</span>
+            <span id="statTableCaption">👨‍✈️ Bireysel Kılavuzluk Performansı:</span>
         </div>
 
         <div class="stats-table-box">
@@ -1421,7 +1412,6 @@
             </table>
         </div>
 
-        <!-- MANUEL KAPTAN EKLEME FORMU (SADECE 52181) -->
         <div id="manPilotBox" style="background:#0b1329; border:1px solid #1e293b; border-radius:8px; padding:10px; margin-top:8px; display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                 <span style="font-size:0.8rem; font-weight:800; color:#38bdf8;">➕ Manuel Kaptan Ekle / Sicil Güncelle</span>
@@ -1444,11 +1434,7 @@
             </div>
         </div>
 
-        <button class="btn-search" 
-                style="background: #334155; margin-top: 6px;" 
-                onclick="closeStatsModal()">
-            Kapat
-        </button>
+        <button class="btn-search" style="background: #334155; margin-top: 6px;" onclick="closeStatsModal()">Kapat</button>
     </div>
 </div>
 
@@ -1467,6 +1453,29 @@
 </div>
 
 <script>
+    // BAĞIMSIZ MODAL AÇMA FONKSİYONU (HER KOŞULDA ÇALIŞIR)
+    function openAuthModal() {
+        const sicilInput = document.getElementById("txtSicil");
+        const passInput = document.getElementById("txtPassword");
+        const errEl = document.getElementById("authError");
+        const modal = document.getElementById("authModal");
+
+        if (sicilInput) sicilInput.value = "";
+        if (passInput) passInput.value = "";
+        if (errEl) errEl.innerText = "";
+        
+        if (modal) {
+            modal.style.display = "flex";
+            modal.style.zIndex = "999999";
+        }
+    }
+
+    function closeAuthModal(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
+        const modal = document.getElementById("authModal");
+        if (modal) modal.style.display = "none";
+    }
+
     /* FIREBASE BAĞLANTISI */
     const firebaseConfig = {
       apiKey: "AIzaSyBf46wFFITOfb-WV_rBDjzk6S53wMsVdd0",
@@ -1488,16 +1497,9 @@
     const MY_SPECIAL_SICIL = "52181";
     const SECRET_PIN = "1915";
 
-    // TELEGRAM BOT TANIMLARI
     const TELEGRAM_BOT_TOKEN = "8514374768:AAFyhrXHuPZo26jLjx8Evr8rRvCrdUsAdEM";
     const TELEGRAM_BOT_USERNAME = "KegmPilotBot";
-
-    // 4 GÜNLÜK KALICI OTURUM SÜRESİ (96 SAAT)
     const SESSION_EXPIRY_MS = 4 * 24 * 60 * 60 * 1000;
-
-    // 4 GÜNLÜK VARDİYA REFERANSI VE DÖNGÜSÜ
-    const REF_START_TIME = new Date(2026, 9, 2, 0, 0, 0).getTime(); // 02 Ekim 2026
-    const SHIFT_CYCLE_MS = 4 * 24 * 60 * 60 * 1000;
 
     const BAS_KILAVUZ_SICILLER = {
         "52216": 1,
@@ -2046,7 +2048,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2338,7 +2340,7 @@
                 if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship;
+                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextKG_ship))) nextGK_ship = ship;
             }
         });
 
@@ -2401,7 +2403,7 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:4px;">
                         <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
-                            <span>${calc.totalActivePilots}</span> ✏️
+                            <span>${calc.totalActivePilots}</span> ✏️️
                         </button>
                         <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
                     </div>
@@ -2776,7 +2778,6 @@
         document.getElementById("capacityManageCurrentCount").innerText = cur;
     }
 
-    /* GİZLİ YÖNETİCİ & İSTATİSTİK TETİKLEME */
     function triggerSecretDiagnosis() {
         clickCount++;
         clearTimeout(clickTimer);
@@ -3249,27 +3250,6 @@
         } else {
             openAuthModal();
         }
-    }
-
-    function openAuthModal() {
-        const sicilInput = document.getElementById("txtSicil");
-        const passInput = document.getElementById("txtPassword");
-        const errEl = document.getElementById("authError");
-        const modal = document.getElementById("authModal");
-
-        if (sicilInput) sicilInput.value = "";
-        if (passInput) passInput.value = "";
-        if (errEl) errEl.innerText = "";
-        
-        if (modal) {
-            modal.style.display = "flex";
-        }
-    }
-
-    function closeAuthModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        const modal = document.getElementById("authModal");
-        if (modal) modal.style.display = "none";
     }
 
     function openSettingsModal() {
