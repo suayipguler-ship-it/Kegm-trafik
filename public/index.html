@@ -1088,7 +1088,7 @@
         </div>
 
         <div class="header-status-group">
-            <button id="btnTelegramLink" class="btn-telegram-link" onclick="openTelegramConnect()" title="Telegram Bildirimlerini Aç">✈️</button>
+            <button id="btnTelegramLink" class="btn-telegram-link" onclick="openTelegramConnect()" title="Telegram Bildirimlerini Aç" style="display:none;">✈️</button>
             <span id="cloudStatus" class="cloud-status" title="Firebase Bağlantısı">☁</span>
             <button class="btn-settings" onclick="openSettingsModal()" title="Ayarlar">⚙</button>
         </div>
@@ -1227,7 +1227,7 @@
     <div class="modal-content" style="border-top-color: #38bdf8;" onclick="event.stopPropagation()">
         <div class="modal-header-sticky">
             <button class="btn-header-back" onclick="closeEditSupportPilotsModal()">← Geri</button>
-            <h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️️ Takviye Kılavuzlarını Düzenle</h3>
+            <h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️ Takviye Kılavuzlarını Düzenle</h3>
             <button class="btn-close" onclick="closeEditSupportPilotsModal()">✕</button>
         </div>
 
@@ -1809,11 +1809,13 @@
                 }
             });
             localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
-            document.getElementById("cloudStatus").style.color = "#22c55e";
+            const cEl = document.getElementById("cloudStatus");
+            if (cEl) cEl.style.color = "#22c55e";
             renderCurrentView();
         }, err => {
             console.error("Atama dinleme hatası:", err);
-            document.getElementById("cloudStatus").style.color = "#ef4444";
+            const cEl = document.getElementById("cloudStatus");
+            if (cEl) cEl.style.color = "#ef4444";
         });
         unsubs.push(unsubAssign);
 
@@ -1834,7 +1836,7 @@
         if (!authenticatedCaptain) return;
 
         const container = document.getElementById("shipContainer");
-        container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
+        if (container) container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
 
         try {
             try {
@@ -1858,7 +1860,7 @@
             setupRealtimeListeners();
             renderCurrentView();
         } catch (e) {
-            container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
+            if (container) container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
         }
     }
 
@@ -1870,6 +1872,7 @@
 
     function renderLiveList() {
         const container = document.getElementById("shipContainer");
+        if (!container) return;
         const bogaz = document.getElementById("selBogaz").value;
         const yon = document.getElementById("selYon").value;
         const hareket = document.getElementById("selHareket").value;
@@ -1949,6 +1952,7 @@
 
     function renderHistoryList() {
         const container = document.getElementById("shipContainer");
+        if (!container) return;
         const bogaz = document.getElementById("selBogaz").value;
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
         const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
@@ -2122,7 +2126,6 @@
         if (!authenticatedCaptain) { alert("Lütfen önce giriş yapınız."); return; }
         selectedShipKey = uniqueKey;
 
-        // Atanan geminin tüm detaylarını yakala
         selectedShipObj = allShips.find(s => getShipKey(s) === uniqueKey) || 
                           historyShips.find(s => getShipKey(s) === uniqueKey) || 
                           { name: shipName };
@@ -2198,7 +2201,6 @@
         }
     }
 
-    // TELEGRAM KAPTAN BAĞLANTI BUTONU
     function openTelegramConnect() {
         if (!authenticatedCaptain) {
             alert("Lütfen önce sicilinizle giriş yapınız.");
@@ -2216,7 +2218,6 @@
         }
     }
 
-    // TELEGRAM GÖREV BİLDİRİMİ TETİKLEYİCİSİ
     async function sendTelegramNotification(pilotName, shipObj) {
         try {
             const sicil = getPilotSicil(pilotName);
@@ -2283,7 +2284,6 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Telegram bildirimini arka planda gönder
                 if (selectedShipObj) {
                     sendTelegramNotification(pilotName, selectedShipObj);
                 }
@@ -2296,7 +2296,6 @@
         }
     }
 
-    /* ERKEN UYARI VE HAVUZ HESAPLAMASI */
     function getActiveCapacity() {
         const saved = localStorage.getItem("kegm_manual_capacity");
         if (saved !== null && !isNaN(parseInt(saved, 10))) {
@@ -2345,7 +2344,7 @@
         const isCapacityExhausted = totalInTransit >= totalActivePilots;
 
         let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
-        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsKG = 0;
+        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsGK = 0;
 
         if (nextKG_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextKG_ship);
@@ -2360,7 +2359,7 @@
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
             remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
-            if (remMinsKG <= 0) criticalKG = true;
+            if (remMinsKG <= 0) criticalGK = true;
         }
 
         return {
@@ -2369,7 +2368,7 @@
             n3_gk_active,
             totalInTransit,
             warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
-            warningGK, criticalGK, depTimeGK, remMinsKG, nextGK_ship,
+            warningGK, criticalGK, depTimeGK, remMinsGK, nextGK_ship,
             hasWarning: warningKG || warningGK
         };
     }
@@ -2380,9 +2379,11 @@
     }
 
     function renderModalSupportAnalysis() {
-        const bogaz = document.getElementById("selBogaz").value;
+        const bEl = document.getElementById("selBogaz");
+        const bogaz = bEl ? bEl.value : "ÇANAKKALE";
         const calc = calculateDynamicSupportNeeds(bogaz);
         const container = document.getElementById("modalSupportAnalysisContainer");
+        if (!container) return;
 
         const isCritical = calc.criticalKG || calc.criticalGK;
         let panelClass = "support-panel";
@@ -2418,7 +2419,7 @@
             }
             if (calc.warningGK && calc.nextGK_ship) {
                 html += `<strong>Hedef Gemi (G-K):</strong> ${calc.nextGK_ship.name} (${formatDisplayTime(calc.nextGK_ship.time, calc.nextGK_ship.planlama)})<br>
-                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeGK)} 
+                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeKG)} 
                          ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
             }
             html += `Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong></div>`;
@@ -2438,7 +2439,7 @@
         let recentRecords = supportRecords.filter(r => (Date.now() - (r.timestamp || 0)) <= fiveDaysMs);
 
         if (!isSuperAdminUser()) {
-            recentRecords = recentRecords.filter(r => Number(r.vardiya) === authenticatedCaptain.shift);
+            recentRecords = recentRecords.filter(r => Number(r.vardiya) === (authenticatedCaptain ? authenticatedCaptain.shift : 2));
         }
 
         if (recentRecords.length > 0) {
@@ -2473,7 +2474,7 @@
     }
 
     window.addEventListener("popstate", (e) => {
-        const modals = ["supportModal", "editSupportPilotsModal", "capacityManageModal", "pilotModal", "secretStatsModal", "settingsModal", "fakeErrorModal"];
+        const modals = ["supportModal", "editSupportPilotsModal", "capacityManageModal", "pilotModal", "secretStatsModal", "settingsModal", "fakeErrorModal", "authModal"];
         modals.forEach(id => {
             const el = document.getElementById(id);
             if (el && el.style.display === "flex") {
@@ -2834,9 +2835,6 @@
         document.getElementById("secretStatsModal").style.display = "none";
     }
 
-    /* =========================================================
-       DİNAMİK İSTATİSTİK FİLTRELEME & HESAPLAMA MOTORU
-       ========================================================= */
     function setStatPeriod(period) {
         selectedStatPeriod = period;
         document.getElementById("btnStatPeriodShift").classList.toggle("active", period === "shift");
@@ -3140,7 +3138,7 @@
                 loginTime: Date.now()
             };
             localStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
-            document.getElementById("authModal").style.display = "none";
+            closeAuthModal();
             applyAuthenticatedState();
             loadAllData();
             return;
@@ -3180,7 +3178,7 @@
             };
 
             localStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
-            document.getElementById("authModal").style.display = "none";
+            closeAuthModal();
             applyAuthenticatedState();
             loadAllData();
 
@@ -3190,53 +3188,59 @@
     }
 
     function applyAuthenticatedState() {
-        if (authenticatedCaptain) {
-            document.getElementById("protectedContent").style.display = "block";
-            document.getElementById("lockScreen").style.display = "none";
+        const prot = document.getElementById("protectedContent");
+        const lock = document.getElementById("lockScreen");
+        const badge = document.getElementById("btnShiftAuthBadge");
+        const badgeIcon = document.getElementById("authBadgeIcon");
+        const badgeText = document.getElementById("authBadgeText");
+        const titleEl = document.getElementById("mainAppTitle");
+        const suppBtn = document.getElementById("btnHeaderSupportBox");
+        const tgBtn = document.getElementById("btnTelegramLink");
+        const selYon = document.getElementById("selYon");
+        const adminBtn = document.getElementById("btnRangeShiftAll");
 
-            const badge = document.getElementById("btnShiftAuthBadge");
-            badge.classList.add("active");
-            document.getElementById("authBadgeIcon").innerText = "🟢";
+        if (authenticatedCaptain) {
+            if (prot) prot.style.display = "block";
+            if (lock) lock.style.display = "none";
+            if (badge) badge.classList.add("active");
+            if (badgeIcon) badgeIcon.innerText = "🟢";
 
             if (isMuhabereUser()) {
                 const isKuzey = (authenticatedCaptain.sicil === "99001");
-                document.getElementById("mainAppTitle").innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
-                document.getElementById("authBadgeText").innerText = `📻 ${isKuzey ? "KUZEY" : "GÜNEY"} (#${authenticatedCaptain.sicil})`;
+                if (titleEl) titleEl.innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
+                if (badgeText) badgeText.innerText = `📻 ${isKuzey ? "KUZEY" : "GÜNEY"} (#${authenticatedCaptain.sicil})`;
                 
-                const selYon = document.getElementById("selYon");
-                selYon.value = isKuzey ? "KUZEY-GÜNEY" : "GÜNEY-KUZEY";
-                selYon.disabled = true;
-
-                document.getElementById("btnHeaderSupportBox").style.display = "none";
-                document.getElementById("btnTelegramLink").style.display = "none";
+                if (selYon) {
+                    selYon.value = isKuzey ? "KUZEY-GÜNEY" : "GÜNEY-KUZEY";
+                    selYon.disabled = true;
+                }
+                if (suppBtn) suppBtn.style.display = "none";
+                if (tgBtn) tgBtn.style.display = "none";
             } else {
-                document.getElementById("mainAppTitle").innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
-                document.getElementById("selYon").disabled = false;
-                document.getElementById("btnHeaderSupportBox").style.display = "flex";
-                document.getElementById("btnTelegramLink").style.display = "inline-flex";
+                if (titleEl) titleEl.innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
+                if (selYon) selYon.disabled = false;
+                if (suppBtn) suppBtn.style.display = "flex";
+                if (tgBtn) tgBtn.style.display = "inline-flex";
 
                 let titlePrefix = `V-${authenticatedCaptain.shift}`;
                 if (isSuperAdminUser()) titlePrefix = "👑 ADMIN";
                 else if (isBasKilavuz()) titlePrefix = `⭐ BAŞ KLV (V-${authenticatedCaptain.shift})`;
-                document.getElementById("authBadgeText").innerText = `${titlePrefix} (#${authenticatedCaptain.sicil})`;
+                if (badgeText) badgeText.innerText = `${titlePrefix} (#${authenticatedCaptain.sicil})`;
             }
 
-            const adminBtn = document.getElementById("btnRangeShiftAll");
             if (adminBtn) {
                 adminBtn.style.display = (currentMode === "history" && isSuperAdminUser()) ? "block" : "none";
             }
         } else {
-            document.getElementById("protectedContent").style.display = "none";
-            document.getElementById("lockScreen").style.display = "flex";
-
-            const badge = document.getElementById("btnShiftAuthBadge");
-            badge.classList.remove("active");
-            document.getElementById("authBadgeIcon").innerText = "🔒";
-            document.getElementById("authBadgeText").innerText = "Giriş Yap";
-
-            const adminBtn = document.getElementById("btnRangeShiftAll");
+            if (prot) prot.style.display = "none";
+            if (lock) lock.style.display = "flex";
+            if (badge) badge.classList.remove("active");
+            if (badgeIcon) badgeIcon.innerText = "🔒";
+            if (badgeText) badgeText.innerText = "Giriş Yap";
+            if (titleEl) titleEl.innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
+            if (suppBtn) suppBtn.style.display = "flex";
+            if (tgBtn) tgBtn.style.display = "none";
             if (adminBtn) adminBtn.style.display = "none";
-            document.getElementById("btnTelegramLink").style.display = "none";
         }
     }
 
@@ -3254,27 +3258,37 @@
     }
 
     function openAuthModal() {
-        document.getElementById("txtSicil").value = "";
-        document.getElementById("txtPassword").value = "";
-        document.getElementById("authError").innerText = "";
+        const sicilInput = document.getElementById("txtSicil");
+        const passInput = document.getElementById("txtPassword");
+        const errEl = document.getElementById("authError");
+        const modal = document.getElementById("authModal");
+
+        if (sicilInput) sicilInput.value = "";
+        if (passInput) passInput.value = "";
+        if (errEl) errEl.innerText = "";
+        
         pushModalHistory("authModal");
-        document.getElementById("authModal").style.display = "flex";
+        if (modal) modal.style.display = "flex";
     }
 
     function closeAuthModal(e) {
         if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        document.getElementById("authModal").style.display = "none";
+        const modal = document.getElementById("authModal");
+        if (modal) modal.style.display = "none";
     }
 
     function openSettingsModal() {
-        document.getElementById("txtDevUUID").value = getDeviceUUID();
+        const uuidEl = document.getElementById("txtDevUUID");
+        if (uuidEl) uuidEl.value = getDeviceUUID();
         pushModalHistory("settingsModal");
-        document.getElementById("settingsModal").style.display = "flex";
+        const m = document.getElementById("settingsModal");
+        if (m) m.style.display = "flex";
     }
 
     function closeSettingsModal(e) {
         if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        document.getElementById("settingsModal").style.display = "none";
+        const m = document.getElementById("settingsModal");
+        if (m) m.style.display = "none";
     }
 
     window.onload = () => {
