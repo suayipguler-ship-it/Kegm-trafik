@@ -1141,8 +1141,7 @@
     <div class="auth-lock-icon">🛡</div>
     <div class="auth-lock-title">Yetkili Cihaz Erişimi Gerekli</div>
     <div class="auth-lock-desc">
-        Bu portal yalnızca KEGM Kılavuz Kaptanları ve Nöbetçi Muhabere Operatörlerine tahsis edilmiştir. 
-        Lütfen siciliniz ve şifrenizle giriş yapınız.
+        Bu portal yalnızca KEGM Kılavuz Kaptanlarına tahsis edilmiştir. Lütfen siciliniz ve şifrenizle giriş yapınız.
     </div>
     <button class="btn-search" style="width: auto; padding: 10px 24px;" onclick="openAuthModal()">
         🔐 Sisteme Giriş Yap
@@ -1162,7 +1161,7 @@
         </div>
 
         <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
-            Sicil ve Şifrenizi giriniz (Kılavuz Kaptanlar veya Muhabere Masası 99001/99002):
+            Sicil ve Şifrenizi giriniz:
         </div>
 
         <div class="auth-split-inputs">
@@ -1531,7 +1530,7 @@
             "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
             "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU",
             "ERKAN ÇETİN", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ", "HÜSEYİN KARAYTUĞ",
-            "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
+            "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN OZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
             "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
@@ -2243,7 +2242,12 @@
 
             const yonText = shipObj.yon || (isMuhabereUser() ? (authenticatedCaptain.sicil === "99001" ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY") : "BELİRTİLMEDİ");
 
-            const msg = `🚢 *YENİ KILAVUZLUK GÖREVİ (Çanakkale VTS)*\n\n` +
+            // Kaptanın vardiyasını dinamik belirle (varsayılan 2. Vardiya)
+            const pilotVardiyaNo = getPilotVardiya(pilotName) || (authenticatedCaptain ? authenticatedCaptain.shift : 2) || 2;
+            const vardiyaBaslik = `${pilotVardiyaNo}. Vardiya Başkılavuzluğu`;
+
+            const msg = `🚢 *YENİ KILAVUZLUK GÖREVİ*\n` +
+                        `*(${vardiyaBaslik})*\n\n` +
                         `Sayın *Kpt. ${pilotName}*,\n` +
                         `Adınıza yeni bir gemi görevlendirmesi yapılmıştır:\n\n` +
                         `• *Gemi Adı:* ${shipObj.name || "Bilinmiyor"}\n` +
@@ -2344,7 +2348,7 @@
         const isCapacityExhausted = totalInTransit >= totalActivePilots;
 
         let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
-        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsGK = 0;
+        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsKG = 0;
 
         if (nextKG_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextKG_ship);
@@ -2359,7 +2363,7 @@
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
             remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
-            if (remMinsKG <= 0) criticalGK = true;
+            if (remMinsKG <= 0) criticalKG = true;
         }
 
         return {
@@ -2368,7 +2372,7 @@
             n3_gk_active,
             totalInTransit,
             warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
-            warningGK, criticalGK, depTimeGK, remMinsGK, nextGK_ship,
+            warningGK, criticalGK, depTimeGK, remMinsKG, nextGK_ship,
             hasWarning: warningKG || warningGK
         };
     }
