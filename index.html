@@ -234,6 +234,17 @@
             border-color: #d97706;
         }
 
+        .btn-range-admin {
+            border-color: #8b5cf6;
+            color: #c4b5fd;
+        }
+
+        .btn-range-admin.active {
+            background: #7c3aed !important;
+            color: #ffffff !important;
+            border-color: #a78bfa !important;
+        }
+
         button.btn-search {
             background-color: #0284c7;
             border: none;
@@ -882,7 +893,7 @@
             border-top: 3px solid #22c55e;
         }
 
-        /* YENİ GELİŞMİŞ İSTATİSTİK BİLEŞENLERİ */
+        /* GELİŞMİŞ İSTATİSTİK BİLEŞENLERİ */
         .stat-filter-row {
             display: flex;
             gap: 6px;
@@ -1082,6 +1093,7 @@
             <button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
             <button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
             <button class="btn-range" id="btnRange24" onclick="setLogHours(24)">Son 24 Saat</button>
+            <button class="btn-range btn-range-admin" id="btnRangeShiftAll" onclick="setLogHours('shift_all')" style="display: none;">👑 1 Vardiya (Tüm Gemiler)</button>
         </div>
 
         <button class="btn-search" onclick="loadAllData()">Listeyi Yenile</button>
@@ -1096,10 +1108,10 @@
     <div class="auth-lock-icon">🛡</div>
     <div class="auth-lock-title">Yetkili Cihaz Erişimi Gerekli</div>
     <div class="auth-lock-desc">
-        Bu portal yalnızca KEGM Kılavuz Kaptanlarına tahsis edilmiştir. Lütfen siciliniz ve şifrenizle giriş yapınız.
+        Bu portal yalnızca KEGM Kılavuz Kaptanlarının onaylı kişisel cihazlarına tahsis edilmiştir. Lütfen siciliniz ve şifrenizle giriş yapınız.
     </div>
     <button class="btn-search" style="width: auto; padding: 10px 24px;" onclick="openAuthModal()">
-        🔐 Sisteme Giriş Yap
+        🔐 Kaptan Girişi Yap
     </button>
 </div>
 
@@ -1111,7 +1123,7 @@
 <div id="authModal" class="modal-overlay" onclick="closeAuthModal(event)">
     <div class="modal-content settings-content" onclick="event.stopPropagation()">
         <div class="modal-header-sticky">
-            <h3>🔐 Personel Kimlik & Cihaz Girişi</h3>
+            <h3>🔐 Kaptan Kimlik & Cihaz Girişi</h3>
             <button class="btn-close" onclick="closeAuthModal()">✕</button>
         </div>
 
@@ -1867,11 +1879,23 @@
         const container = document.getElementById("shipContainer");
         const bogaz = document.getElementById("selBogaz").value;
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-        const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
+        const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
+        const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
 
         let rawList = historyShips.filter(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
+            
+            const timeVal = getShipTimestamp(ship);
             const assignment = getShipAssignment(ship);
+
+            // 👑 1 Vardiya (Tüm Gemiler) Modu - Sadece 52181 / 1915 Özel
+            if (isShiftAllMode) {
+                if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
+                if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
+                return true;
+            }
+
+            // Standart Saat Filtreli Mod
             if (assignment === PILOTLESS_VALUE) return false;
             const hasAssignedPilot = !!assignment;
             const isBogazda = isBogazdaShip(ship);
@@ -1882,46 +1906,67 @@
                 if (pVardiya !== 0 && pVardiya !== authenticatedCaptain.shift) return false;
             }
 
-            const timeVal = getShipTimestamp(ship);
             if (cutoffTime > 0 && timeVal > 0 && timeVal < cutoffTime) return false;
             if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
             return true;
         });
 
+        // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
+
+        // AKILLI DUBLİKASYON ENGELLEME
         const uniqueMap = new Map();
         rawList.forEach(ship => {
             const cleanName = normalizeStr(ship.name);
-            const dirKey = isNorthSouth(ship.yon) ? "NS" : "SN";
-            const dedupKey = `${cleanName}_${dirKey}`;
-            if (!uniqueMap.has(dedupKey)) {
-                uniqueMap.set(dedupKey, ship);
+            const shipTime = getShipTimestamp(ship) || 0;
+            const currentAssignment = getShipAssignment(ship);
+            const currentHasPilot = (!!currentAssignment && currentAssignment !== PILOTLESS_VALUE);
+
+            let existingKey = null;
+            for (let [key, existingShip] of uniqueMap.entries()) {
+                if (key.startsWith(cleanName + "_")) {
+                    const exTime = getShipTimestamp(existingShip) || 0;
+                    if (Math.abs(shipTime - exTime) < (6 * 60 * 60 * 1000)) {
+                        existingKey = key;
+                        break;
+                    }
+                }
+            }
+
+            if (!existingKey) {
+                uniqueMap.set(`${cleanName}_${shipTime}`, ship);
             } else {
-                const existing = uniqueMap.get(dedupKey);
-                const existingAssignment = getShipAssignment(existing);
-                const currentAssignment = getShipAssignment(ship);
-                const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
-                const currentHasPilot = !!currentAssignment && currentAssignment !== PILOTLESS_VALUE;
-                if (!existingHasPilot && currentHasPilot) uniqueMap.set(dedupKey, ship);
+                const existingShip = uniqueMap.get(existingKey);
+                const existingAssignment = getShipAssignment(existingShip);
+                const existingHasPilot = (!!existingAssignment && existingAssignment !== PILOTLESS_VALUE);
+
+                if (!existingHasPilot && currentHasPilot) {
+                    uniqueMap.delete(existingKey);
+                    uniqueMap.set(`${cleanName}_${shipTime}`, ship);
+                }
             }
         });
 
         const baseList = Array.from(uniqueMap.values());
         let html = "";
         if (baseList.length === 0) {
-            html += `<div class="status-msg">Son ${logHours} saat içinde vardiyanıza ait atanmış kılavuzlu gemi yok.</div>`;
+            const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde vardiyanıza ait atanmış kılavuzlu gemi yok.`;
+            html += `<div class="status-msg">${msg}</div>`;
         } else {
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
-            const snList = baseList.filter(s => isSouthNorth(s.yon));
+            const snList = baseList.filter(s => !isNorthSouth(s.yon) && isSouthNorth(s.yon));
 
-            html += `<div class="direction-section"><div class="direction-title"><span>🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span></div>`;
+            const nsTitle = isShiftAllMode ? "🧭 KUZEY - GÜNEY (Tüm Geçişler & Düzeltme)" : "🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)";
+            const snTitle = isShiftAllMode ? "🧭 GÜNEY - KUZEY (Tüm Geçişler & Düzeltme)" : "🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)";
+
+            html += `<div class="direction-section"><div class="direction-title"><span>${nsTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span></div>`;
             if (nsList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
             else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
             html += `</div>`;
 
-            html += `<div class="direction-section"><div class="direction-title"><span>🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
+            html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
             if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-            else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+            else snList.forEach(ship => { html += buildCompactLogRow(ship); });
             html += `</div>`;
         }
 
@@ -1931,18 +1976,31 @@
     function buildCompactLogRow(ship) {
         const uniqueKey = getShipKey(ship);
         const assignedPilot = getShipAssignment(ship);
-        if (assignedPilot === PILOTLESS_VALUE) return "";
-        const isAssigned = !!assignedPilot;
+        const isPilotless = (assignedPilot === PILOTLESS_VALUE);
+        const isAssigned = (!!assignedPilot && !isPilotless);
         const displayTime = formatDisplayTime(ship.time, ship.planlama);
-        let tagText = isAssigned ? assignedPilot : "+ Ata";
+
+        let tagText = "+ Ata / Düzelt";
+        let tagClass = "log-pilot-tag";
+        let rowClass = "log-row-compact unassigned";
+
+        if (isPilotless) {
+            tagText = "🚫 Pilotsuz";
+            tagClass += " tag-pilotless";
+            rowClass = "log-row-compact pilotless-row";
+        } else if (isAssigned) {
+            tagText = assignedPilot;
+            tagClass += " saved";
+            rowClass = "log-row-compact assigned";
+        }
 
         return `
-            <div class="log-row-compact ${isAssigned ? "assigned" : ""}">
+            <div class="${rowClass}">
                 <div class="log-ship-info">
                     <span class="log-ship-name-plain">${ship.name}</span>
                     <span class="log-ship-time">🕒 ${displayTime}</span>
                 </div>
-                <div class="log-pilot-tag ${isAssigned ? "saved" : ""}"
+                <div class="${tagClass}"
                     onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
                     ${tagText}
                 </div>
@@ -1959,6 +2017,11 @@
         document.getElementById("selHareket").style.display = m === "live" ? "block" : "none";
         document.getElementById("logRangeBox").style.display = m === "history" ? "flex" : "none";
 
+        const adminBtn = document.getElementById("btnRangeShiftAll");
+        if (adminBtn) {
+            adminBtn.style.display = (m === "history" && isSuperAdminUser()) ? "block" : "none";
+        }
+
         renderCurrentView();
     }
 
@@ -1967,6 +2030,12 @@
         document.getElementById("btnRange6").classList.toggle("active", hours === 6);
         document.getElementById("btnRange12").classList.toggle("active", hours === 12);
         document.getElementById("btnRange24").classList.toggle("active", hours === 24);
+        
+        const adminBtn = document.getElementById("btnRangeShiftAll");
+        if (adminBtn) {
+            adminBtn.classList.toggle("active", hours === "shift_all");
+        }
+
         renderCurrentView();
     }
 
@@ -2282,7 +2351,7 @@
     }
 
     function closeSupportModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-header-back")) return;
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
         document.getElementById("supportModal").style.display = "none";
     }
 
@@ -2962,6 +3031,11 @@
             else if (isBasKilavuz()) titlePrefix = `⭐ BAŞ KLV (V-${authenticatedCaptain.shift})`;
 
             document.getElementById("authBadgeText").innerText = `${titlePrefix} (#${authenticatedCaptain.sicil})`;
+
+            const adminBtn = document.getElementById("btnRangeShiftAll");
+            if (adminBtn) {
+                adminBtn.style.display = (currentMode === "history" && isSuperAdminUser()) ? "block" : "none";
+            }
         } else {
             document.getElementById("protectedContent").style.display = "none";
             document.getElementById("lockScreen").style.display = "flex";
@@ -2970,6 +3044,9 @@
             badge.classList.remove("active");
             document.getElementById("authBadgeIcon").innerText = "🔒";
             document.getElementById("authBadgeText").innerText = "Giriş Yap";
+
+            const adminBtn = document.getElementById("btnRangeShiftAll");
+            if (adminBtn) adminBtn.style.display = "none";
         }
     }
 
@@ -3034,3 +3111,15 @@
 
 </body>
 </html>
+
+Bu kodda da buton çalışmıyor neden olabilir bu kod çalışıyordu eskiden tek yaptığım kopyalayıp yapıştırmak oldu.
+
+Birde benim telefondan girilmiyor arkadaşım kendi telefonundan girdiğinde onun cihazı yetkisiz cihaz olarak görülür mü ilk önce onun mu girmesi lazımdı.
+
+Benim telefon kilitlediği için arkadaşımın telefonundan açmaya çalışsak çalışır mıydı.
+
+Sorunu çöz bana çalışan kodu ver nerede tıkanıyor sistem neden tuş pasif kalıyor önceden çalışıyordu</blockquote>
+    <button class="btn-search" style="width: auto; padding: 10px 24px;" onclick="openAuthModal()">
+        🔐 Kaptan Girişi Yap
+    </button>
+Kodu burası kilitliyor gibi hissediyorum basınca algılamıyor basıldığını anlıyorum renk değişiyor ama bir işlem yapmıyor.
