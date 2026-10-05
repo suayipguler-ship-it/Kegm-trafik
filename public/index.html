@@ -555,7 +555,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.85);
-            z-index: 999;
+            z-index: 99999;
             align-items: flex-end;
         }
 
@@ -1530,7 +1530,7 @@
             "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
             "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU",
             "ERKAN ÇETİN", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ", "HÜSEYİN KARAYTUĞ",
-            "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN OZKEÇECİ", "OLCAY SÖZEN",
+            "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
             "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
@@ -2046,7 +2046,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2140,8 +2140,8 @@
             activeVardiya = authenticatedCaptain.shift;
         }
 
-        pushModalHistory("pilotModal");
-        document.getElementById("pilotModal").style.display = "flex";
+        const m = document.getElementById("pilotModal");
+        if (m) m.style.display = "flex";
 
         const currentAssignment = globalAssignments[uniqueKey] || "";
         const pilotlessButton = document.getElementById("btnPilotless");
@@ -2242,7 +2242,6 @@
 
             const yonText = shipObj.yon || (isMuhabereUser() ? (authenticatedCaptain.sicil === "99001" ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY") : "BELİRTİLMEDİ");
 
-            // Kaptanın vardiyasını dinamik belirle (varsayılan 2. Vardiya)
             const pilotVardiyaNo = getPilotVardiya(pilotName) || (authenticatedCaptain ? authenticatedCaptain.shift : 2) || 2;
             const vardiyaBaslik = `${pilotVardiyaNo}. Vardiya Başkılavuzluğu`;
 
@@ -2423,7 +2422,7 @@
             }
             if (calc.warningGK && calc.nextGK_ship) {
                 html += `<strong>Hedef Gemi (G-K):</strong> ${calc.nextGK_ship.name} (${formatDisplayTime(calc.nextGK_ship.time, calc.nextGK_ship.planlama)})<br>
-                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeKG)} 
+                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeGK)} 
                          ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
             }
             html += `Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong></div>`;
@@ -2473,20 +2472,6 @@
         container.innerHTML = html;
     }
 
-    function pushModalHistory(modalId) {
-        history.pushState({ modalOpen: modalId }, "");
-    }
-
-    window.addEventListener("popstate", (e) => {
-        const modals = ["supportModal", "editSupportPilotsModal", "capacityManageModal", "pilotModal", "secretStatsModal", "settingsModal", "fakeErrorModal", "authModal"];
-        modals.forEach(id => {
-            const el = document.getElementById(id);
-            if (el && el.style.display === "flex") {
-                el.style.display = "none";
-            }
-        });
-    });
-
     function openSupportModal() {
         if (!authenticatedCaptain) {
             alert("Takviye modülünü kullanmak için lütfen önce giriş yapınız.");
@@ -2494,8 +2479,8 @@
             return;
         }
 
-        pushModalHistory("supportModal");
-        document.getElementById("supportModal").style.display = "flex";
+        const m = document.getElementById("supportModal");
+        if (m) m.style.display = "flex";
 
         const now = new Date();
         const hh = String(now.getHours()).padStart(2, "0");
@@ -2631,8 +2616,8 @@
         }
 
         switchEditSupportVardiya(editSupportActiveVardiya);
-        pushModalHistory("editSupportPilotsModal");
-        document.getElementById("editSupportPilotsModal").style.display = "flex";
+        const m = document.getElementById("editSupportPilotsModal");
+        if (m) m.style.display = "flex";
     }
 
     function closeEditSupportPilotsModal(e) {
@@ -2723,8 +2708,8 @@
         }
 
         switchCapacityVardiya(capacityActiveVardiya);
-        pushModalHistory("capacityManageModal");
-        document.getElementById("capacityManageModal").style.display = "flex";
+        const m = document.getElementById("capacityManageModal");
+        if (m) m.style.display = "flex";
     }
 
     function closeCapacityManageModal(e) {
@@ -2830,8 +2815,8 @@
         } else {
             document.getElementById("manPilotBox").style.display = "none";
         }
-        pushModalHistory("secretStatsModal");
-        document.getElementById("secretStatsModal").style.display = "flex";
+        const m = document.getElementById("secretStatsModal");
+        if (m) m.style.display = "flex";
     }
 
     function closeStatsModal(e) {
@@ -2999,7 +2984,7 @@
             document.getElementById("statTableCaption").innerText = "👨‍✈️ Şahsınıza Özel Kılavuzluk Performansı (Gizli):";
         } else {
             pilotsToDisplay.sort((a, b) => pilotStats[b].total - pilotStats[a].total);
-            document.getElementById("statTableCaption").innerText = "👨‍✈️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
+            document.getElementById("statTableCaption").innerText = "👨‍‍✈️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
         }
 
         let tableHtml = "";
@@ -3115,7 +3100,7 @@
         }
     }
 
-    /* GİRİŞ & CİHAZ DOĞRULAMA (4 GÜNLÜK KALICI OTURUM) */
+    /* GİRİŞ & CİHAZ DOĞRULAMA */
     async function submitDeviceAuth() {
         const sicil = document.getElementById("txtSicil").value.trim();
         const pass = document.getElementById("txtPassword").value.trim();
@@ -3123,15 +3108,15 @@
         const deviceId = getDeviceUUID();
 
         if (!sicil || !pass) {
-            errEl.innerText = "Lütfen Sicil ve Şifrenizi eksiksiz girin.";
+            if (errEl) errEl.innerText = "Lütfen Sicil ve Şifrenizi eksiksiz girin.";
             return;
         }
 
-        errEl.innerText = "Cihaz ve yetki kontrol ediliyor...";
+        if (errEl) errEl.innerText = "Cihaz ve yetki kontrol ediliyor...";
 
         if (sicil === "99001" || sicil === "99002") {
             if (pass !== "1915") {
-                errEl.innerText = "Hatalı şifre girdiniz.";
+                if (errEl) errEl.innerText = "Hatalı şifre girdiniz.";
                 return;
             }
             authenticatedCaptain = {
@@ -3152,14 +3137,14 @@
             const userDoc = await db.collection("authorized_users").doc(sicil).get();
 
             if (!userDoc.exists) {
-                errEl.innerText = "Bu sicil sisteme tanımlı değil.";
+                if (errEl) errEl.innerText = "Bu sicil sisteme tanımlı değil.";
                 return;
             }
 
             const data = userDoc.data();
 
             if (data.pass !== pass) {
-                errEl.innerText = "Hatalı şifre girdiniz.";
+                if (errEl) errEl.innerText = "Hatalı şifre girdiniz.";
                 return;
             }
 
@@ -3169,7 +3154,7 @@
                     firstBoundAt: new Date().toISOString()
                 });
             } else if (data.deviceId !== deviceId) {
-                errEl.innerText = "❌ YETKİSİZ CİHAZ! Bu hesap başka bir telefona mühürlü.";
+                if (errEl) errEl.innerText = "❌ YETKİSİZ CİHAZ! Bu hesap başka bir telefona mühürlü.";
                 return;
             }
 
@@ -3187,64 +3172,69 @@
             loadAllData();
 
         } catch (error) {
-            errEl.innerText = "Bağlantı hatası: " + error.message;
+            if (errEl) errEl.innerText = "Bağlantı hatası: " + error.message;
         }
     }
 
     function applyAuthenticatedState() {
-        const prot = document.getElementById("protectedContent");
-        const lock = document.getElementById("lockScreen");
-        const badge = document.getElementById("btnShiftAuthBadge");
-        const badgeIcon = document.getElementById("authBadgeIcon");
-        const badgeText = document.getElementById("authBadgeText");
-        const titleEl = document.getElementById("mainAppTitle");
-        const suppBtn = document.getElementById("btnHeaderSupportBox");
-        const tgBtn = document.getElementById("btnTelegramLink");
-        const selYon = document.getElementById("selYon");
-        const adminBtn = document.getElementById("btnRangeShiftAll");
+        try {
+            const prot = document.getElementById("protectedContent");
+            const lock = document.getElementById("lockScreen");
+            const badge = document.getElementById("btnShiftAuthBadge");
+            const badgeIcon = document.getElementById("authBadgeIcon");
+            const badgeText = document.getElementById("authBadgeText");
+            const titleEl = document.getElementById("mainAppTitle");
+            const suppBtn = document.getElementById("btnHeaderSupportBox");
+            const tgBtn = document.getElementById("btnTelegramLink");
+            const selYon = document.getElementById("selYon");
+            const adminBtn = document.getElementById("btnRangeShiftAll");
 
-        if (authenticatedCaptain) {
-            if (prot) prot.style.display = "block";
-            if (lock) lock.style.display = "none";
-            if (badge) badge.classList.add("active");
-            if (badgeIcon) badgeIcon.innerText = "🟢";
+            if (authenticatedCaptain) {
+                if (prot) prot.style.display = "block";
+                if (lock) lock.style.display = "none";
+                if (badge) badge.classList.add("active");
+                if (badgeIcon) badgeIcon.innerText = "🟢";
 
-            if (isMuhabereUser()) {
-                const isKuzey = (authenticatedCaptain.sicil === "99001");
-                if (titleEl) titleEl.innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
-                if (badgeText) badgeText.innerText = `📻 ${isKuzey ? "KUZEY" : "GÜNEY"} (#${authenticatedCaptain.sicil})`;
-                
-                if (selYon) {
-                    selYon.value = isKuzey ? "KUZEY-GÜNEY" : "GÜNEY-KUZEY";
-                    selYon.disabled = true;
+                if (isMuhabereUser()) {
+                    const isKuzey = (authenticatedCaptain.sicil === "99001");
+                    if (titleEl) titleEl.innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
+                    if (badgeText) badgeText.innerText = `📻 ${isKuzey ? "KUZEY" : "GÜNEY"} (#${authenticatedCaptain.sicil})`;
+                    
+                    if (selYon) {
+                        selYon.value = isKuzey ? "KUZEY-GÜNEY" : "GÜNEY-KUZEY";
+                        selYon.disabled = true;
+                    }
+                    if (suppBtn) suppBtn.style.display = "none";
+                    if (tgBtn) tgBtn.style.display = "none";
+                } else {
+                    if (titleEl) titleEl.innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
+                    if (selYon) selYon.disabled = false;
+                    if (suppBtn) suppBtn.style.display = "flex";
+                    if (tgBtn) tgBtn.style.display = "inline-flex";
+
+                    let titlePrefix = `V-${authenticatedCaptain.shift}`;
+                    if (isSuperAdminUser()) titlePrefix = "👑 ADMIN";
+                    else if (isBasKilavuz()) titlePrefix = `⭐ BAŞ KLV (V-${authenticatedCaptain.shift})`;
+                    if (badgeText) badgeText.innerText = `${titlePrefix} (#${authenticatedCaptain.sicil})`;
                 }
-                if (suppBtn) suppBtn.style.display = "none";
-                if (tgBtn) tgBtn.style.display = "none";
+
+                if (adminBtn) {
+                    adminBtn.style.display = (currentMode === "history" && isSuperAdminUser()) ? "block" : "none";
+                }
             } else {
+                if (prot) prot.style.display = "none";
+                if (lock) lock.style.display = "flex";
+                if (badge) badge.classList.remove("active");
+                if (badgeIcon) badgeIcon.innerText = "🔒";
+                if (badgeText) badgeText.innerText = "Giriş Yap";
                 if (titleEl) titleEl.innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
-                if (selYon) selYon.disabled = false;
                 if (suppBtn) suppBtn.style.display = "flex";
-                if (tgBtn) tgBtn.style.display = "inline-flex";
-
-                let titlePrefix = `V-${authenticatedCaptain.shift}`;
-                if (isSuperAdminUser()) titlePrefix = "👑 ADMIN";
-                else if (isBasKilavuz()) titlePrefix = `⭐ BAŞ KLV (V-${authenticatedCaptain.shift})`;
-                if (badgeText) badgeText.innerText = `${titlePrefix} (#${authenticatedCaptain.sicil})`;
+                if (tgBtn) tgBtn.style.display = "none";
+                if (adminBtn) adminBtn.style.display = "none";
+                if (selYon) selYon.disabled = false;
             }
-
-            if (adminBtn) {
-                adminBtn.style.display = (currentMode === "history" && isSuperAdminUser()) ? "block" : "none";
-            }
-        } else {
-            if (prot) prot.style.display = "none";
-            if (lock) lock.style.display = "flex";
-            if (badge) badge.classList.remove("active");
-            if (badgeIcon) badgeIcon.innerText = "🔒";
-            if (badgeText) badgeText.innerText = "Giriş Yap";
-            if (titleEl) titleEl.innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
-            if (suppBtn) suppBtn.style.display = "flex";
-            if (tgBtn) tgBtn.style.display = "none";
-            if (adminBtn) adminBtn.style.display = "none";
+        } catch (e) {
+            console.error("applyAuthenticatedState hatası:", e);
         }
     }
 
@@ -3271,8 +3261,9 @@
         if (passInput) passInput.value = "";
         if (errEl) errEl.innerText = "";
         
-        pushModalHistory("authModal");
-        if (modal) modal.style.display = "flex";
+        if (modal) {
+            modal.style.display = "flex";
+        }
     }
 
     function closeAuthModal(e) {
@@ -3284,7 +3275,6 @@
     function openSettingsModal() {
         const uuidEl = document.getElementById("txtDevUUID");
         if (uuidEl) uuidEl.value = getDeviceUUID();
-        pushModalHistory("settingsModal");
         const m = document.getElementById("settingsModal");
         if (m) m.style.display = "flex";
     }
@@ -3296,9 +3286,9 @@
     }
 
     window.onload = () => {
-        const savedSession = localStorage.getItem("kegm_active_pilot");
-        if (savedSession) {
-            try { 
+        try {
+            const savedSession = localStorage.getItem("kegm_active_pilot");
+            if (savedSession) {
                 const sessionObj = JSON.parse(savedSession);
                 const sessionAge = Date.now() - (sessionObj.loginTime || 0);
                 if (sessionAge < SESSION_EXPIRY_MS) {
@@ -3306,11 +3296,13 @@
                 } else {
                     localStorage.removeItem("kegm_active_pilot");
                 }
-            } catch(e) {
-                localStorage.removeItem("kegm_active_pilot");
             }
+        } catch(e) {
+            localStorage.removeItem("kegm_active_pilot");
         }
+
         applyAuthenticatedState();
+
         if (authenticatedCaptain) {
             loadAllData();
         }
