@@ -1,21 +1,20 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="noindex, nofollow, noarchive" name="robots"/>
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title>BOĞAZ GEÇİŞ PLANLAMA</title>
-    <link href="manifest.json" rel="manifest"/>
-    <meta content="#050b14" name="theme-color"/>
-    <meta content="yes" name="apple-mobile-web-app-capable"/>
-    <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-    <link href="https://cdn-icons-png.flaticon.com/512/2942/2942076.png" rel="apple-touch-icon"/>
-
-    <!-- Firebase SDK (v9 Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-    <style>
+<meta charset="utf-8"/>
+<meta content="noindex, nofollow, noarchive" name="robots"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>BOĞAZ GEÇİŞ PLANLAMA</title>
+<link href="manifest.json" rel="manifest"/>
+<meta content="#050b14" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<link href="https://cdn-icons-png.flaticon.com/512/2942/2942076.png" rel="apple-touch-icon"/>
+<!-- Firebase SDK (v9 Compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
         * {
             box-sizing: border-box;
             margin: 0;
@@ -121,21 +120,7 @@
         .header-status-group {
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .btn-telegram-link {
-            background: #0284c7;
-            border: 1px solid #38bdf8;
-            color: #fff;
-            font-size: 0.95rem;
-            border-radius: 6px;
-            cursor: pointer;
-            padding: 3px 6px;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            gap: 4px;
         }
 
         .btn-settings {
@@ -246,17 +231,6 @@
             border-color: #d97706;
         }
 
-        .btn-range-admin {
-            border-color: #8b5cf6;
-            color: #c4b5fd;
-        }
-
-        .btn-range-admin.active {
-            background: #7c3aed !important;
-            color: #ffffff !important;
-            border-color: #a78bfa !important;
-        }
-
         button.btn-search {
             background-color: #0284c7;
             border: none;
@@ -280,16 +254,13 @@
             background: #0f172a;
             border: 1px solid #1e293b;
             border-radius: 12px;
-            padding: 24px 16px;
+            padding: 32px 16px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
             margin-top: 10px;
-            max-width: 420px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .auth-lock-icon {
@@ -306,27 +277,7 @@
             color: #94a3b8;
             font-size: 0.85rem;
             line-height: 1.5;
-        }
-
-        .auth-split-inputs {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            margin-top: 4px;
-        }
-
-        .auth-box-field {
-            flex: 1;
-            text-align: center;
-            font-family: monospace;
-            font-size: 1.15rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            border: 1px solid #38bdf8;
-            background: #070d1a;
-            color: #38bdf8;
-            padding: 12px;
-            border-radius: 8px;
+            max-width: 320px;
         }
 
         .ship-card {
@@ -504,14 +455,6 @@
             border-left: 4px solid #22c55e;
         }
 
-        .log-row-compact.unassigned {
-            border-left: 4px solid #f59e0b;
-        }
-
-        .log-row-compact.pilotless-row {
-            border-left: 4px solid #ef4444;
-        }
-
         .log-ship-info {
             display: flex;
             flex-direction: column;
@@ -558,24 +501,16 @@
             font-weight: 700;
         }
 
-        .log-pilot-tag.tag-pilotless {
-            background: #450a0a;
-            border: 1px solid #ef4444;
-            color: #fca5a5;
-            font-weight: 700;
-        }
-
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.88);
-            z-index: 999999 !important;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
             align-items: flex-end;
-            justify-content: center;
         }
 
         .modal-content {
@@ -627,6 +562,10 @@
             line-height: 1.2;
         }
 
+        .btn-header-back:active {
+            background: #334155;
+        }
+
         .btn-close {
             width: auto;
             background: #1e293b;
@@ -638,6 +577,11 @@
             cursor: pointer;
             line-height: 1;
             font-weight: 800;
+        }
+
+        .btn-close:active {
+            background: #ef4444;
+            color: #fff;
         }
 
         .vardiya-tabs {
@@ -682,6 +626,10 @@
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .btn-pilot-item:active {
+            background: #0284c7;
         }
 
         .btn-pilotless {
@@ -746,6 +694,10 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
+        }
+
+        .support-count-badge-btn:active {
+            background: #334155;
         }
 
         .support-info-line {
@@ -874,6 +826,26 @@
             font-weight: 700;
         }
 
+        .auth-split-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .auth-box-field {
+            flex: 1;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            border: 1px solid #38bdf8;
+            background: #070d1a;
+            color: #38bdf8;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
         .settings-content {
             border-radius: 12px;
             margin: auto;
@@ -907,6 +879,7 @@
             border-top: 3px solid #22c55e;
         }
 
+        /* YENİ GELİŞMİŞ İSTATİSTİK BİLEŞENLERİ */
         .stat-filter-row {
             display: flex;
             gap: 6px;
@@ -1039,413 +1012,333 @@
             font-size: 0.9rem;
             margin-top: 24px;
         }
-    </style>
+    
+.btn-telegram-link{background:#0284c7;border:1px solid #38bdf8;color:#fff;font-size:.95rem;border-radius:6px;cursor:pointer;padding:3px 6px;line-height:1;display:inline-flex;align-items:center;justify-content:center;}
+</style>
 </head>
-
 <body>
-
-<!-- GİRİŞ MODALI -->
-<div id="authModal" class="modal-overlay" onclick="closeAuthModal(event)">
-    <div class="modal-content settings-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <h3>🔐 Personel Kimlik & Cihaz Girişi</h3>
-            <button class="btn-close" onclick="closeAuthModal()">✕</button>
-        </div>
-
-        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
-            Sicil ve Şifrenizi giriniz:
-        </div>
-
-        <div class="auth-split-inputs">
-            <input type="text" id="modalSicil" class="auth-box-field" maxlength="6" placeholder="SİCİL" inputmode="numeric">
-            <input type="password" id="modalPass" class="auth-box-field" maxlength="8" placeholder="ŞİFRE">
-        </div>
-
-        <div id="modalAuthError" style="color:#ef4444; font-size:0.75rem; text-align:center; min-height:16px;"></div>
-
-        <button class="btn-search" style="margin-top:4px;" onclick="submitModalAuth()">
-            Cihazı Doğrula & Giriş Yap
-        </button>
-    </div>
-</div>
-
 <div class="header">
-    <h1 id="mainAppTitle">
-        <span>BOĞAZ GEÇİŞ</span>
-        <span>PLANLAMA</span>
-    </h1>
-
-    <div class="header-actions">
-        <div class="header-btn-col">
-            <button id="btnShiftAuthBadge"
-                    class="header-action-btn btn-shift-auth"
-                    onclick="handleAuthBadgeClick()"
-                    title="Vardiya ve Cihaz Doğrulama">
-                <span class="header-btn-icon" id="authBadgeIcon">🔒</span>
-                <span class="header-btn-text" id="authBadgeText">Giriş Yap</span>
-            </button>
-
-            <button id="btnHeaderSupportBox" class="header-action-btn btn-header-support-box"
-                    onclick="openSupportModal()"
-                    title="Takviye Durumu ve Kayıt">
-                <span class="header-btn-icon">🚚</span>
-                <span class="header-btn-text">Takviye</span>
-            </button>
-        </div>
-
-        <div class="header-status-group">
-            <button id="btnTelegramLink" class="btn-telegram-link" onclick="openTelegramConnect()" title="Telegram Bildirimlerini Aç" style="display:none;">✈️</button>
-            <span id="cloudStatus" class="cloud-status" title="Firebase Bağlantısı">☁</span>
-            <button class="btn-settings" onclick="openSettingsModal()" title="Ayarlar">⚙</button>
-        </div>
-    </div>
+<h1 id="mainAppTitle">
+<span>BOĞAZ GEÇİŞ</span>
+<span>PLANLAMA</span>
+</h1>
+<div class="header-actions">
+<div class="header-btn-col">
+<button class="header-action-btn btn-shift-auth" id="btnShiftAuthBadge" onclick="handleAuthBadgeClick()" title="Vardiya ve Cihaz Doğrulama">
+<span class="header-btn-icon" id="authBadgeIcon">🔒</span>
+<span class="header-btn-text" id="authBadgeText">Giriş Yap</span>
+</button>
+<button class="header-action-btn btn-header-support-box" onclick="openSupportModal()" title="Takviye Durumu ve Kayıt">
+<span class="header-btn-icon">🚚</span>
+<span class="header-btn-text">Takviye</span>
+</button>
 </div>
-
-<!-- KORUMALI İÇERİK: OTURUM AÇILMADAN ASLA GÖRÜNMEZ -->
+<div class="header-status-group"><button class="btn-telegram-link" id="btnTelegramLink" onclick="openTelegramConnect()" style="display:none;" title="Telegram Bildirimlerini Aç">✈️</button>
+<span class="cloud-status" id="cloudStatus" title="Firebase Bağlantısı">☁</span>
+<button class="btn-settings" onclick="openSettingsModal()" title="Ayarlar">⚙</button>
+</div>
+</div>
+</div>
+<div class="nav-tabs">
+<button class="btn-tab active" id="tabLive" onclick="switchMode('live')">📋 Canlı Planlama</button>
+<button class="btn-tab" id="tabHistory" onclick="switchMode('history')">📜 Kılavuzlu Geçiş Logu</button>
+</div>
 <div id="protectedContent" style="display: none;">
-    <div class="nav-tabs" id="mainNavTabs">
-        <button id="tabLive" class="btn-tab active" onclick="switchMode('live')">📋 Canlı Planlama</button>
-        <button id="tabHistory" class="btn-tab" onclick="switchMode('history')">📜 Kılavuzlu Geçiş Logu</button>
-    </div>
-
-    <div class="filter-card">
-        <input type="text" id="txtShipSearch" class="search-box" placeholder="🔍 Gemi Adı Ara..." oninput="renderCurrentView()">
-
-        <div class="filter-row">
-            <select id="selBogaz" onchange="renderCurrentView()">
-                <option value="ÇANAKKALE">ÇANAKKALE</option>
-                <option value="İSTANBUL">İSTANBUL</option>
-            </select>
-
-            <select id="selYon" onchange="renderCurrentView()">
-                <option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
-                <option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
-            </select>
-        </div>
-
-        <select id="selHareket" onchange="renderCurrentView()">
-            <option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
-            <option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
-            <option value="BOĞAZDA">BOĞAZDA</option>
-        </select>
-
-        <div id="logRangeBox" class="log-range-row">
-            <button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
-            <button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
-            <button class="btn-range" id="btnRange24" onclick="setLogHours(24)">Son 24 Saat</button>
-            <button class="btn-range btn-range-admin" id="btnRangeShiftAll" onclick="setLogHours('shift_all')" style="display: none;">👑 1 Vardiya (Tüm Gemiler)</button>
-        </div>
-
-        <button class="btn-search" onclick="loadAllData()">Listeyi Yenile</button>
-    </div>
-
-    <div id="shipContainer" class="ship-list">
-        <div class="status-msg">Veriler yükleniyor...</div>
-    </div>
+<div class="filter-card">
+<input class="search-box" id="txtShipSearch" oninput="renderCurrentView()" placeholder="🔍 Gemi Adı Ara..." type="text"/>
+<div class="filter-row">
+<select id="selBogaz" onchange="renderCurrentView()">
+<option value="ÇANAKKALE">ÇANAKKALE</option>
+<option value="İSTANBUL">İSTANBUL</option>
+</select>
+<select id="selYon" onchange="renderCurrentView()">
+<option value="GÜNEY-KUZEY">GÜNEY-KUZEY</option>
+<option value="KUZEY-GÜNEY">KUZEY-GÜNEY</option>
+</select>
 </div>
-
-<!-- KİLİT EKRANI (GİRİŞ KUTULARI İÇERİDE) -->
-<div id="lockScreen" class="auth-lock-card">
-    <div class="auth-lock-icon">🛡</div>
-    <div class="auth-lock-title">Kılavuz Kaptan Portalı</div>
-    <div class="auth-lock-desc">
+<select id="selHareket" onchange="renderCurrentView()">
+<option value="PLAN. GEÇİŞ">PLAN. GEÇİŞ</option>
+<option value="GEÇİŞE HAZIR">GEÇİŞE HAZIR</option>
+<option value="BOĞAZDA">BOĞAZDA</option>
+</select>
+<div class="log-range-row" id="logRangeBox">
+<button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
+<button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
+<button class="btn-range" id="btnRange24" onclick="setLogHours(24)">Son 24 Saat</button><button class="btn-range btn-range-admin" id="btnRangeShiftAll" onclick="setLogHours('shift_all')" style="display:none;">👑 1 Vardiya (Tüm Gemiler)</button>
+</div>
+<button class="btn-search" onclick="loadAllData()">Listeyi Yenile</button>
+</div>
+<div class="ship-list" id="shipContainer">
+<div class="status-msg">Veriler yükleniyor...</div>
+</div>
+</div>
+<div class="auth-lock-card" id="lockScreen">
+<div class="auth-lock-icon">🛡</div>
+<div class="auth-lock-title">Kılavuz Kaptan Portalı</div>
+<div class="auth-lock-desc">
         Bu portal yalnızca KEGM Kılavuz Kaptanlarına tahsis edilmiştir. Lütfen siciliniz ve şifrenizle giriş yapınız.
     </div>
-
-    <div class="auth-split-inputs">
-        <input type="text" id="lockSicil" class="auth-box-field" maxlength="6" placeholder="SİCİL" inputmode="numeric">
-        <input type="password" id="lockPass" class="auth-box-field" maxlength="8" placeholder="ŞİFRE">
-    </div>
-
-    <div id="lockError" style="color:#ef4444; font-size:0.8rem; text-align:center; min-height:16px;"></div>
-
-    <button class="btn-search" style="width: 100%; padding: 12px; font-weight: 800; cursor: pointer; background: #0284c7;" onclick="submitDirectAuth(document.getElementById('lockSicil').value, document.getElementById('lockPass').value, 'lockError')">
+<div class="auth-split-inputs">
+<input class="auth-box-field" id="lockSicil" inputmode="numeric" maxlength="6" placeholder="SİCİL" type="text"/>
+<input class="auth-box-field" id="lockPass" maxlength="8" placeholder="ŞİFRE" type="password"/>
+</div>
+<div id="lockError" style="color:#ef4444; font-size:0.8rem; text-align:center; min-height:16px;"></div>
+<button class="btn-search" onclick="submitLockScreenAuth()" style="width: 100%; padding: 12px; font-weight: 800; cursor: pointer; background: #0284c7;">
         🔐 Sisteme Giriş Yap
     </button>
 </div>
-
 <div class="telemetry-footer" onclick="triggerSecretDiagnosis()">
     ● NMEA-0183 Telemetri Aktif [v2.4.1] | Port: 4001
 </div>
+<!-- KİŞİSEL CİHAZ DOĞRULAMA MODALI -->
 
 <!-- SABİT BAŞLIKLI GELİŞMİŞ TAKVİYE MODALI -->
-<div id="supportModal" class="modal-overlay" onclick="closeSupportModal(event)">
-    <div class="modal-content" style="border-top-color: #f59e0b;" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <button class="btn-header-back" onclick="closeSupportModal()">← Geri</button>
-            <h3 style="color:#fbbf24;">🚐 ANLIK TAKVİYE DURUMU</h3>
-            <button class="btn-close" onclick="closeSupportModal()" title="Kapat">✕</button>
-        </div>
-
-        <div id="modalSupportAnalysisContainer"></div>
-
-        <div class="support-form-label" style="margin-top:4px;">Yön</div>
-        <select id="supportDirection">
-            <option value="K-G">KUZEY → GÜNEY</option>
-            <option value="G-K">GÜNEY → KUZEY</option>
-        </select>
-
-        <div class="support-form-label">Saat</div>
-        <input type="time" id="supportTime" step="900">
-
-        <div class="support-form-label">Vardiya Seçimi (Takviye Giden Kaptanlar İçin)</div>
-        <div class="vardiya-tabs" id="supportModalVardiyaTabs">
-            <button id="supportTabV1" class="btn-v-tab" onclick="switchSupportVardiya(1)">Vardiya-1</button>
-            <button id="supportTabV2" class="btn-v-tab active" onclick="switchSupportVardiya(2)">Vardiya-2</button>
-            <button id="supportTabV3" class="btn-v-tab" onclick="switchSupportVardiya(3)">Vardiya-3</button>
-        </div>
-
-        <div id="supportPilotList" class="support-pilot-list"></div>
-
-        <div id="supportSelectedCount" style="color:#fbbf24; font-weight:800; font-size:0.8rem; text-align:center;">
+<div class="modal-overlay" id="supportModal" onclick="closeSupportModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()" style="border-top-color: #f59e0b;">
+<div class="modal-header-sticky">
+<button class="btn-header-back" onclick="closeSupportModal()">← Geri</button>
+<h3 style="color:#fbbf24;">🚐 ANLIK TAKVİYE DURUMU</h3>
+<button class="btn-close" onclick="closeSupportModal()" title="Kapat">✕</button>
+</div>
+<div id="modalSupportAnalysisContainer"></div>
+<div class="support-form-label" style="margin-top:4px;">Yön</div>
+<select id="supportDirection">
+<option value="K-G">KUZEY → GÜNEY</option>
+<option value="G-K">GÜNEY → KUZEY</option>
+</select>
+<div class="support-form-label">Saat</div>
+<input id="supportTime" step="900" type="time"/>
+<div class="support-form-label">Vardiya Seçimi (Takviye Giden Kaptanlar İçin)</div>
+<div class="vardiya-tabs" id="supportModalVardiyaTabs">
+<button class="btn-v-tab" id="supportTabV1" onclick="switchSupportVardiya(1)">Vardiya-1</button>
+<button class="btn-v-tab active" id="supportTabV2" onclick="switchSupportVardiya(2)">Vardiya-2</button>
+<button class="btn-v-tab" id="supportTabV3" onclick="switchSupportVardiya(3)">Vardiya-3</button>
+</div>
+<div class="support-pilot-list" id="supportPilotList"></div>
+<div id="supportSelectedCount" style="color:#fbbf24; font-weight:800; font-size:0.8rem; text-align:center;">
             0 kılavuz seçildi.
         </div>
-
-        <div style="display:flex; gap:8px; margin-top:4px;">
-            <button class="btn-search" style="background:#f59e0b; color:#000; font-weight:800; flex:2;" onclick="saveSupportRecord()">
+<div style="display:flex; gap:8px; margin-top:4px;">
+<button class="btn-search" onclick="saveSupportRecord()" style="background:#f59e0b; color:#000; font-weight:800; flex:2;">
                 🚚 TAKVİYEYİ KAYDET
             </button>
-            <button class="btn-search" style="background:#334155; color:#cbd5e1; font-weight:700; flex:1;" onclick="closeSupportModal()">
+<button class="btn-search" onclick="closeSupportModal()" style="background:#334155; color:#cbd5e1; font-weight:700; flex:1;">
                 Kapat
             </button>
-        </div>
-    </div>
 </div>
-
+</div>
+</div>
 <!-- GEÇMİŞ TAKVİYE KILAVUZLARINI DÜZENLEME MODALI -->
-<div id="editSupportPilotsModal" class="modal-overlay" onclick="closeEditSupportPilotsModal(event)">
-    <div class="modal-content" style="border-top-color: #38bdf8;" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <button class="btn-header-back" onclick="closeEditSupportPilotsModal()">← Geri</button>
-            <h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️ Takviye Kılavuzlarını Düzenle</h3>
-            <button class="btn-close" onclick="closeEditSupportPilotsModal()">✕</button>
-        </div>
-
-        <div style="font-size:0.78rem; color:#94a3b8; line-height:1.4;">
+<div class="modal-overlay" id="editSupportPilotsModal" onclick="closeEditSupportPilotsModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()" style="border-top-color: #38bdf8;">
+<div class="modal-header-sticky">
+<button class="btn-header-back" onclick="closeEditSupportPilotsModal()">← Geri</button>
+<h3 id="editSupportModalTitle" style="color:#38bdf8;">✏️ Takviye Kılavuzlarını Düzenle</h3>
+<button class="btn-close" onclick="closeEditSupportPilotsModal()">✕</button>
+</div>
+<div style="font-size:0.78rem; color:#94a3b8; line-height:1.4;">
             Bu takviye kaydındaki kılavuzları işaretleyerek <strong>ekleyebilir</strong> veya tikini kaldırarak <strong>çıkarabilirsiniz</strong>:
         </div>
-
-        <div class="vardiya-tabs" id="editSupportModalVardiyaTabs" style="margin-top:4px;">
-            <button id="editSuppTabV1" class="btn-v-tab" onclick="switchEditSupportVardiya(1)">V-1</button>
-            <button id="editSuppTabV2" class="btn-v-tab active" onclick="switchEditSupportVardiya(2)">V-2</button>
-            <button id="editSuppTabV3" class="btn-v-tab" onclick="switchEditSupportVardiya(3)">V-3</button>
-        </div>
-
-        <div id="editSupportPilotListBox" class="support-pilot-list" style="max-height:280px;"></div>
-
-        <div id="editSupportSelectedCount" style="color:#38bdf8; font-weight:800; font-size:0.8rem; text-align:center;">
+<div class="vardiya-tabs" id="editSupportModalVardiyaTabs" style="margin-top:4px;">
+<button class="btn-v-tab" id="editSuppTabV1" onclick="switchEditSupportVardiya(1)">V-1</button>
+<button class="btn-v-tab active" id="editSuppTabV2" onclick="switchEditSupportVardiya(2)">V-2</button>
+<button class="btn-v-tab" id="editSuppTabV3" onclick="switchEditSupportVardiya(3)">V-3</button>
+</div>
+<div class="support-pilot-list" id="editSupportPilotListBox" style="max-height:280px;"></div>
+<div id="editSupportSelectedCount" style="color:#38bdf8; font-weight:800; font-size:0.8rem; text-align:center;">
             0 kılavuz seçili.
         </div>
-
-        <div style="display:flex; gap:8px;">
-            <button class="btn-search" style="background:#0284c7; font-weight:800; flex:2;" onclick="saveEditedSupportPilots()">
+<div style="display:flex; gap:8px;">
+<button class="btn-search" onclick="saveEditedSupportPilots()" style="background:#0284c7; font-weight:800; flex:2;">
                 💾 Değişiklikleri Kaydet
             </button>
-            <button class="btn-search" style="background:#334155; font-weight:700; flex:1;" onclick="closeEditSupportPilotsModal()">
+<button class="btn-search" onclick="closeEditSupportPilotsModal()" style="background:#334155; font-weight:700; flex:1;">
                 Kapat
             </button>
-        </div>
-    </div>
 </div>
-
+</div>
+</div>
 <!-- MEVCUT KILAVUZ HAVUZU EKLE / ÇIKAR MODALI -->
-<div id="capacityManageModal" class="modal-overlay" onclick="closeCapacityManageModal(event)">
-    <div class="modal-content" style="border-top-color: #38bdf8;" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <button class="btn-header-back" onclick="closeCapacityManageModal()">← Geri</button>
-            <h3 style="color:#38bdf8;">👥 Vardiya Mevcudu & İzinli Yönetimi</h3>
-            <button class="btn-close" onclick="closeCapacityManageModal()">✕</button>
-        </div>
-
-        <div style="font-size:0.78rem; color:#94a3b8; line-height:1.4;">
+<div class="modal-overlay" id="capacityManageModal" onclick="closeCapacityManageModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()" style="border-top-color: #38bdf8;">
+<div class="modal-header-sticky">
+<button class="btn-header-back" onclick="closeCapacityManageModal()">← Geri</button>
+<h3 style="color:#38bdf8;">👥 Vardiya Mevcudu &amp; İzinli Yönetimi</h3>
+<button class="btn-close" onclick="closeCapacityManageModal()">✕</button>
+</div>
+<div style="font-size:0.78rem; color:#94a3b8; line-height:1.4;">
             Vardiyadaki kılavuzların üzerine dokunarak <strong>Görevde / İzinli</strong> durumunu değiştirebilirsiniz:
         </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#0b1329; border:1px solid #1e293b; padding:8px 12px; border-radius:8px;">
-            <span style="font-weight:700; color:#e2e8f0; font-size:0.85rem;">Aktif Mevcut:</span>
-            <div style="display:flex; align-items:center; gap:6px;">
-                <button style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;" onclick="adjustCapacityDelta(-1)">-</button>
-                <span id="capacityManageCurrentCount" style="font-size:1.1rem; font-weight:800; color:#fbbf24; min-width:30px; text-align:center;">28</span>
-                <button style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;" onclick="adjustCapacityDelta(1)">+</button>
-            </div>
-        </div>
-
-        <div class="vardiya-tabs" id="capacityModalVardiyaTabs" style="margin-top:4px;">
-            <button id="capTabV1" class="btn-v-tab" onclick="switchCapacityVardiya(1)">V-1</button>
-            <button id="capTabV2" class="btn-v-tab active" onclick="switchCapacityVardiya(2)">V-2</button>
-            <button id="capTabV3" class="btn-v-tab" onclick="switchCapacityVardiya(3)">V-3</button>
-        </div>
-
-        <div id="capacityPilotListContainer" style="display:flex; flex-direction:column; gap:6px; max-height:48vh; overflow-y:auto; padding-right:4px;"></div>
-
-        <button class="btn-search" style="background:#0284c7; margin-top:6px;" onclick="closeCapacityManageModal()">
+<div style="display:flex; justify-content:space-between; align-items:center; background:#0b1329; border:1px solid #1e293b; padding:8px 12px; border-radius:8px;">
+<span style="font-weight:700; color:#e2e8f0; font-size:0.85rem;">Aktif Mevcut:</span>
+<div style="display:flex; align-items:center; gap:6px;">
+<button onclick="adjustCapacityDelta(-1)" style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;">-</button>
+<span id="capacityManageCurrentCount" style="font-size:1.1rem; font-weight:800; color:#fbbf24; min-width:30px; text-align:center;">28</span>
+<button onclick="adjustCapacityDelta(1)" style="width:30px; height:30px; padding:0; background:#334155; border-radius:4px; font-weight:800;">+</button>
+</div>
+</div>
+<div class="vardiya-tabs" id="capacityModalVardiyaTabs" style="margin-top:4px;">
+<button class="btn-v-tab" id="capTabV1" onclick="switchCapacityVardiya(1)">V-1</button>
+<button class="btn-v-tab active" id="capTabV2" onclick="switchCapacityVardiya(2)">V-2</button>
+<button class="btn-v-tab" id="capTabV3" onclick="switchCapacityVardiya(3)">V-3</button>
+</div>
+<div id="capacityPilotListContainer" style="display:flex; flex-direction:column; gap:6px; max-height:48vh; overflow-y:auto; padding-right:4px;"></div>
+<button class="btn-search" onclick="closeCapacityManageModal()" style="background:#0284c7; margin-top:6px;">
             Tamamla ve Canlı Ekrana Dön
         </button>
-    </div>
 </div>
-
+</div>
 <!-- PİLOT SEÇİM MODALI -->
-<div id="pilotModal" class="modal-overlay" onclick="closeModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <h3 id="modalShipTitle">Kılavuz Kaptan Ata</h3>
-            <button class="btn-close" onclick="closeModal()">✕</button>
-        </div>
-
-        <button id="btnPilotless" class="btn-pilot-item btn-pilotless" onclick="markShipAsPilotless()">
+<div class="modal-overlay" id="pilotModal" onclick="closeModal(event)">
+<div class="modal-content" onclick="event.stopPropagation()">
+<div class="modal-header-sticky">
+<h3 id="modalShipTitle">Kılavuz Kaptan Ata</h3>
+<button class="btn-close" onclick="closeModal()">✕</button>
+</div>
+<button class="btn-pilot-item btn-pilotless" id="btnPilotless" onclick="markShipAsPilotless()">
             🚫 BU GEMİ PİLOTSUZ
         </button>
-
-        <div class="vardiya-tabs" id="pilotModalVardiyaTabs">
-            <button id="tabV1" class="btn-v-tab" onclick="switchVardiya(1)">Çanakkale-1</button>
-            <button id="tabV2" class="btn-v-tab active" onclick="switchVardiya(2)">Çanakkale-2</button>
-            <button id="tabV3" class="btn-v-tab" onclick="switchVardiya(3)">Çanakkale-3</button>
-        </div>
-
-        <div id="pilotListContainer" class="pilot-list-box"></div>
-    </div>
+<div class="vardiya-tabs" id="pilotModalVardiyaTabs">
+<button class="btn-v-tab" id="tabV1" onclick="switchVardiya(1)">Çanakkale-1</button>
+<button class="btn-v-tab active" id="tabV2" onclick="switchVardiya(2)">Çanakkale-2</button>
+<button class="btn-v-tab" id="tabV3" onclick="switchVardiya(3)">Çanakkale-3</button>
 </div>
-
-<!-- SAHTE HATA MODALI -->
-<div id="fakeErrorModal" class="modal-overlay" onclick="closeFakeErrorModal(event)">
-    <div class="modal-content fake-error-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky" style="border-bottom-color:#7f1d1d;">
-            <span class="fake-error-title">⚠ SYSTEM EXCEPTION: 0x800403</span>
-            <button class="btn-close" style="color:#ef4444;" onclick="closeFakeErrorModal()">✕</button>
-        </div>
-
-        <div style="font-size:0.75rem; color:#f87171; line-height:1.4; font-family:monospace;">
-            ERR_TELEMETRY_ACCESS_RESTRICTED<br>
+<div class="pilot-list-box" id="pilotListContainer"></div>
+</div>
+</div>
+<!-- SAHTE HATA MODALI (SYSADMIN 1915 GİRİŞİ) -->
+<div class="modal-overlay" id="fakeErrorModal" onclick="closeFakeErrorModal(event)">
+<div class="modal-content fake-error-content" onclick="event.stopPropagation()">
+<div class="modal-header-sticky" style="border-bottom-color:#7f1d1d;">
+<span class="fake-error-title">⚠ SYSTEM EXCEPTION: 0x800403</span>
+<button class="btn-close" onclick="closeFakeErrorModal()" style="color:#ef4444;">✕</button>
+</div>
+<div style="font-size:0.75rem; color:#f87171; line-height:1.4; font-family:monospace;">
+            ERR_TELEMETRY_ACCESS_RESTRICTED<br/>
             Yetkisiz telemetri terminali engellendi. SysAdmin Key giriniz:
         </div>
-
-        <input type="password" id="txtSecretPin" placeholder="Key / PIN..."
-               style="background:#180606; border-color:#991b1b; color:#fca5a5; font-family:monospace; margin-top:4px;">
-
-        <button class="btn-search" style="background:#dc2626;" onclick="verifySecretPin()">
+<input id="txtSecretPin" placeholder="Key / PIN..." style="background:#180606; border-color:#991b1b; color:#fca5a5; font-family:monospace; margin-top:4px;" type="password"/>
+<button class="btn-search" onclick="verifySecretPin()" style="background:#dc2626;">
             Terminal Doğrula
         </button>
-    </div>
 </div>
-
-<!-- İSTATİSTİK MODALI -->
-<div id="secretStatsModal" class="modal-overlay" onclick="closeStatsModal(event)">
-    <div class="modal-content stats-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky" style="border-bottom-color:#22c55e;">
-            <button class="btn-header-back" onclick="closeStatsModal()">← Geri</button>
-            <h3 style="color:#4ade80;">📊 Boğaz Trafik & Kılavuzluk Analitiği</h3>
-            <button class="btn-close" onclick="closeStatsModal()">✕</button>
-        </div>
-
-        <div class="stat-filter-row">
-            <button class="stat-filter-btn active" id="btnStatPeriodShift" onclick="setStatPeriod('shift')">Bu Vardiya</button>
-            <button class="stat-filter-btn" id="btnStatPeriodMonth" onclick="setStatPeriod('month')">Bu Ay</button>
-            <button class="stat-filter-btn" id="btnStatPeriodYear" onclick="setStatPeriod('year')">Bu Yıl (2026)</button>
-            <button class="stat-filter-btn" id="btnStatPeriodAll" onclick="setStatPeriod('all')">Tüm Zamanlar</button>
-        </div>
-
-        <div class="stats-summary-grid">
-            <div class="stat-box">
-                <div id="statTotalTraffic" class="stat-val" style="color:#38bdf8;">0</div>
-                <div class="stat-lbl">Toplam Gemi</div>
-            </div>
-            <div class="stat-box">
-                <div id="statPilotedTraffic" class="stat-val" style="color:#4ade80;">0</div>
-                <div class="stat-lbl">Kılavuzlu</div>
-            </div>
-            <div class="stat-box">
-                <div id="statPilotlessTraffic" class="stat-val" style="color:#ef4444;">0</div>
-                <div class="stat-lbl">Pilotsuz</div>
-            </div>
-            <div class="stat-box">
-                <div id="statPilotRate" class="stat-val" style="color:#fbbf24;">%0</div>
-                <div class="stat-lbl">Kılavuz Oranı</div>
-            </div>
-        </div>
-
-        <div class="stat-section-card">
-            <div class="stat-section-title">
-                <span>🧭 Trafik Yön Akışı & Vardiya Yük Dengesi</span>
-                <span id="statFlowRatio" style="color:#fbbf24; font-size:0.72rem;">%50 KG / %50 GK</span>
-            </div>
-            <div id="statVardiyaBalanceBox" style="font-size:0.72rem; color:#cbd5e1; line-height:1.5;"></div>
-        </div>
-
-        <div class="stat-section-card">
-            <div class="stat-section-title">
-                <span>🚢 Gemi Tipleri Dağılımı</span>
-                <span id="statTopType" style="color:#a78bfa; font-size:0.72rem;">-</span>
-            </div>
-            <div id="statTypeContainer" class="stat-type-grid"></div>
-        </div>
-
-        <div class="stat-section-card">
-            <div class="stat-section-title">
-                <span>🚐 Takviye Lojistik Verimliliği</span>
-                <span id="statSupportCount" style="color:#fbbf24; font-size:0.72rem;">0 İntikal / 0 Kılavuz</span>
-            </div>
-            <div id="statSupportFlowBox" style="font-size:0.72rem; color:#94a3b8;"></div>
-        </div>
-
-        <div class="stat-section-title" style="margin-top:2px; margin-bottom:4px;">
-            <span id="statTableCaption">👨‍✈️ Bireysel Kılavuzluk Performansı:</span>
-        </div>
-
-        <div class="stats-table-box">
-            <table class="stats-table">
-                <thead>
-                    <tr>
-                        <th>Kılavuz Kaptan</th>
-                        <th>Gemi</th>
-                        <th>KG / GK</th>
-                        <th>Ort. Boy</th>
-                        <th>Baskın Tip</th>
-                    </tr>
-                </thead>
-                <tbody id="statsTableBody"></tbody>
-            </table>
-        </div>
-
-        <div id="manPilotBox" style="background:#0b1329; border:1px solid #1e293b; border-radius:8px; padding:10px; margin-top:8px; display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                <span style="font-size:0.8rem; font-weight:800; color:#38bdf8;">➕ Manuel Kaptan Ekle / Sicil Güncelle</span>
-                <button id="btnBulkUpload" onclick="topluKaptanYukle()" title="Tüm Vardiyaları Resmî Sicillerle Otomatik Sıfırla & Yükle" style="width:110px; padding:6px; background:#4f46e5; border:1px solid #6366f1; border-radius:8px; color:#fff; font-size:0.8rem; font-weight:800; cursor:pointer;">
+</div>
+<!-- GİZLİ GELİŞMİŞ İSTATİSTİK & KARAR DESTEK PANELİ -->
+<div class="modal-overlay" id="secretStatsModal" onclick="closeStatsModal(event)">
+<div class="modal-content stats-content" onclick="event.stopPropagation()">
+<div class="modal-header-sticky" style="border-bottom-color:#22c55e;">
+<button class="btn-header-back" onclick="closeStatsModal()">← Geri</button>
+<h3 style="color:#4ade80;">📊 Boğaz Trafik &amp; Kılavuzluk Analitiği</h3>
+<button class="btn-close" onclick="closeStatsModal()">✕</button>
+</div>
+<!-- DÖNEM SEÇİCİ (ZAMAN PENCERESİ) -->
+<div class="stat-filter-row">
+<button class="stat-filter-btn active" id="btnStatPeriodShift" onclick="setStatPeriod('shift')">Bu Vardiya</button>
+<button class="stat-filter-btn" id="btnStatPeriodMonth" onclick="setStatPeriod('month')">Bu Ay</button>
+<button class="stat-filter-btn" id="btnStatPeriodYear" onclick="setStatPeriod('year')">Bu Yıl (2026)</button>
+<button class="stat-filter-btn" id="btnStatPeriodAll" onclick="setStatPeriod('all')">Tüm Zamanlar</button>
+</div>
+<!-- 1. TEMEL GEÇİŞ & KILAVUZLUK ORANI METRİKLERİ -->
+<div class="stats-summary-grid">
+<div class="stat-box">
+<div class="stat-val" id="statTotalTraffic" style="color:#38bdf8;">0</div>
+<div class="stat-lbl">Toplam Gemi</div>
+</div>
+<div class="stat-box">
+<div class="stat-val" id="statPilotedTraffic" style="color:#4ade80;">0</div>
+<div class="stat-lbl">Kılavuzlu</div>
+</div>
+<div class="stat-box">
+<div class="stat-val" id="statPilotlessTraffic" style="color:#ef4444;">0</div>
+<div class="stat-lbl">Pilotsuz</div>
+</div>
+<div class="stat-box">
+<div class="stat-val" id="statPilotRate" style="color:#fbbf24;">%0</div>
+<div class="stat-lbl">Kılavuz Oranı</div>
+</div>
+</div>
+<!-- 2. VARDİYA ADALET VE YÖN DAĞILIMI (GENEL VE VARDİYA BAZLI) -->
+<div class="stat-section-card">
+<div class="stat-section-title">
+<span>🧭 Trafik Yön Akışı &amp; Vardiya Yük Dengesi</span>
+<span id="statFlowRatio" style="color:#fbbf24; font-size:0.72rem;">%50 KG / %50 GK</span>
+</div>
+<div id="statVardiyaBalanceBox" style="font-size:0.72rem; color:#cbd5e1; line-height:1.5;"></div>
+</div>
+<!-- 3. GEMİ TİPLERİ DAĞILIMI -->
+<div class="stat-section-card">
+<div class="stat-section-title">
+<span>🚢 Gemi Tipleri Dağılımı</span>
+<span id="statTopType" style="color:#a78bfa; font-size:0.72rem;">-</span>
+</div>
+<div class="stat-type-grid" id="statTypeContainer"></div>
+</div>
+<!-- 4. TAKVİYE & LOJİSTİK VERİMLİLİK ÖZETİ -->
+<div class="stat-section-card">
+<div class="stat-section-title">
+<span>🚐 Takviye Lojistik Verimliliği</span>
+<span id="statSupportCount" style="color:#fbbf24; font-size:0.72rem;">0 İntikal / 0 Kılavuz</span>
+</div>
+<div id="statSupportFlowBox" style="font-size:0.72rem; color:#94a3b8;"></div>
+</div>
+<!-- 5. KILAVUZ BAZLI / KİŞİSEL PERFORMANS VE YORULMA TABLOSU -->
+<div class="stat-section-title" style="margin-top:2px; margin-bottom:4px;">
+<span id="statTableCaption">👨‍✈️ Bireysel Kılavuzluk Performansı (Adalet / İş Yükü):</span>
+</div>
+<div class="stats-table-box">
+<table class="stats-table">
+<thead>
+<tr>
+<th>Kılavuz Kaptan</th>
+<th>Gemi</th>
+<th>KG / GK</th>
+<th>Ort. Boy</th>
+<th>Baskın Tip</th>
+</tr>
+</thead>
+<tbody id="statsTableBody"></tbody>
+</table>
+</div>
+<!-- MANUEL KAPTAN EKLEME FORMU (SADECE 52181) -->
+<div id="manPilotBox" style="background:#0b1329; border:1px solid #1e293b; border-radius:8px; padding:10px; margin-top:8px; display:none;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+<span style="font-size:0.8rem; font-weight:800; color:#38bdf8;">➕ Manuel Kaptan Ekle / Sicil Güncelle</span>
+<button id="btnBulkUpload" onclick="topluKaptanYukle()" style="width:110px; padding:6px; background:#4f46e5; border:1px solid #6366f1; border-radius:8px; color:#fff; font-size:0.8rem; font-weight:800; cursor:pointer;" title="Tüm Vardiyaları Resmî Sicillerle Otomatik Sıfırla &amp; Yükle">
                     Yükle
                 </button>
-            </div>
-            <div style="display:flex; gap:6px; margin-bottom:6px;">
-                <input type="text" id="manSicil" placeholder="Sicil No (Örn: 52216)" style="flex:1; padding:6px; font-size:0.8rem;">
-                <select id="manVardiya" style="width:110px; padding:6px; font-size:0.8rem;">
-                    <option value="1">Vardiya 1</option>
-                    <option value="2">Vardiya 2</option>
-                    <option value="3">Vardiya 3</option>
-                </select>
-            </div>
-            <input type="text" id="manName" placeholder="Kaptan Adı Soyadı" style="padding:6px; font-size:0.8rem; margin-bottom:6px;">
-            <div style="display:flex; gap:6px;">
-                <input type="text" id="manPass" value="1915" placeholder="Şifre" style="flex:1; padding:6px; font-size:0.8rem;">
-                <button class="btn-search" style="flex:1; background:#0284c7; padding:6px; font-size:0.8rem;" onclick="manuelKaptanKaydet()">Kaydet / Güncelle</button>
-            </div>
-        </div>
-
-        <button class="btn-search" style="background: #334155; margin-top: 6px;" onclick="closeStatsModal()">Kapat</button>
-    </div>
 </div>
-
+<div style="display:flex; gap:6px; margin-bottom:6px;">
+<input id="manSicil" placeholder="Sicil No (Örn: 52216)" style="flex:1; padding:6px; font-size:0.8rem;" type="text"/>
+<select id="manVardiya" style="width:110px; padding:6px; font-size:0.8rem;">
+<option value="1">Vardiya 1</option>
+<option value="2">Vardiya 2</option>
+<option value="3">Vardiya 3</option>
+</select>
+</div>
+<input id="manName" placeholder="Kaptan Adı Soyadı" style="padding:6px; font-size:0.8rem; margin-bottom:6px;" type="text"/>
+<div style="display:flex; gap:6px;">
+<input id="manPass" placeholder="Şifre" style="flex:1; padding:6px; font-size:0.8rem;" type="text" value="1915"/>
+<button class="btn-search" onclick="manuelKaptanKaydet()" style="flex:1; background:#0284c7; padding:6px; font-size:0.8rem;">Kaydet / Güncelle</button>
+</div>
+</div>
+<button class="btn-search" onclick="closeStatsModal()" style="background: #334155; margin-top: 6px;">
+            Kapat
+        </button>
+</div>
+</div>
 <!-- AYAR MODALI -->
-<div id="settingsModal" class="modal-overlay" onclick="closeSettingsModal(event)">
-    <div class="modal-content settings-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <h3>Cihaz Bilgisi</h3>
-            <button class="btn-close" onclick="closeSettingsModal()">✕</button>
-        </div>
-        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
-            Onaylı Cihaz Kimliğiniz (UUID):
-            <textarea readonly style="margin-top:6px; height:60px; font-family:monospace; font-size:0.75rem;" id="txtDevUUID"></textarea>
-        </div>
-    </div>
+<div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)">
+<div class="modal-content settings-content" onclick="event.stopPropagation()">
+<div class="modal-header-sticky">
+<h3>Cihaz Bilgisi</h3>
+<button class="btn-close" onclick="closeSettingsModal()">✕</button>
 </div>
-
+<div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
+            Onaylı Cihaz Kimliğiniz (UUID):
+            <textarea id="txtDevUUID" readonly="" style="margin-top:6px; height:60px; font-family:monospace; font-size:0.75rem;"></textarea>
+</div>
+</div>
+</div>
 <script>
     /* FIREBASE BAĞLANTISI */
     const firebaseConfig = {
@@ -1468,9 +1361,12 @@
     const MY_SPECIAL_SICIL = "52181";
     const SECRET_PIN = "1915";
 
-    const TELEGRAM_BOT_TOKEN = "8514374768:AAFyhrXHuPZo26jLjx8Evr8rRvCrdUsAdEM";
-    const TELEGRAM_BOT_USERNAME = "KegmPilotBot";
+    // 4 GÜNLÜK KALICI OTURUM SÜRESİ (96 SAAT)
     const SESSION_EXPIRY_MS = 4 * 24 * 60 * 60 * 1000;
+
+    // 4 GÜNLÜK VARDİYA REFERANSI VE DÖNGÜSÜ
+    const REF_START_TIME = new Date(2026, 9, 2, 0, 0, 0).getTime(); // 02 Ekim 2026
+    const SHIFT_CYCLE_MS = 4 * 24 * 60 * 60 * 1000;
 
     const BAS_KILAVUZ_SICILLER = {
         "52216": 1,
@@ -1497,7 +1393,7 @@
             "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ", "MERT ATAYILMAZ", "MERTOL AKOĞLAN",
             "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR",
             "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR", "VEHBİ DEMİR",
-            "ALİ RIZA URAZ", "EGE TÜRK", "İSMAİL YAVAŞ"
+            "ALİ RIZA URAZ"
         ],
         3: [
             "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
@@ -1506,7 +1402,7 @@
             "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
-            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
+            "T. ENDER YALCIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
             "GÜLTEKİN ÖZDEMİR"
         ]
     };
@@ -1531,7 +1427,7 @@
         "MERT ATAYILMAZ": "52960", "MERTOL AKOGLAN": "52570", "SUNAY IRMAK": "51805",
         "SUAYIP GULER": "52181", "SUKRU KURUN": "52219", "TAYFUN GUR": "52480",
         "TOYGAR SEZGIN": "52223", "UMUT CELIK": "52935", "YUCEL AYAR": "52822",
-        "VEHBI DEMIR": "52938", "ALI RIZA URAZ": "53078", "EGE TURK": "54218", "ISMAIL YAVAS": "54223",
+        "VEHBI DEMIR": "52938", "ALI RIZA URAZ": "53078",
         "MUSTAFA ERCETIN": "51809", "MURAT ONGUR": "50875", "ABDULBAKI PEKSERT": "51334",
         "ALI DURSUN OZDEMIR": "52702", "BURCIN ERLEVENT": "51039", "DENIZ EKINCI": "53885",
         "ERCAN SEVINC": "51780", "ERHAN CEVRIOGLU": "51313", "ERKAN CETIN": "52715",
@@ -1566,25 +1462,9 @@
         return 0;
     }
 
-    function getPilotSicil(pilotName) {
-        if (!pilotName) return null;
-        const clean = normalizeStr(pilotName);
-        for (const [nameKey, sicilVal] of Object.entries(GERCEK_SICIL_HARITASI)) {
-            if (clean.includes(nameKey) || nameKey.includes(clean)) {
-                return sicilVal;
-            }
-        }
-        return null;
-    }
-
     function isSuperAdminUser() {
         if (!authenticatedCaptain) return false;
         return authenticatedCaptain.sicil === MY_SPECIAL_SICIL || authenticatedCaptain.sicil === "1915";
-    }
-
-    function isMuhabereUser() {
-        if (!authenticatedCaptain) return false;
-        return authenticatedCaptain.sicil === "99001" || authenticatedCaptain.sicil === "99002" || authenticatedCaptain.role === "muhabere";
     }
 
     function isBasKilavuz() {
@@ -1593,13 +1473,13 @@
     }
 
     function canUserAccessVardiya(vNum) {
-        if (isSuperAdminUser() || isMuhabereUser()) return true;
+        if (isSuperAdminUser()) return true;
         if (!authenticatedCaptain) return false;
         return authenticatedCaptain.shift === Number(vNum);
     }
 
     function canUserEditVardiya(vNum) {
-        if (isSuperAdminUser() || isMuhabereUser()) return true;
+        if (isSuperAdminUser()) return true;
         if (!authenticatedCaptain) return false;
         return authenticatedCaptain.shift === Number(vNum);
     }
@@ -1706,22 +1586,6 @@
         return timeStr;
     }
 
-    // SADECE VE SADECE MUHABERE OPERATÖRLERİNE (99001 / 99002) GÖRÜNÜR
-    function formatRemainingBadge(ship) {
-        if (!isMuhabereUser()) return "";
-
-        const t = getShipTimestamp(ship);
-        if (!t) return "";
-        const diffMins = Math.round((t - Date.now()) / 60000);
-        if (diffMins > 0) {
-            const color = diffMins <= 35 ? "#ef4444" : (diffMins <= 60 ? "#fbbf24" : "#38bdf8");
-            return `<span style="color:${color}; font-weight:800; font-size:0.75rem; margin-left:6px;">(~${diffMins} dk var)</span>`;
-        } else if (diffMins > -180) {
-            return `<span style="color:#22c55e; font-weight:800; font-size:0.75rem; margin-left:6px;">(Boğazda)</span>`;
-        }
-        return "";
-    }
-
     function getDeviceUUID() {
         let uuid = localStorage.getItem("kegm_device_fingerprint");
         if (!uuid) {
@@ -1747,10 +1611,9 @@
     let editSupportActiveVardiya = 2;
     let currentEditingSupportId = null;
     let selectedShipKey = "";
-    let selectedShipObj = null;
     let clickCount = 0;
     let clickTimer = null;
-    let selectedStatPeriod = "shift";
+    let selectedStatPeriod = "shift"; // shift, month, year, all
 
     function getShipKey(ship) {
         return `${ship.name}_${ship.time}`;
@@ -1781,13 +1644,11 @@
                 }
             });
             localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
-            const cEl = document.getElementById("cloudStatus");
-            if (cEl) cEl.style.color = "#22c55e";
+            document.getElementById("cloudStatus").style.color = "#22c55e";
             renderCurrentView();
         }, err => {
             console.error("Atama dinleme hatası:", err);
-            const cEl = document.getElementById("cloudStatus");
-            if (cEl) cEl.style.color = "#ef4444";
+            document.getElementById("cloudStatus").style.color = "#ef4444";
         });
         unsubs.push(unsubAssign);
 
@@ -1808,7 +1669,7 @@
         if (!authenticatedCaptain) return;
 
         const container = document.getElementById("shipContainer");
-        if (container) container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
+        container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
 
         try {
             try {
@@ -1832,7 +1693,7 @@
             setupRealtimeListeners();
             renderCurrentView();
         } catch (e) {
-            if (container) container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
+            container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
         }
     }
 
@@ -1844,7 +1705,6 @@
 
     function renderLiveList() {
         const container = document.getElementById("shipContainer");
-        if (!container) return;
         const bogaz = document.getElementById("selBogaz").value;
         const yon = document.getElementById("selYon").value;
         const hareket = document.getElementById("selHareket").value;
@@ -1876,7 +1736,7 @@
             const pilotVardiyaNo = getPilotVardiya(rawAssignedPilot);
 
             let visibleAssignment = rawAssignedPilot;
-            if (rawAssignedPilot && !isPilotless && !isSuperAdminUser() && !isMuhabereUser()) {
+            if (rawAssignedPilot && !isPilotless && !isSuperAdminUser()) {
                 if (pilotVardiyaNo !== 0 && pilotVardiyaNo !== authenticatedCaptain.shift) {
                     visibleAssignment = "";
                 }
@@ -1886,7 +1746,6 @@
             const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
             const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
             const displayTime = formatDisplayTime(ship.time, ship.planlama);
-            const remainingBadge = formatRemainingBadge(ship);
 
             let cardClass = "ship-card";
             if (isPilotless) cardClass += " pilotless";
@@ -1907,7 +1766,7 @@
                     </div>
                     ${isPilotless ? `<div class="pilotless-info visible">🚫 BU GEMİ PİLOTSUZ OLARAK İŞARETLENDİ</div>` : ""}
                     <div class="ship-details">
-                        Boy: <span>${ship.len || "-"} m</span> | Tip: <span>${ship.type || "-"}</span> ${remainingBadge}<br>
+                        Boy: <span>${ship.len || "-"} m</span> | Tip: <span>${ship.type || "-"}</span><br>
                         Kılavuz: <span>${ship.pilotReq || "-"}</span> | Römorkör: <span>${ship.tug || "-"}</span>
                     </div>
                     <div class="pilot-row">
@@ -1924,104 +1783,64 @@
 
     function renderHistoryList() {
         const container = document.getElementById("shipContainer");
-        if (!container) return;
         const bogaz = document.getElementById("selBogaz").value;
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-        const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
-        const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
+        const cutoffTime = Date.now() - (logHours * 60 * 60 * 1000);
 
         let rawList = historyShips.filter(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
-            
-            const timeVal = getShipTimestamp(ship);
             const assignment = getShipAssignment(ship);
-
-            if (isShiftAllMode) {
-                if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
-                if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
-                return true;
-            }
-
-            if (isMuhabereUser()) {
-                const isKG = isNorthSouth(ship.yon);
-                if (authenticatedCaptain.sicil === "99001" && !isKG) return false;
-                if (authenticatedCaptain.sicil === "99002" && isKG) return false;
-            }
-
             if (assignment === PILOTLESS_VALUE) return false;
             const hasAssignedPilot = !!assignment;
             const isBogazda = isBogazdaShip(ship);
             if (!hasAssignedPilot && !isBogazda) return false;
 
-            if (hasAssignedPilot && !isSuperAdminUser() && !isMuhabereUser()) {
+            if (hasAssignedPilot && !isSuperAdminUser()) {
                 const pVardiya = getPilotVardiya(assignment);
                 if (pVardiya !== 0 && pVardiya !== authenticatedCaptain.shift) return false;
             }
 
+            const timeVal = getShipTimestamp(ship);
             if (cutoffTime > 0 && timeVal > 0 && timeVal < cutoffTime) return false;
             if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
             return true;
         });
 
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
-
         const uniqueMap = new Map();
         rawList.forEach(ship => {
             const cleanName = normalizeStr(ship.name);
-            const shipTime = getShipTimestamp(ship) || 0;
-            const currentAssignment = getShipAssignment(ship);
-            const currentHasPilot = (!!currentAssignment && currentAssignment !== PILOTLESS_VALUE);
-
-            let existingKey = null;
-            for (let [key, existingShip] of uniqueMap.entries()) {
-                if (key.startsWith(cleanName + "_")) {
-                    const exTime = getShipTimestamp(existingShip) || 0;
-                    if (Math.abs(shipTime - exTime) < (6 * 60 * 60 * 1000)) {
-                        existingKey = key;
-                        break;
-                    }
-                }
-            }
-
-            if (!existingKey) {
-                uniqueMap.set(`${cleanName}_${shipTime}`, ship);
+            const dirKey = isNorthSouth(ship.yon) ? "NS" : "SN";
+            const dedupKey = `${cleanName}_${dirKey}`;
+            if (!uniqueMap.has(dedupKey)) {
+                uniqueMap.set(dedupKey, ship);
             } else {
-                const existingShip = uniqueMap.get(existingKey);
-                const existingAssignment = getShipAssignment(existingShip);
-                const existingHasPilot = (!!existingAssignment && existingAssignment !== PILOTLESS_VALUE);
-
-                if (!existingHasPilot && currentHasPilot) {
-                    uniqueMap.delete(existingKey);
-                    uniqueMap.set(`${cleanName}_${shipTime}`, ship);
-                }
+                const existing = uniqueMap.get(dedupKey);
+                const existingAssignment = getShipAssignment(existing);
+                const currentAssignment = getShipAssignment(ship);
+                const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
+                const currentHasPilot = !!currentAssignment && currentAssignment !== PILOTLESS_VALUE;
+                if (!existingHasPilot && currentHasPilot) uniqueMap.set(dedupKey, ship);
             }
         });
 
         const baseList = Array.from(uniqueMap.values());
         let html = "";
         if (baseList.length === 0) {
-            const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde geçerli gemi kaydı yok.`;
-            html += `<div class="status-msg">${msg}</div>`;
+            html += `<div class="status-msg">Son ${logHours} saat içinde vardiyanıza ait atanmış kılavuzlu gemi yok.</div>`;
         } else {
             const nsList = baseList.filter(s => isNorthSouth(s.yon));
-            const snList = baseList.filter(s => !isNorthSouth(s.yon) && isSouthNorth(s.yon));
+            const snList = baseList.filter(s => isSouthNorth(s.yon));
 
-            const nsTitle = isShiftAllMode ? "🧭 KUZEY - GÜNEY (Tüm Geçişler & Düzeltme)" : "🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)";
-            const snTitle = isShiftAllMode ? "🧭 GÜNEY - KUZEY (Tüm Geçişler & Düzeltme)" : "🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)";
+            html += `<div class="direction-section"><div class="direction-title"><span>🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span></div>`;
+            if (nsList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+            else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+            html += `</div>`;
 
-            if (!isMuhabereUser() || authenticatedCaptain.sicil === "99001") {
-                html += `<div class="direction-section"><div class="direction-title"><span>${nsTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span></div>`;
-                if (nsList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
-                html += `</div>`;
-            }
-
-            if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
-                html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
-                if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
-                html += `</div>`;
-            }
+            html += `<div class="direction-section"><div class="direction-title"><span>🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
+            if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
+            else snList.forEach(ship => { html += buildCompactLogRow(ship); });
+            html += `</div>`;
         }
 
         container.innerHTML = html;
@@ -2030,32 +1849,18 @@
     function buildCompactLogRow(ship) {
         const uniqueKey = getShipKey(ship);
         const assignedPilot = getShipAssignment(ship);
-        const isPilotless = (assignedPilot === PILOTLESS_VALUE);
-        const isAssigned = (!!assignedPilot && !isPilotless);
+        if (assignedPilot === PILOTLESS_VALUE) return "";
+        const isAssigned = !!assignedPilot;
         const displayTime = formatDisplayTime(ship.time, ship.planlama);
-        const remainingBadge = formatRemainingBadge(ship);
-
-        let tagText = "+ Ata / Düzelt";
-        let tagClass = "log-pilot-tag";
-        let rowClass = "log-row-compact unassigned";
-
-        if (isPilotless) {
-            tagText = "🚫 Pilotsuz";
-            tagClass += " tag-pilotless";
-            rowClass = "log-row-compact pilotless-row";
-        } else if (isAssigned) {
-            tagText = assignedPilot;
-            tagClass += " saved";
-            rowClass = "log-row-compact assigned";
-        }
+        let tagText = isAssigned ? assignedPilot : "+ Ata";
 
         return `
-            <div class="${rowClass}">
+            <div class="log-row-compact ${isAssigned ? "assigned" : ""}">
                 <div class="log-ship-info">
-                    <span class="log-ship-name-plain">${ship.name} ${remainingBadge}</span>
+                    <span class="log-ship-name-plain">${ship.name}</span>
                     <span class="log-ship-time">🕒 ${displayTime}</span>
                 </div>
-                <div class="${tagClass}"
+                <div class="log-pilot-tag ${isAssigned ? "saved" : ""}"
                     onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
                     ${tagText}
                 </div>
@@ -2068,14 +1873,9 @@
         document.getElementById("tabLive").classList.toggle("active", m === "live");
         document.getElementById("tabHistory").classList.toggle("active", m === "history");
 
-        document.getElementById("selYon").style.display = (m === "live" && !isMuhabereUser()) ? "block" : "none";
+        document.getElementById("selYon").style.display = m === "live" ? "block" : "none";
         document.getElementById("selHareket").style.display = m === "live" ? "block" : "none";
         document.getElementById("logRangeBox").style.display = m === "history" ? "flex" : "none";
-
-        const adminBtn = document.getElementById("btnRangeShiftAll");
-        if (adminBtn) {
-            adminBtn.style.display = (m === "history" && isSuperAdminUser()) ? "block" : "none";
-        }
 
         renderCurrentView();
     }
@@ -2085,27 +1885,16 @@
         document.getElementById("btnRange6").classList.toggle("active", hours === 6);
         document.getElementById("btnRange12").classList.toggle("active", hours === 12);
         document.getElementById("btnRange24").classList.toggle("active", hours === 24);
-        
-        const adminBtn = document.getElementById("btnRangeShiftAll");
-        if (adminBtn) {
-            adminBtn.classList.toggle("active", hours === "shift_all");
-        }
-
         renderCurrentView();
     }
 
     function openPilotModal(uniqueKey, shipName) {
         if (!authenticatedCaptain) { alert("Lütfen önce giriş yapınız."); return; }
         selectedShipKey = uniqueKey;
-
-        selectedShipObj = allShips.find(s => getShipKey(s) === uniqueKey) || 
-                          historyShips.find(s => getShipKey(s) === uniqueKey) || 
-                          { name: shipName };
-
         document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
 
         const tabsBox = document.getElementById("pilotModalVardiyaTabs");
-        if (isSuperAdminUser() || isMuhabereUser()) {
+        if (isSuperAdminUser()) {
             tabsBox.style.display = "flex";
             activeVardiya = 2;
         } else {
@@ -2113,8 +1902,8 @@
             activeVardiya = authenticatedCaptain.shift;
         }
 
-        const m = document.getElementById("pilotModal");
-        if (m) m.style.display = "flex";
+        pushModalHistory("pilotModal");
+        document.getElementById("pilotModal").style.display = "flex";
 
         const currentAssignment = globalAssignments[uniqueKey] || "";
         const pilotlessButton = document.getElementById("btnPilotless");
@@ -2163,7 +1952,7 @@
             await db.collection("live_assignments").doc(docId).set({
                 shipKey: selectedShipKey,
                 pilot: PILOTLESS_VALUE,
-                vardiya: authenticatedCaptain.shift || 2,
+                vardiya: authenticatedCaptain.shift,
                 updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
@@ -2173,87 +1962,13 @@
         }
     }
 
-    function openTelegramConnect() {
-        if (!authenticatedCaptain) {
-            alert("Lütfen önce sicilinizle giriş yapınız.");
-            openAuthModal();
-            return;
-        }
-        if (isMuhabereUser()) {
-            alert("Muhabere operatörlerinin Telegram bildirimine kaydolması gerekmez. Bu özellik Kılavuz Kaptanlar içindir.");
-            return;
-        }
-        const deepLink = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${authenticatedCaptain.sicil}`;
-        const win = window.open(deepLink, "_blank");
-        if (!win) {
-            window.location.href = deepLink;
-        }
-    }
-
-    // TELEGRAM GÖREV BİLDİRİMİ (BAŞLIK DÜZELTİLDİ: Çanakkale VTS kaldırıldı)
-    async function sendTelegramNotification(pilotName, shipObj) {
-        try {
-            const sicil = getPilotSicil(pilotName);
-            if (!sicil) return;
-
-            const userDoc = await db.collection("authorized_users").doc(sicil).get();
-            if (!userDoc.exists) return;
-
-            const uData = userDoc.data();
-            const chatId = uData.telegramChatId;
-            if (!chatId) {
-                console.log(`[Telegram] ${pilotName} kaptanın Telegram hesabı henüz bağlı değil.`);
-                return;
-            }
-
-            const displayTime = formatDisplayTime(shipObj.time, shipObj.planlama);
-            const tMs = getShipTimestamp(shipObj);
-            let remText = "";
-            if (tMs) {
-                const diff = Math.round((tMs - Date.now()) / 60000);
-                if (diff > 0) remText = ` (~${diff} dk var)`;
-            }
-
-            const yonText = shipObj.yon || (isMuhabereUser() ? (authenticatedCaptain.sicil === "99001" ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY") : "BELİRTİLMEDİ");
-
-            // Kaptanın vardiyasını tespit et
-            const pilotVardiyaNo = getPilotVardiya(pilotName) || (authenticatedCaptain ? authenticatedCaptain.shift : 2) || 2;
-            const vardiyaBaslik = `${pilotVardiyaNo}. Vardiya Başkılavuzluğu`;
-
-            const msg = `🚢 *YENİ KILAVUZLUK GÖREVİ*\n` +
-                        `*(${vardiyaBaslik})*\n\n` +
-                        `Sayın *Kpt. ${pilotName}*,\n` +
-                        `Adınıza yeni bir gemi görevlendirmesi yapılmıştır:\n\n` +
-                        `• *Gemi Adı:* ${shipObj.name || "Bilinmiyor"}\n` +
-                        `• *Geçiş Saati:* ${displayTime}${remText}\n` +
-                        `• *Yön:* ${yonText}\n` +
-                        `• *Boy / Tip:* ${shipObj.len || "-"} m / ${shipObj.type || "-"}\n` +
-                        `• *Görevlendiren:* ${authenticatedCaptain.name}\n\n` +
-                        `_Emniyetli seyirler ve iyi nöbetler dileriz._`;
-
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: msg,
-                    parse_mode: "Markdown"
-                })
-            });
-
-            console.log(`[Telegram] ${pilotName} kaptana başarıyla mesaj iletildi.`);
-        } catch (err) {
-            console.error("[Telegram Hata]:", err);
-        }
-    }
-
     async function assignPilot(pilotName) {
         if (!selectedShipKey) return;
         const docId = encodeURIComponent(selectedShipKey);
 
         try {
             if (pilotName) {
-                const targetVardiya = getPilotVardiya(pilotName) || authenticatedCaptain.shift || 2;
+                const targetVardiya = getPilotVardiya(pilotName) || authenticatedCaptain.shift;
                 await db.collection("live_assignments").doc(docId).set({
                     shipKey: selectedShipKey,
                     pilot: pilotName,
@@ -2261,10 +1976,6 @@
                     updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                
-                if (selectedShipObj) {
-                    sendTelegramNotification(pilotName, selectedShipObj);
-                }
             } else {
                 await db.collection("live_assignments").doc(docId).delete();
             }
@@ -2274,12 +1985,13 @@
         }
     }
 
+    /* ERKEN UYARI VE HAVUZ HESAPLAMASI */
     function getActiveCapacity() {
         const saved = localStorage.getItem("kegm_manual_capacity");
         if (saved !== null && !isNaN(parseInt(saved, 10))) {
             return parseInt(saved, 10);
         }
-        const userShift = authenticatedCaptain ? (authenticatedCaptain.shift || 2) : 2;
+        const userShift = authenticatedCaptain ? authenticatedCaptain.shift : 2;
         const vPilots = VARDIYALAR[userShift] || [];
         const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
         return activeCount > 0 ? activeCount : 28;
@@ -2322,7 +2034,7 @@
         const isCapacityExhausted = totalInTransit >= totalActivePilots;
 
         let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
-        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsKG = 0;
+        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsGK = 0;
 
         if (nextKG_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextKG_ship);
@@ -2337,7 +2049,7 @@
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
             remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
-            if (remMinsKG <= 0) criticalKG = true;
+            if (remMinsKG <= 0) criticalGK = true;
         }
 
         return {
@@ -2346,7 +2058,7 @@
             n3_gk_active,
             totalInTransit,
             warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
-            warningGK, criticalGK, depTimeGK, remMinsKG, nextGK_ship,
+            warningGK, criticalGK, depTimeGK, remMinsGK, nextGK_ship,
             hasWarning: warningKG || warningGK
         };
     }
@@ -2357,11 +2069,9 @@
     }
 
     function renderModalSupportAnalysis() {
-        const bEl = document.getElementById("selBogaz");
-        const bogaz = bEl ? bEl.value : "ÇANAKKALE";
+        const bogaz = document.getElementById("selBogaz").value;
         const calc = calculateDynamicSupportNeeds(bogaz);
         const container = document.getElementById("modalSupportAnalysisContainer");
-        if (!container) return;
 
         const isCritical = calc.criticalKG || calc.criticalGK;
         let panelClass = "support-panel";
@@ -2417,7 +2127,7 @@
         let recentRecords = supportRecords.filter(r => (Date.now() - (r.timestamp || 0)) <= fiveDaysMs);
 
         if (!isSuperAdminUser()) {
-            recentRecords = recentRecords.filter(r => Number(r.vardiya) === (authenticatedCaptain ? authenticatedCaptain.shift : 2));
+            recentRecords = recentRecords.filter(r => Number(r.vardiya) === authenticatedCaptain.shift);
         }
 
         if (recentRecords.length > 0) {
@@ -2447,6 +2157,20 @@
         container.innerHTML = html;
     }
 
+    function pushModalHistory(modalId) {
+        history.pushState({ modalOpen: modalId }, "");
+    }
+
+    window.addEventListener("popstate", (e) => {
+        const modals = ["supportModal", "editSupportPilotsModal", "capacityManageModal", "pilotModal", "secretStatsModal", "settingsModal", "fakeErrorModal"];
+        modals.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.style.display === "flex") {
+                el.style.display = "none";
+            }
+        });
+    });
+
     function openSupportModal() {
         if (!authenticatedCaptain) {
             alert("Takviye modülünü kullanmak için lütfen önce giriş yapınız.");
@@ -2454,8 +2178,8 @@
             return;
         }
 
-        const m = document.getElementById("supportModal");
-        if (m) m.style.display = "flex";
+        pushModalHistory("supportModal");
+        document.getElementById("supportModal").style.display = "flex";
 
         const now = new Date();
         const hh = String(now.getHours()).padStart(2, "0");
@@ -2468,7 +2192,7 @@
             supportActiveVardiya = 2;
         } else {
             suppTabs.style.display = "none";
-            supportActiveVardiya = authenticatedCaptain.shift || 2;
+            supportActiveVardiya = authenticatedCaptain.shift;
         }
 
         switchSupportVardiya(supportActiveVardiya);
@@ -2587,12 +2311,12 @@
             editSupportActiveVardiya = targetRec.vardiya || 2;
         } else {
             editTabs.style.display = "none";
-            editSupportActiveVardiya = authenticatedCaptain.shift || 2;
+            editSupportActiveVardiya = authenticatedCaptain.shift;
         }
 
         switchEditSupportVardiya(editSupportActiveVardiya);
-        const m = document.getElementById("editSupportPilotsModal");
-        if (m) m.style.display = "flex";
+        pushModalHistory("editSupportPilotsModal");
+        document.getElementById("editSupportPilotsModal").style.display = "flex";
     }
 
     function closeEditSupportPilotsModal(e) {
@@ -2679,16 +2403,16 @@
             capacityActiveVardiya = 2;
         } else {
             capTabs.style.display = "none";
-            capacityActiveVardiya = authenticatedCaptain.shift || 2;
+            capacityActiveVardiya = authenticatedCaptain.shift;
         }
 
         switchCapacityVardiya(capacityActiveVardiya);
-        const m = document.getElementById("capacityManageModal");
-        if (m) m.style.display = "flex";
+        pushModalHistory("capacityManageModal");
+        document.getElementById("capacityManageModal").style.display = "flex";
     }
 
     function closeCapacityManageModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-header-back")) return;
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
         document.getElementById("capacityManageModal").style.display = "none";
         renderModalSupportAnalysis();
     }
@@ -2751,6 +2475,7 @@
         document.getElementById("capacityManageCurrentCount").innerText = cur;
     }
 
+    /* GİZLİ YÖNETİCİ & İSTATİSTİK TETİKLEME */
     function triggerSecretDiagnosis() {
         clickCount++;
         clearTimeout(clickTimer);
@@ -2782,15 +2507,14 @@
     }
 
     function openStatsModal() {
-        if (isMuhabereUser()) return;
         setStatPeriod("shift");
         if (isSuperAdminUser()) {
             document.getElementById("manPilotBox").style.display = "block";
         } else {
             document.getElementById("manPilotBox").style.display = "none";
         }
-        const m = document.getElementById("secretStatsModal");
-        if (m) m.style.display = "flex";
+        pushModalHistory("secretStatsModal");
+        document.getElementById("secretStatsModal").style.display = "flex";
     }
 
     function closeStatsModal(e) {
@@ -2798,6 +2522,9 @@
         document.getElementById("secretStatsModal").style.display = "none";
     }
 
+    /* =========================================================
+       DİNAMİK İSTATİSTİK FİLTRELEME & HESAPLAMA MOTORU
+       ========================================================= */
     function setStatPeriod(period) {
         selectedStatPeriod = period;
         document.getElementById("btnStatPeriodShift").classList.toggle("active", period === "shift");
@@ -2810,12 +2537,14 @@
     function isShipInStatPeriod(shipTime, yon) {
         if (!shipTime) return false;
         const d = new Date(shipTime);
+        const now = new Date();
 
         if (selectedStatPeriod === "all") return true;
         if (selectedStatPeriod === "year") return d.getFullYear() === 2026;
-        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9;
+        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9; // Ekim
 
-        if (selectedStatPeriod === "shift" || logHours === "shift_all") {
+        if (selectedStatPeriod === "shift") {
+            // 2 Ekim 2026 2. Vardiya Döngüsü
             const isKG = isNorthSouth(yon);
             const v2_kg_start = new Date(2026, 9, 2, 12, 0, 0).getTime();
             const v2_gk_start = new Date(2026, 9, 2, 14, 0, 0).getTime();
@@ -2831,7 +2560,7 @@
 
     function calcAdvancedStats() {
         const tbody = document.getElementById("statsTableBody");
-        const userShift = authenticatedCaptain ? (authenticatedCaptain.shift || 2) : 2;
+        const userShift = authenticatedCaptain ? authenticatedCaptain.shift : 2;
 
         let totalTraffic = 0;
         let pilotedTraffic = 0;
@@ -2864,6 +2593,7 @@
             const isKG = isNorthSouth(ship.yon);
             if (isKG) kgCount++; else gkCount++;
 
+            // Tip dağılımı
             const rawType = (ship.type || "DİĞER").trim().toUpperCase();
             shipTypeCounts[rawType] = (shipTypeCounts[rawType] || 0) + 1;
 
@@ -2898,15 +2628,17 @@
             }
         });
 
+        // 1. Özet Kartlar
         document.getElementById("statTotalTraffic").innerText = totalTraffic;
         document.getElementById("statPilotedTraffic").innerText = pilotedTraffic;
         document.getElementById("statPilotlessTraffic").innerText = pilotlessTraffic;
         const rate = totalTraffic > 0 ? Math.round((pilotedTraffic / totalTraffic) * 100) : 0;
         document.getElementById("statPilotRate").innerText = `%${rate}`;
 
+        // 2. Yön Akışı ve Vardiya Yük Dengesi
         const kgPct = totalTraffic > 0 ? Math.round((kgCount / totalTraffic) * 100) : 50;
         const gkPct = totalTraffic > 0 ? (100 - kgPct) : 50;
-        document.getElementById("statFlowRatio").innerText = `%${kgPct} KG / %${gkPct} GK (${kgCount} / ${gkCount})`;
+        document.getElementById("statFlowRatio").innerText = `%${kgPct} KG / %${gkPct} GK (${kgCount} / ${kgCount})`;
 
         let vBalanceHtml = "";
         if (isSuperAdminUser()) {
@@ -2924,6 +2656,7 @@
         }
         document.getElementById("statVardiyaBalanceBox").innerHTML = vBalanceHtml;
 
+        // 3. Gemi Tipleri Dağılımı
         const sortedTypes = Object.entries(shipTypeCounts).sort((a, b) => b[1] - a[1]);
         document.getElementById("statTopType").innerText = sortedTypes.length > 0 ? `${sortedTypes[0][0]} (${sortedTypes[0][1]})` : "-";
         
@@ -2933,6 +2666,7 @@
         });
         document.getElementById("statTypeContainer").innerHTML = typeBadges || '<span style="color:#64748b; font-size:0.7rem;">Kayıt yok</span>';
 
+        // 4. Takviye & Lojistik Verimlilik
         let totalSuppRuns = 0;
         let totalSuppPilots = 0;
         let suppKG = 0;
@@ -2949,6 +2683,7 @@
         document.getElementById("statSupportCount").innerText = `${totalSuppRuns} Sefer / ${totalSuppPilots} Kılavuz`;
         document.getElementById("statSupportFlowBox").innerText = `Kuzey ➔ Güney: ${suppKG} kişi taşındı | Güney ➔ Kuzey: ${suppGK} kişi taşındı.`;
 
+        // 5. Bireysel Kaptan Performans & Yorulma Tablosu
         let pilotsToDisplay = Object.keys(pilotStats);
         if (!isSuperAdminUser()) {
             pilotsToDisplay = pilotsToDisplay.filter(pName => 
@@ -3074,12 +2809,13 @@
         }
     }
 
-    /* KESİNTİSİZ TEK MERKEZLİ GİRİŞ FONKSİYONU */
-    async function submitDirectAuth(sicilVal, passVal, errorElementId) {
-        const sicil = (sicilVal || "").trim();
-        const pass = (passVal || "").trim();
-        const errEl = document.getElementById(errorElementId);
-        const deviceId = getDeviceUUID();
+    /* GİRİŞ & CİHAZ DOĞRULAMA (4 GÜNLÜK KALICI OTURUM) */
+    async function submitLockScreenAuth() {
+        const sicilInput = document.getElementById("lockSicil");
+        const passInput = document.getElementById("lockPass");
+        const errEl = document.getElementById("lockError");
+        const sicil = sicilInput ? sicilInput.value.trim() : "";
+        const pass = passInput ? passInput.value.trim() : "";
 
         if (!sicil || !pass) {
             if (errEl) errEl.innerText = "Lütfen Sicil ve Şifrenizi eksiksiz girin.";
@@ -3087,38 +2823,35 @@
         }
 
         if (errEl) errEl.innerText = "Cihaz ve yetki kontrol ediliyor...";
+        const deviceId = getDeviceUUID();
 
-        // 1. ÖZEL MUHABERE GİRİŞİ (99001 / 99002)
+        // Muhabere masaları: doğrudan ve Firestore gerektirmeden giriş.
         if (sicil === "99001" || sicil === "99002") {
             if (pass !== "1915") {
                 if (errEl) errEl.innerText = "Hatalı şifre girdiniz.";
                 return;
             }
             authenticatedCaptain = {
-                sicil: sicil,
-                name: (sicil === "99001") ? "Kuzey Muhabere (K-G)" : "Güney Muhabere (G-K)",
+                sicil,
+                name: sicil === "99001" ? "Kuzey Muhabere (K-G)" : "Güney Muhabere (G-K)",
                 shift: 2,
                 role: "muhabere",
                 loginTime: Date.now()
             };
             localStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
-            closeAuthModal();
             applyAuthenticatedState();
             loadAllData();
             return;
         }
 
-        // 2. KILAVUZ KAPTAN GİRİŞİ
         try {
             const userDoc = await db.collection("authorized_users").doc(sicil).get();
-
             if (!userDoc.exists) {
                 if (errEl) errEl.innerText = "Bu sicil sisteme tanımlı değil.";
                 return;
             }
 
             const data = userDoc.data();
-
             if (data.pass !== pass) {
                 if (errEl) errEl.innerText = "Hatalı şifre girdiniz.";
                 return;
@@ -3143,21 +2876,32 @@
             };
 
             localStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
-            closeAuthModal();
+            if (errEl) errEl.innerText = "";
             applyAuthenticatedState();
-            loadAllData();
-
+            await loadAllData();
         } catch (error) {
+            console.error("Giriş hatası:", error);
             if (errEl) errEl.innerText = "Bağlantı hatası: " + error.message;
         }
     }
 
-    function submitModalAuth() {
-        const s = document.getElementById("modalSicil").value;
-        const p = document.getElementById("modalPass").value;
-        submitDirectAuth(s, p, "modalAuthError");
+    // Eski modal fonksiyonu korunuyor; başka bir bölüm çağırırsa doğrudan girişe aktarır.
+    async function submitDeviceAuth() {
+        const s = document.getElementById("txtSicil");
+        const p = document.getElementById("txtPassword");
+        const ls = document.getElementById("lockSicil");
+        const lp = document.getElementById("lockPass");
+        if (s && ls) ls.value = s.value;
+        if (p && lp) lp.value = p.value;
+        await submitLockScreenAuth();
+        const modal = document.getElementById("authModal");
+        if (modal) modal.style.display = "none";
     }
 
+
+    function isMuhabereUser() {
+        return !!authenticatedCaptain && (authenticatedCaptain.role === "muhabere" || authenticatedCaptain.sicil === "99001" || authenticatedCaptain.sicil === "99002");
+    }
     function applyAuthenticatedState() {
         try {
             const prot = document.getElementById("protectedContent");
@@ -3229,43 +2973,41 @@
                 applyAuthenticatedState();
             }
         } else {
-            openAuthModal();
+            const lock = document.getElementById("lockScreen");
+            if (lock) lock.scrollIntoView({ behavior: "smooth", block: "center" });
+            const sicil = document.getElementById("lockSicil");
+            if (sicil) sicil.focus();
         }
     }
 
     function openAuthModal() {
-        const m = document.getElementById("authModal");
-        if (m) {
-            document.getElementById("modalSicil").value = "";
-            document.getElementById("modalPass").value = "";
-            document.getElementById("modalAuthError").innerText = "";
-            m.style.display = "flex";
-        }
+        document.getElementById("txtSicil").value = "";
+        document.getElementById("txtPassword").value = "";
+        document.getElementById("authError").innerText = "";
+        pushModalHistory("authModal");
+        document.getElementById("authModal").style.display = "flex";
     }
 
     function closeAuthModal(e) {
         if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        const m = document.getElementById("authModal");
-        if (m) m.style.display = "none";
+        document.getElementById("authModal").style.display = "none";
     }
 
     function openSettingsModal() {
-        const uuidEl = document.getElementById("txtDevUUID");
-        if (uuidEl) uuidEl.value = getDeviceUUID();
-        const m = document.getElementById("settingsModal");
-        if (m) m.style.display = "flex";
+        document.getElementById("txtDevUUID").value = getDeviceUUID();
+        pushModalHistory("settingsModal");
+        document.getElementById("settingsModal").style.display = "flex";
     }
 
     function closeSettingsModal(e) {
         if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        const m = document.getElementById("settingsModal");
-        if (m) m.style.display = "none";
+        document.getElementById("settingsModal").style.display = "none";
     }
 
     window.onload = () => {
-        try {
-            const savedSession = localStorage.getItem("kegm_active_pilot");
-            if (savedSession) {
+        const savedSession = localStorage.getItem("kegm_active_pilot");
+        if (savedSession) {
+            try { 
                 const sessionObj = JSON.parse(savedSession);
                 const sessionAge = Date.now() - (sessionObj.loginTime || 0);
                 if (sessionAge < SESSION_EXPIRY_MS) {
@@ -3273,18 +3015,15 @@
                 } else {
                     localStorage.removeItem("kegm_active_pilot");
                 }
+            } catch(e) {
+                localStorage.removeItem("kegm_active_pilot");
             }
-        } catch(e) {
-            localStorage.removeItem("kegm_active_pilot");
         }
-
         applyAuthenticatedState();
-
         if (authenticatedCaptain) {
             loadAllData();
         }
     };
 </script>
-
 </body>
 </html>
