@@ -281,17 +281,21 @@
             gap: 10px;
         }
 
+        /* YENİ DOĞRUDAN GİRİŞ KARTI (MODAL AÇILMA ZORUNLULUĞUNU BİTİREN YAPI) */
         .auth-lock-card {
             background: #0f172a;
             border: 1px solid #1e293b;
             border-radius: 12px;
-            padding: 32px 16px;
+            padding: 24px 16px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
             margin-top: 10px;
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .auth-lock-icon {
@@ -308,7 +312,27 @@
             color: #94a3b8;
             font-size: 0.85rem;
             line-height: 1.5;
-            max-width: 320px;
+        }
+
+        .auth-split-inputs {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .auth-box-field {
+            flex: 1;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            border: 1px solid #38bdf8;
+            background: #070d1a;
+            color: #38bdf8;
+            padding: 12px;
+            border-radius: 8px;
         }
 
         .ship-card {
@@ -349,6 +373,10 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .ship-name-link:active {
+            color: #38bdf8;
         }
 
         .ais-icon {
@@ -543,7 +571,6 @@
             font-weight: 700;
         }
 
-        /* MODAL VE POP-UP GARANTİ GÖRÜNÜRLÜK */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -606,10 +633,6 @@
             line-height: 1.2;
         }
 
-        .btn-header-back:active {
-            background: #334155;
-        }
-
         .btn-close {
             width: auto;
             background: #1e293b;
@@ -621,11 +644,6 @@
             cursor: pointer;
             line-height: 1;
             font-weight: 800;
-        }
-
-        .btn-close:active {
-            background: #ef4444;
-            color: #fff;
         }
 
         .vardiya-tabs {
@@ -670,10 +688,6 @@
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-        }
-
-        .btn-pilot-item:active {
-            background: #0284c7;
         }
 
         .btn-pilotless {
@@ -738,10 +752,6 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-        }
-
-        .support-count-badge-btn:active {
-            background: #334155;
         }
 
         .support-info-line {
@@ -868,26 +878,6 @@
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: 700;
-        }
-
-        .auth-split-inputs {
-            display: flex;
-            gap: 10px;
-            margin-top: 6px;
-        }
-
-        .auth-box-field {
-            flex: 1;
-            text-align: center;
-            font-family: monospace;
-            font-size: 1.15rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            border: 1px solid #38bdf8;
-            background: #070d1a;
-            color: #38bdf8;
-            padding: 12px;
-            border-radius: 8px;
         }
 
         .settings-content {
@@ -1060,31 +1050,6 @@
 
 <body>
 
-<!-- GİRİŞ MODALI EN ÜSTTE -->
-<div id="authModal" class="modal-overlay" onclick="closeAuthModal(event)">
-    <div class="modal-content settings-content" onclick="event.stopPropagation()">
-        <div class="modal-header-sticky">
-            <h3>🔐 Personel Kimlik & Cihaz Girişi</h3>
-            <button class="btn-close" onclick="closeAuthModal()">✕</button>
-        </div>
-
-        <div style="font-size:0.8rem; color:#94a3b8; line-height:1.4;">
-            Sicil ve Şifrenizi giriniz:
-        </div>
-
-        <div class="auth-split-inputs">
-            <input type="text" id="txtSicil" class="auth-box-field" maxlength="6" placeholder="SİCİL" inputmode="numeric">
-            <input type="password" id="txtPassword" class="auth-box-field" maxlength="8" placeholder="ŞİFRE">
-        </div>
-
-        <div id="authError" style="color:#ef4444; font-size:0.75rem; text-align:center; min-height:16px;"></div>
-
-        <button class="btn-search" style="margin-top:4px;" onclick="submitDeviceAuth()">
-            Cihazı Doğrula & Giriş Yap
-        </button>
-    </div>
-</div>
-
 <div class="header">
     <h1 id="mainAppTitle">
         <span>BOĞAZ GEÇİŞ</span>
@@ -1117,12 +1082,13 @@
     </div>
 </div>
 
-<div class="nav-tabs" id="mainNavTabs">
-    <button id="tabLive" class="btn-tab active" onclick="switchMode('live')">📋 Canlı Planlama</button>
-    <button id="tabHistory" class="btn-tab" onclick="switchMode('history')">📜 Kılavuzlu Geçiş Logu</button>
-</div>
-
+<!-- KORUMALI İÇERİK: OTURUM AÇILMADAN ASLA GÖRÜNMEZ -->
 <div id="protectedContent" style="display: none;">
+    <div class="nav-tabs" id="mainNavTabs">
+        <button id="tabLive" class="btn-tab active" onclick="switchMode('live')">📋 Canlı Planlama</button>
+        <button id="tabHistory" class="btn-tab" onclick="switchMode('history')">📜 Kılavuzlu Geçiş Logu</button>
+    </div>
+
     <div class="filter-card">
         <input type="text" id="txtShipSearch" class="search-box" placeholder="🔍 Gemi Adı Ara..." oninput="renderCurrentView()">
 
@@ -1159,13 +1125,22 @@
     </div>
 </div>
 
+<!-- DOĞRUDAN VE KESİNTİSİZ GİRİŞ KARTI (OTURUM AÇILMAMIŞKEN DOĞRUDAN ÇALIŞIR) -->
 <div id="lockScreen" class="auth-lock-card">
     <div class="auth-lock-icon">🛡</div>
-    <div class="auth-lock-title">Yetkili Cihaz Erişimi Gerekli</div>
+    <div class="auth-lock-title">Kılavuz Kaptan Portalı</div>
     <div class="auth-lock-desc">
         Bu portal yalnızca KEGM Kılavuz Kaptanlarına tahsis edilmiştir. Lütfen siciliniz ve şifrenizle giriş yapınız.
     </div>
-    <button class="btn-search" style="width: auto; padding: 12px 28px; cursor: pointer;" onclick="openAuthModal()">
+
+    <div class="auth-split-inputs">
+        <input type="text" id="lockSicil" class="auth-box-field" maxlength="6" placeholder="SİCİL" inputmode="numeric">
+        <input type="password" id="lockPass" class="auth-box-field" maxlength="8" placeholder="ŞİFRE">
+    </div>
+
+    <div id="lockError" style="color:#ef4444; font-size:0.8rem; text-align:center; min-height:16px;"></div>
+
+    <button class="btn-search" style="width: 100%; padding: 12px; font-weight: 800; cursor: pointer; background: #0284c7;" onclick="submitLockScreenAuth()">
         🔐 Sisteme Giriş Yap
     </button>
 </div>
@@ -1453,1659 +1428,14 @@
 </div>
 
 <script>
-    // BAĞIMSIZ MODAL AÇMA FONKSİYONU (HER KOŞULDA ÇALIŞIR)
-    function openAuthModal() {
-        const sicilInput = document.getElementById("txtSicil");
-        const passInput = document.getElementById("txtPassword");
-        const errEl = document.getElementById("authError");
-        const modal = document.getElementById("authModal");
-
-        if (sicilInput) sicilInput.value = "";
-        if (passInput) passInput.value = "";
-        if (errEl) errEl.innerText = "";
-        
-        if (modal) {
-            modal.style.display = "flex";
-            modal.style.zIndex = "999999";
-        }
-    }
-
-    function closeAuthModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        const modal = document.getElementById("authModal");
-        if (modal) modal.style.display = "none";
-    }
-
-    /* FIREBASE BAĞLANTISI */
-    const firebaseConfig = {
-      apiKey: "AIzaSyBf46wFFITOfb-WV_rBDjzk6S53wMsVdd0",
-      authDomain: "kegm-planlama.firebaseapp.com",
-      databaseURL: "https://kegm-planlama-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "kegm-planlama",
-      storageBucket: "kegm-planlama.firebasestorage.app",
-      messagingSenderId: "732016157047",
-      appId: "1:732016157047:web:a9252c6f45fabc1fef8172",
-      measurementId: "G-T6XND7BQ27"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    const PILOTLESS_VALUE = "__PILOTSUZ__";
-    const MAX_LIVE_AGE_HOURS = 48;
-    const MAX_BOGAZDA_AGE_HOURS = 9;
-    const MY_SPECIAL_SICIL = "52181";
-    const SECRET_PIN = "1915";
-
-    const TELEGRAM_BOT_TOKEN = "8514374768:AAFyhrXHuPZo26jLjx8Evr8rRvCrdUsAdEM";
-    const TELEGRAM_BOT_USERNAME = "KegmPilotBot";
-    const SESSION_EXPIRY_MS = 4 * 24 * 60 * 60 * 1000;
-
-    const BAS_KILAVUZ_SICILLER = {
-        "52216": 1,
-        "51788": 2,
-        "51809": 3
-    };
-
-    const VARDIYALAR = {
-        1: [
-            "SELİM KANDEMİR (Baş Klv. Kpt.)", "ENVER TAŞBUNAR", "ALİ YILMAZ", "CANER GÜRSOY",
-            "ÇETİNER ÖNDÜL", "DENİZ YÜCEEFEGÜÇ", "ENİS OKUTAN", "ERKAN KAYA",
-            "GÖKHAN BAHTİYAR", "GÖKMEN ALTUNDOĞAN", "GÖKSENİN KAPLAN", "GÜNAY GÜR",
-            "HAKAN ÖZSOY", "İLKAY MARTLI", "İLKER GÜNDOĞAN", "İRFAN İLKE ÖZÜARI",
-            "MEHMET ALİ ÇAMLI", "MURAT EMRE ERDEMİR", "RAHMİ ALPASLAN SOYUER", "SERDAR AKKOCA",
-            "SONER ÇAYAN", "ŞERİF DOĞRUER", "ŞÜKRÜ ERBİL OĞUZHAN", "TAMER YAĞIZ",
-            "VOLKAN ÖZSOY", "VURAL MUCUK", "ZAFER ALTUNCU", "BARIŞ TUNÇER",
-            "RIZA DURNA", "SERDİNÇ KOÇ"
-        ],
-        2: [
-            "CEM ERİNÇİN (Baş Klv. Kp.)", "MURAT TURAN", "ADNAN KEREM YALÇIN", "AHMET UYGUN",
-            "ALİ GÜL", "BERAT ERKAN ALSANCAK", "BURAK REİS YAVUZ", "BÜLENT MEMİŞ",
-            "ÇAĞLAR ALBAYRAK", "ENGİN POLAT", "ENGİN ŞİMŞEK", "ERÇİN GÖNÜLCAN",
-            "ERGÜN ÖZGÜN", "FATİH IŞIK", "GÖKHAN KARSLI", "KEREM GÜL",
-            "MEHMET HAKAN TURAN", "MEHMET ÖZGÜN ÜNLÜ", "MERT ATAYILMAZ", "MERTOL AKOĞLAN",
-            "SUNAY IRMAK", "ŞUAYİP GÜLER", "ŞÜKRÜ KURUN", "TAYFUN GÜR",
-            "TOYGAR SEZGİN", "UMUT ÇELİK", "YÜCEL AYAR", "VEHBİ DEMİR",
-            "ALİ RIZA URAZ", "EGE TÜRK", "İSMAİL YAVAŞ"
-        ],
-        3: [
-            "MUSTAFA ERÇETİN (Baş Klv. Kp.)", "MURAT ÖNGÜR", "ABDÜLBAKİ PEKSERT", "ALİ DURSUN ÖZDEMİR",
-            "BURÇİN ERLEVENT", "DENİZ EKİNCİ", "ERCAN SEVİNÇ", "ERHAN CEVRİOĞLU",
-            "ERKAN ÇETİN", "GÜRCAN SOYTÜRK", "HAKAN BİLGİÇ", "HÜSEYİN KARAYTUĞ",
-            "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
-            "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
-            "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
-            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
-            "GÜLTEKİN ÖZDEMİR"
-        ]
-    };
-
-    const GERCEK_SICIL_HARITASI = {
-        "SELIM KANDEMIR": "52216", "ENVER TASBUNAR": "51227", "ALI YILMAZ": "52943",
-        "CANER GURSOY": "52811", "CETINER ONDUL": "52814", "DENIZ YUCEEFEGUC": "52856",
-        "ENIS OKUTAN": "53086", "ERKAN KAYA": "52710", "GOKHAN BAHTIYAR": "52821",
-        "GOKMEN ALTUNDOGAN": "53857", "GOKSENIN KAPLAN": "52807", "GUNAY GUR": "51825",
-        "HAKAN OZSOY": "52191", "ILKAY MARTLI": "53883", "ILKER GUNDOGAN": "52950",
-        "IRFAN ILKE OZUARI": "53755", "MEHMET ALI CAMLI": "52177", "MURAT EMRE ERDEMIR": "52785",
-        "RAHMI ALPASLAN SOYUER": "50978", "SERDAR AKKOCA": "50988", "SONER CAYAN": "52746",
-        "SERIF DOGRUER": "52704", "SUKRU ERBIL OGUZHAN": "52738", "TAMER YAGIZ": "52934",
-        "VOLKAN OZSOY": "53754", "VURAL MUCUK": "52360", "ZAFER ALTUNCU": "53884",
-        "BARIS TUNCER": "54056", "SERDINC KOC": "52815",
-        "CEM ERINCIN": "51788", "MURAT TURAN": "51794", "ADNAN KEREM YALCIN": "52350",
-        "AHMET UYGUN": "52179", "ALI GUL": "50976", "BERAT ERKAN ALSANCAK": "53209",
-        "BURAK REIS YAVUZ": "51811", "BULENT MEMIS": "51042", "CAGLAR ALBAYRAK": "53889",
-        "ENGIN POLAT": "52705", "ENGIN SIMSEK": "52742", "ERCIN GONULCAN": "53888",
-        "ERGUN OZGUN": "52946", "FATIH ISIK": "52952", "GOKHAN KARSLI": "53758",
-        "KEREM GUL": "52744", "MEHMET HAKAN TURAN": "51822", "MEHMET OZGUN UNLU": "52940",
-        "MERT ATAYILMAZ": "52960", "MERTOL AKOGLAN": "52570", "SUNAY IRMAK": "51805",
-        "SUAYIP GULER": "52181", "SUKRU KURUN": "52219", "TAYFUN GUR": "52480",
-        "TOYGAR SEZGIN": "52223", "UMUT CELIK": "52935", "YUCEL AYAR": "52822",
-        "VEHBI DEMIR": "52938", "ALI RIZA URAZ": "53078", "EGE TURK": "54218", "ISMAIL YAVAS": "54223",
-        "MUSTAFA ERCETIN": "51809", "MURAT ONGUR": "50875", "ABDULBAKI PEKSERT": "51334",
-        "ALI DURSUN OZDEMIR": "52702", "BURCIN ERLEVENT": "51039", "DENIZ EKINCI": "53885",
-        "ERCAN SEVINC": "51780", "ERHAN CEVRIOGLU": "51313", "ERKAN CETIN": "52715",
-        "GURCAN SOYTURK": "52222", "HAKAN BILGIC": "50985", "HUSEYIN KARAYTUG": "52713",
-        "MEHMET OZGUR SAHIN": "52178", "MUSTAFA AKMAN": "53216", "OKAN OZKECECI": "53139",
-        "OLCAY SOZEN": "50986", "ONUR KAYA": "52915", "OZER ORAL": "52703",
-        "OZKAN BERK": "52351", "RIZA CETIN": "52947", "SECA MATLAR": "53198",
-        "SERCAN KUTLUER": "52957", "TANSEL AKPINAR": "52352", "TANSEL OREL": "51714",
-        "T. ENDER YALCIN": "50782", "TAYLAN OLPAK": "52800", "TUNA UN": "52787",
-        "TOLGA DEMIRCI": "52356", "ULAS EMIROGLU": "52180", "GULTEKIN OZDEMIR": "52944"
-    };
-
-    function normalizeStr(str) {
-        if (!str) return "";
-        return String(str)
-            .toLocaleUpperCase("tr-TR")
-            .replace(/İ/g, "I").replace(/Ş/g, "S").replace(/Ğ/g, "G")
-            .replace(/Ü/g, "U").replace(/Ö/g, "O").replace(/Ç/g, "C")
-            .replace(/\s+/g, " ").trim();
-    }
-
-    function getPilotVardiya(pilotName) {
-        if (!pilotName) return 0;
-        const norm = normalizeStr(pilotName);
-        for (const [vNo, pList] of Object.entries(VARDIYALAR)) {
-            for (const p of pList) {
-                if (norm.includes(normalizeStr(p)) || normalizeStr(p).includes(norm)) {
-                    return Number(vNo);
-                }
-            }
-        }
-        return 0;
-    }
-
-    function getPilotSicil(pilotName) {
-        if (!pilotName) return null;
-        const clean = normalizeStr(pilotName);
-        for (const [nameKey, sicilVal] of Object.entries(GERCEK_SICIL_HARITASI)) {
-            if (clean.includes(nameKey) || nameKey.includes(clean)) {
-                return sicilVal;
-            }
-        }
-        return null;
-    }
-
-    function isSuperAdminUser() {
-        if (!authenticatedCaptain) return false;
-        return authenticatedCaptain.sicil === MY_SPECIAL_SICIL || authenticatedCaptain.sicil === "1915";
-    }
-
-    function isMuhabereUser() {
-        if (!authenticatedCaptain) return false;
-        return authenticatedCaptain.sicil === "99001" || authenticatedCaptain.sicil === "99002";
-    }
-
-    function isBasKilavuz() {
-        if (!authenticatedCaptain) return false;
-        return !!BAS_KILAVUZ_SICILLER[authenticatedCaptain.sicil];
-    }
-
-    function canUserAccessVardiya(vNum) {
-        if (isSuperAdminUser() || isMuhabereUser()) return true;
-        if (!authenticatedCaptain) return false;
-        return authenticatedCaptain.shift === Number(vNum);
-    }
-
-    function canUserEditVardiya(vNum) {
-        if (isSuperAdminUser() || isMuhabereUser()) return true;
-        if (!authenticatedCaptain) return false;
-        return authenticatedCaptain.shift === Number(vNum);
-    }
-
-    function isNorthSouth(yonStr) {
-        if (!yonStr) return false;
-        const norm = normalizeStr(yonStr);
-        return norm.startsWith("KUZEY") || norm === "NS" || norm.startsWith("K-G");
-    }
-
-    function isSouthNorth(yonStr) {
-        if (!yonStr) return false;
-        const norm = normalizeStr(yonStr);
-        return norm.startsWith("GUNEY") || norm === "SN" || norm.startsWith("G-K");
-    }
-
-    function parseTimeString(timeStr) {
-        if (!timeStr) return 0;
-        const str = String(timeStr).trim();
-        if (str.includes("T")) {
-            const iso = new Date(str).getTime();
-            if (!isNaN(iso) && iso > 0) return iso;
-        }
-        let match = str.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s*[- ]\s*(\d{1,2}):(\d{2})/);
-        if (!match) match = str.match(/(\d{1,2})[./](\d{1,2})[./](\d{2,4})\s+(\d{1,2}):(\d{2})/);
-        if (match) {
-            const day = parseInt(match[1], 10);
-            const month = parseInt(match[2], 10) - 1;
-            let year = parseInt(match[3], 10);
-            if (year < 100) year += 2000;
-            const hour = parseInt(match[4], 10);
-            const minute = parseInt(match[5], 10);
-            return new Date(year, month, day, hour, minute).getTime();
-        }
-        const shortMatch = str.match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/);
-        if (shortMatch) {
-            const day = parseInt(shortMatch[1], 10);
-            const month = parseInt(shortMatch[2], 10) - 1;
-            const hour = parseInt(shortMatch[3], 10);
-            const minute = parseInt(shortMatch[4], 10);
-            const now = new Date();
-            let year = now.getFullYear();
-            let candidate = new Date(year, month, day, hour, minute);
-            if (candidate.getTime() - now.getTime() > 36 * 60 * 60 * 1000) {
-                candidate = new Date(year - 1, month, day, hour, minute);
-            }
-            return candidate.getTime();
-        }
-        const timeOnlyMatch = str.match(/(\d{1,2}):(\d{2})/);
-        if (timeOnlyMatch) {
-            const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(timeOnlyMatch[1], 10), parseInt(timeOnlyMatch[2], 10)).getTime();
-        }
-        return 0;
-    }
-
-    function getShipTimestamp(ship) {
-        if (!ship) return 0;
-        const candidates = [ship.timestamp, ship.entryTimestamp, ship.time, ship.planlama];
-        for (const value of candidates) {
-            if (value === undefined || value === null || value === "") continue;
-            const numeric = Number(value);
-            if (!isNaN(numeric) && numeric > 1000000000) return numeric;
-            const parsed = parseTimeString(value);
-            if (parsed && parsed > 0) return parsed;
-        }
-        return 0;
-    }
-
-    function isBogazdaShip(ship) {
-        return normalizeStr(ship && ship.hareket).includes("BOGAZDA");
-    }
-
-    function isShipTooOldForLive(ship) {
-        const shipTime = getShipTimestamp(ship);
-        if (!shipTime) return false;
-        const ageHours = (Date.now() - shipTime) / (1000 * 60 * 60);
-        if (ageHours < 0) return false;
-        const maxAge = isBogazdaShip(ship) ? MAX_BOGAZDA_AGE_HOURS : MAX_LIVE_AGE_HOURS;
-        return ageHours > maxAge;
-    }
-
-    function formatDisplayTime(timeStr, planlamaStr) {
-        if (planlamaStr) {
-            const pMatch = String(planlamaStr).match(/(\d{1,2})[./](\d{1,2})(?:[./]\d{2,4})?\s*[- ]\s*(\d{1,2}:\d{2})/);
-            if (pMatch) return `${pMatch[1]} / ${pMatch[3]}`;
-        }
-        if (!timeStr) return "-";
-        if (String(timeStr).includes("T")) {
-            const d = new Date(timeStr);
-            if (!isNaN(d.getTime())) {
-                const day = String(d.getDate()).padStart(2, "0");
-                const hour = String(d.getHours()).padStart(2, "0");
-                const min = String(d.getMinutes()).padStart(2, "0");
-                return `${day} / ${hour}:${min}`;
-            }
-        }
-        const fullMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})[./]\d{2,4}\s*[- ]\s*(\d{1,2}:\d{2})/);
-        if (fullMatch) return `${fullMatch[1]} / ${fullMatch[3]}`;
-        const shortMatch = String(timeStr).match(/(\d{1,2})[./](\d{1,2})\s*[- ]\s*(\d{1,2}):(\d{2})/);
-        if (shortMatch) return `${shortMatch[1]} / ${shortMatch[3]}`;
-        const timeOnly = String(timeStr).match(/(\d{1,2}:\d{2})/);
-        if (timeOnly) return timeOnly[1];
-        return timeStr;
-    }
-
-    // SADECE VE SADECE MUHABERE OPERATÖRLERİNE (99001 / 99002) GÖRÜNÜR
-    function formatRemainingBadge(ship) {
-        if (!isMuhabereUser()) return "";
-
-        const t = getShipTimestamp(ship);
-        if (!t) return "";
-        const diffMins = Math.round((t - Date.now()) / 60000);
-        if (diffMins > 0) {
-            const color = diffMins <= 35 ? "#ef4444" : (diffMins <= 60 ? "#fbbf24" : "#38bdf8");
-            return `<span style="color:${color}; font-weight:800; font-size:0.75rem; margin-left:6px;">(~${diffMins} dk var)</span>`;
-        } else if (diffMins > -180) {
-            return `<span style="color:#22c55e; font-weight:800; font-size:0.75rem; margin-left:6px;">(Boğazda)</span>`;
-        }
-        return "";
-    }
-
-    function getDeviceUUID() {
-        let uuid = localStorage.getItem("kegm_device_fingerprint");
-        if (!uuid) {
-            uuid = "DEV-" + ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-            );
-            localStorage.setItem("kegm_device_fingerprint", uuid);
-        }
-        return uuid;
-    }
-
-    let authenticatedCaptain = null;
-    let allShips = [];
-    let historyShips = [];
-    let globalAssignments = {};
-    let supportRecords = [];
-    let inactivePilotsSet = new Set();
-    let currentMode = "live";
-    let logHours = 6;
-    let activeVardiya = 2;
-    let supportActiveVardiya = 2;
-    let capacityActiveVardiya = 2;
-    let editSupportActiveVardiya = 2;
-    let currentEditingSupportId = null;
-    let selectedShipKey = "";
-    let selectedShipObj = null;
-    let clickCount = 0;
-    let clickTimer = null;
-    let selectedStatPeriod = "shift";
-
-    function getShipKey(ship) {
-        return `${ship.name}_${ship.time}`;
-    }
-
-    function getShipAssignment(ship) {
-        if (!ship) return "";
-        const key = getShipKey(ship);
-        if (Object.prototype.hasOwnProperty.call(globalAssignments, key)) return globalAssignments[key];
-        if (Object.prototype.hasOwnProperty.call(globalAssignments, ship.name)) return globalAssignments[ship.name];
-        return "";
-    }
-
-    let unsubs = [];
-
-    function setupRealtimeListeners() {
-        unsubs.forEach(u => typeof u === "function" && u());
-        unsubs = [];
-
-        const unsubAssign = db.collection("live_assignments").onSnapshot(snapshot => {
-            snapshot.docChanges().forEach(change => {
-                const key = decodeURIComponent(change.doc.id);
-                if (change.type === "removed") {
-                    delete globalAssignments[key];
-                } else {
-                    const data = change.doc.data();
-                    globalAssignments[key] = data.pilot;
-                }
-            });
-            localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
-            const cEl = document.getElementById("cloudStatus");
-            if (cEl) cEl.style.color = "#22c55e";
-            renderCurrentView();
-        }, err => {
-            console.error("Atama dinleme hatası:", err);
-            const cEl = document.getElementById("cloudStatus");
-            if (cEl) cEl.style.color = "#ef4444";
-        });
-        unsubs.push(unsubAssign);
-
-        const unsubSupport = db.collection("support_records").orderBy("timestamp", "desc").limit(40).onSnapshot(snapshot => {
-            supportRecords = [];
-            snapshot.forEach(doc => {
-                supportRecords.push({ id: doc.id, ...doc.data() });
-            });
-            localStorage.setItem("kegm_support_store", JSON.stringify(supportRecords));
-            renderModalSupportAnalysis();
-        }, err => {
-            console.error("Takviye dinleme hatası:", err);
-        });
-        unsubs.push(unsubSupport);
-    }
-
-    async function loadAllData() {
-        if (!authenticatedCaptain) return;
-
-        const container = document.getElementById("shipContainer");
-        if (container) container.innerHTML = '<div class="status-msg">Veriler yükleniyor...</div>';
-
-        try {
-            try {
-                globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
-                supportRecords = JSON.parse(localStorage.getItem("kegm_support_store") || "[]");
-                inactivePilotsSet = new Set(JSON.parse(localStorage.getItem("kegm_inactive_pilots") || "[]"));
-            } catch (e) {
-                globalAssignments = {};
-                supportRecords = [];
-                inactivePilotsSet = new Set();
-            }
-
-            const [liveRes, histRes] = await Promise.all([
-                fetch("ships.json?t=" + Date.now()).catch(() => ({ ok: false })),
-                fetch("history.json?t=" + Date.now()).catch(() => ({ ok: false }))
-            ]);
-
-            if (liveRes.ok) allShips = await liveRes.json();
-            if (histRes.ok) historyShips = await histRes.json();
-
-            setupRealtimeListeners();
-            renderCurrentView();
-        } catch (e) {
-            if (container) container.innerHTML = '<div class="status-msg">Bağlantı hatası oluştu.</div>';
-        }
-    }
-
-    function renderCurrentView() {
-        if (!authenticatedCaptain) return;
-        if (currentMode === "live") renderLiveList();
-        else renderHistoryList();
-    }
-
-    function renderLiveList() {
-        const container = document.getElementById("shipContainer");
-        if (!container) return;
-        const bogaz = document.getElementById("selBogaz").value;
-        const yon = document.getElementById("selYon").value;
-        const hareket = document.getElementById("selHareket").value;
-        const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-
-        let filtered = allShips.filter(ship => {
-            if (isShipTooOldForLive(ship)) return false;
-            const matchBogaz = normalizeStr(ship.bogaz) === normalizeStr(bogaz);
-            const matchYon = normalizeStr(ship.yon) === normalizeStr(yon);
-            const matchHareket = normalizeStr(ship.hareket) === normalizeStr(hareket);
-
-            if (!matchBogaz || !matchYon || !matchHareket) return false;
-            if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
-            return true;
-        });
-
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="status-msg">Bu kritere uygun aktif gemi bulunamadı.</div>';
-            return;
-        }
-
-        filtered.sort((a, b) => (getShipTimestamp(a) || 0) - (getShipTimestamp(b) || 0));
-
-        let html = "";
-        filtered.forEach(ship => {
-            const uniqueKey = getShipKey(ship);
-            const rawAssignedPilot = getShipAssignment(ship);
-            const isPilotless = rawAssignedPilot === PILOTLESS_VALUE;
-            const pilotVardiyaNo = getPilotVardiya(rawAssignedPilot);
-
-            let visibleAssignment = rawAssignedPilot;
-            if (rawAssignedPilot && !isPilotless && !isSuperAdminUser() && !isMuhabereUser()) {
-                if (pilotVardiyaNo !== 0 && pilotVardiyaNo !== authenticatedCaptain.shift) {
-                    visibleAssignment = "";
-                }
-            }
-
-            const isAssigned = !!visibleAssignment && !isPilotless;
-            const targetQuery = (ship.imo && String(ship.imo).length === 7) ? ship.imo : (ship.name || "");
-            const aisUrl = `https://www.vesselfinder.com/?ship=${encodeURIComponent(targetQuery)}`;
-            const displayTime = formatDisplayTime(ship.time, ship.planlama);
-            const remainingBadge = formatRemainingBadge(ship);
-
-            let cardClass = "ship-card";
-            if (isPilotless) cardClass += " pilotless";
-            else if (isAssigned) cardClass += " assigned";
-
-            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈ " + visibleAssignment : "+ Kılavuz Kaptan Ata";
-
-            html += `
-                <div class="${cardClass}">
-                    <div class="ship-header">
-                        <a href="${aisUrl}" target="_blank" rel="noopener noreferrer" class="ship-name-link">
-                            ${ship.name || "-"} <span class="ais-icon">↗</span>
-                        </a>
-                        <div class="ship-time-badge">
-                            <span class="time-prefix">${ship.hareket || "PLAN"}</span>
-                            <span class="time-val">${displayTime}</span>
-                        </div>
-                    </div>
-                    ${isPilotless ? `<div class="pilotless-info visible">🚫 BU GEMİ PİLOTSUZ OLARAK İŞARETLENDİ</div>` : ""}
-                    <div class="ship-details">
-                        Boy: <span>${ship.len || "-"} m</span> | Tip: <span>${ship.type || "-"}</span> ${remainingBadge}<br>
-                        Kılavuz: <span>${ship.pilotReq || "-"}</span> | Römorkör: <span>${ship.tug || "-"}</span>
-                    </div>
-                    <div class="pilot-row">
-                        <button class="btn-assign-badge ${isPilotless ? "pilotless" : isAssigned ? "saved" : ""}"
-                            onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
-                            ${assignmentButtonText}
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-
-    function renderHistoryList() {
-        const container = document.getElementById("shipContainer");
-        if (!container) return;
-        const bogaz = document.getElementById("selBogaz").value;
-        const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
-        const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
-        const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
-
-        let rawList = historyShips.filter(ship => {
-            if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
-            
-            const timeVal = getShipTimestamp(ship);
-            const assignment = getShipAssignment(ship);
-
-            if (isShiftAllMode) {
-                if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
-                if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
-                return true;
-            }
-
-            if (isMuhabereUser()) {
-                const isKG = isNorthSouth(ship.yon);
-                if (authenticatedCaptain.sicil === "99001" && !isKG) return false;
-                if (authenticatedCaptain.sicil === "99002" && isKG) return false;
-            }
-
-            if (assignment === PILOTLESS_VALUE) return false;
-            const hasAssignedPilot = !!assignment;
-            const isBogazda = isBogazdaShip(ship);
-            if (!hasAssignedPilot && !isBogazda) return false;
-
-            if (hasAssignedPilot && !isSuperAdminUser() && !isMuhabereUser()) {
-                const pVardiya = getPilotVardiya(assignment);
-                if (pVardiya !== 0 && pVardiya !== authenticatedCaptain.shift) return false;
-            }
-
-            if (cutoffTime > 0 && timeVal > 0 && timeVal < cutoffTime) return false;
-            if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
-            return true;
-        });
-
-        rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
-
-        const uniqueMap = new Map();
-        rawList.forEach(ship => {
-            const cleanName = normalizeStr(ship.name);
-            const shipTime = getShipTimestamp(ship) || 0;
-            const currentAssignment = getShipAssignment(ship);
-            const currentHasPilot = (!!currentAssignment && currentAssignment !== PILOTLESS_VALUE);
-
-            let existingKey = null;
-            for (let [key, existingShip] of uniqueMap.entries()) {
-                if (key.startsWith(cleanName + "_")) {
-                    const exTime = getShipTimestamp(existingShip) || 0;
-                    if (Math.abs(shipTime - exTime) < (6 * 60 * 60 * 1000)) {
-                        existingKey = key;
-                        break;
-                    }
-                }
-            }
-
-            if (!existingKey) {
-                uniqueMap.set(`${cleanName}_${shipTime}`, ship);
-            } else {
-                const existingShip = uniqueMap.get(existingKey);
-                const existingAssignment = getShipAssignment(existingShip);
-                const existingHasPilot = (!!existingAssignment && existingAssignment !== PILOTLESS_VALUE);
-
-                if (!existingHasPilot && currentHasPilot) {
-                    uniqueMap.delete(existingKey);
-                    uniqueMap.set(`${cleanName}_${shipTime}`, ship);
-                }
-            }
-        });
-
-        const baseList = Array.from(uniqueMap.values());
-        let html = "";
-        if (baseList.length === 0) {
-            const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde geçerli gemi kaydı yok.`;
-            html += `<div class="status-msg">${msg}</div>`;
-        } else {
-            const nsList = baseList.filter(s => isNorthSouth(s.yon));
-            const snList = baseList.filter(s => !isNorthSouth(s.yon) && isSouthNorth(s.yon));
-
-            const nsTitle = isShiftAllMode ? "🧭 KUZEY - GÜNEY (Tüm Geçişler & Düzeltme)" : "🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)";
-            const snTitle = isShiftAllMode ? "🧭 GÜNEY - KUZEY (Tüm Geçişler & Düzeltme)" : "🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)";
-
-            if (!isMuhabereUser() || authenticatedCaptain.sicil === "99001") {
-                html += `<div class="direction-section"><div class="direction-title"><span>${nsTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${nsList.length} Gemi</span></div>`;
-                if (nsList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
-                html += `</div>`;
-            }
-
-            if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
-                html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
-                if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
-                html += `</div>`;
-            }
-        }
-
-        container.innerHTML = html;
-    }
-
-    function buildCompactLogRow(ship) {
-        const uniqueKey = getShipKey(ship);
-        const assignedPilot = getShipAssignment(ship);
-        const isPilotless = (assignedPilot === PILOTLESS_VALUE);
-        const isAssigned = (!!assignedPilot && !isPilotless);
-        const displayTime = formatDisplayTime(ship.time, ship.planlama);
-        const remainingBadge = formatRemainingBadge(ship);
-
-        let tagText = "+ Ata / Düzelt";
-        let tagClass = "log-pilot-tag";
-        let rowClass = "log-row-compact unassigned";
-
-        if (isPilotless) {
-            tagText = "🚫 Pilotsuz";
-            tagClass += " tag-pilotless";
-            rowClass = "log-row-compact pilotless-row";
-        } else if (isAssigned) {
-            tagText = assignedPilot;
-            tagClass += " saved";
-            rowClass = "log-row-compact assigned";
-        }
-
-        return `
-            <div class="${rowClass}">
-                <div class="log-ship-info">
-                    <span class="log-ship-name-plain">${ship.name} ${remainingBadge}</span>
-                    <span class="log-ship-time">🕒 ${displayTime}</span>
-                </div>
-                <div class="${tagClass}"
-                    onclick="openPilotModal('${uniqueKey.replace(/'/g, "\\'")}', '${String(ship.name || "").replace(/'/g, "\\'")}')">
-                    ${tagText}
-                </div>
-            </div>
-        `;
-    }
-
-    function switchMode(m) {
-        currentMode = m;
-        document.getElementById("tabLive").classList.toggle("active", m === "live");
-        document.getElementById("tabHistory").classList.toggle("active", m === "history");
-
-        document.getElementById("selYon").style.display = (m === "live" && !isMuhabereUser()) ? "block" : "none";
-        document.getElementById("selHareket").style.display = m === "live" ? "block" : "none";
-        document.getElementById("logRangeBox").style.display = m === "history" ? "flex" : "none";
-
-        const adminBtn = document.getElementById("btnRangeShiftAll");
-        if (adminBtn) {
-            adminBtn.style.display = (m === "history" && isSuperAdminUser()) ? "block" : "none";
-        }
-
-        renderCurrentView();
-    }
-
-    function setLogHours(hours) {
-        logHours = hours;
-        document.getElementById("btnRange6").classList.toggle("active", hours === 6);
-        document.getElementById("btnRange12").classList.toggle("active", hours === 12);
-        document.getElementById("btnRange24").classList.toggle("active", hours === 24);
-        
-        const adminBtn = document.getElementById("btnRangeShiftAll");
-        if (adminBtn) {
-            adminBtn.classList.toggle("active", hours === "shift_all");
-        }
-
-        renderCurrentView();
-    }
-
-    function openPilotModal(uniqueKey, shipName) {
-        if (!authenticatedCaptain) { alert("Lütfen önce giriş yapınız."); return; }
-        selectedShipKey = uniqueKey;
-
-        selectedShipObj = allShips.find(s => getShipKey(s) === uniqueKey) || 
-                          historyShips.find(s => getShipKey(s) === uniqueKey) || 
-                          { name: shipName };
-
-        document.getElementById("modalShipTitle").innerText = `${shipName} - Kılavuz Ata`;
-
-        const tabsBox = document.getElementById("pilotModalVardiyaTabs");
-        if (isSuperAdminUser() || isMuhabereUser()) {
-            tabsBox.style.display = "flex";
-            activeVardiya = 2;
-        } else {
-            tabsBox.style.display = "none";
-            activeVardiya = authenticatedCaptain.shift;
-        }
-
-        const m = document.getElementById("pilotModal");
-        if (m) m.style.display = "flex";
-
-        const currentAssignment = globalAssignments[uniqueKey] || "";
-        const pilotlessButton = document.getElementById("btnPilotless");
-        if (currentAssignment === PILOTLESS_VALUE) {
-            pilotlessButton.classList.add("active");
-            pilotlessButton.innerText = "🚫 PİLOTSUZ OLARAK İŞARETLENDİ";
-        } else {
-            pilotlessButton.classList.remove("active");
-            pilotlessButton.innerText = "🚫 BU GEMİ PİLOTSUZ";
-        }
-
-        switchVardiya(activeVardiya);
-    }
-
-    function closeModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        document.getElementById("pilotModal").style.display = "none";
-    }
-
-    function switchVardiya(vNum) {
-        if (!canUserAccessVardiya(vNum)) return;
-        activeVardiya = vNum;
-        document.getElementById("tabV1").classList.toggle("active", vNum === 1);
-        document.getElementById("tabV2").classList.toggle("active", vNum === 2);
-        document.getElementById("tabV3").classList.toggle("active", vNum === 3);
-        renderModalPilots();
-    }
-
-    function renderModalPilots() {
-        const container = document.getElementById("pilotListContainer");
-        const list = VARDIYALAR[activeVardiya] || [];
-        let html = `<button class="btn-pilot-item btn-pilot-clear" onclick="assignPilot('')">✖ Atamayı Kaldır / Temizle</button>`;
-        list.forEach(p => {
-            const safePilot = p.replace(/'/g, "\\'");
-            html += `<button class="btn-pilot-item" onclick="assignPilot('${safePilot}')">${p}</button>`;
-        });
-        container.innerHTML = html;
-    }
-
-    async function markShipAsPilotless() {
-        if (!selectedShipKey) return;
-        if (!confirm("Bu gemi PİLOTSUZ olarak işaretlenecek. Onaylıyor musunuz?")) return;
-        
-        const docId = encodeURIComponent(selectedShipKey);
-        try {
-            await db.collection("live_assignments").doc(docId).set({
-                shipKey: selectedShipKey,
-                pilot: PILOTLESS_VALUE,
-                vardiya: authenticatedCaptain.shift || 2,
-                updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            document.getElementById("pilotModal").style.display = "none";
-        } catch (err) {
-            alert("Kayıt hatası: " + err.message);
-        }
-    }
-
-    function openTelegramConnect() {
-        if (!authenticatedCaptain) {
-            alert("Lütfen önce sicilinizle giriş yapınız.");
-            openAuthModal();
-            return;
-        }
-        if (isMuhabereUser()) {
-            alert("Muhabere operatörlerinin Telegram bildirimine kaydolması gerekmez. Bu özellik Kılavuz Kaptanlar içindir.");
-            return;
-        }
-        const deepLink = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${authenticatedCaptain.sicil}`;
-        const win = window.open(deepLink, "_blank");
-        if (!win) {
-            window.location.href = deepLink;
-        }
-    }
-
-    async function sendTelegramNotification(pilotName, shipObj) {
-        try {
-            const sicil = getPilotSicil(pilotName);
-            if (!sicil) return;
-
-            const userDoc = await db.collection("authorized_users").doc(sicil).get();
-            if (!userDoc.exists) return;
-
-            const uData = userDoc.data();
-            const chatId = uData.telegramChatId;
-            if (!chatId) {
-                console.log(`[Telegram] ${pilotName} kaptanın Telegram hesabı henüz bağlı değil.`);
-                return;
-            }
-
-            const displayTime = formatDisplayTime(shipObj.time, shipObj.planlama);
-            const tMs = getShipTimestamp(shipObj);
-            let remText = "";
-            if (tMs) {
-                const diff = Math.round((tMs - Date.now()) / 60000);
-                if (diff > 0) remText = ` (~${diff} dk var)`;
-            }
-
-            const yonText = shipObj.yon || (isMuhabereUser() ? (authenticatedCaptain.sicil === "99001" ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY") : "BELİRTİLMEDİ");
-
-            const pilotVardiyaNo = getPilotVardiya(pilotName) || (authenticatedCaptain ? authenticatedCaptain.shift : 2) || 2;
-            const vardiyaBaslik = `${pilotVardiyaNo}. Vardiya Başkılavuzluğu`;
-
-            const msg = `🚢 *YENİ KILAVUZLUK GÖREVİ*\n` +
-                        `*(${vardiyaBaslik})*\n\n` +
-                        `Sayın *Kpt. ${pilotName}*,\n` +
-                        `Adınıza yeni bir gemi görevlendirmesi yapılmıştır:\n\n` +
-                        `• *Gemi Adı:* ${shipObj.name || "Bilinmiyor"}\n` +
-                        `• *Geçiş Saati:* ${displayTime}${remText}\n` +
-                        `• *Yön:* ${yonText}\n` +
-                        `• *Boy / Tip:* ${shipObj.len || "-"} m / ${shipObj.type || "-"}\n` +
-                        `• *Görevlendiren:* ${authenticatedCaptain.name}\n\n` +
-                        `_Emniyetli seyirler ve iyi nöbetler dileriz._`;
-
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: msg,
-                    parse_mode: "Markdown"
-                })
-            });
-
-            console.log(`[Telegram] ${pilotName} kaptana başarıyla mesaj iletildi.`);
-        } catch (err) {
-            console.error("[Telegram Hata]:", err);
-        }
-    }
-
-    async function assignPilot(pilotName) {
-        if (!selectedShipKey) return;
-        const docId = encodeURIComponent(selectedShipKey);
-
-        try {
-            if (pilotName) {
-                const targetVardiya = getPilotVardiya(pilotName) || authenticatedCaptain.shift || 2;
-                await db.collection("live_assignments").doc(docId).set({
-                    shipKey: selectedShipKey,
-                    pilot: pilotName,
-                    vardiya: targetVardiya,
-                    updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                if (selectedShipObj) {
-                    sendTelegramNotification(pilotName, selectedShipObj);
-                }
-            } else {
-                await db.collection("live_assignments").doc(docId).delete();
-            }
-            document.getElementById("pilotModal").style.display = "none";
-        } catch (err) {
-            alert("Atama kayıt hatası: " + err.message);
-        }
-    }
-
-    function getActiveCapacity() {
-        const saved = localStorage.getItem("kegm_manual_capacity");
-        if (saved !== null && !isNaN(parseInt(saved, 10))) {
-            return parseInt(saved, 10);
-        }
-        const userShift = authenticatedCaptain ? (authenticatedCaptain.shift || 2) : 2;
-        const vPilots = VARDIYALAR[userShift] || [];
-        const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
-        return activeCount > 0 ? activeCount : 28;
-    }
-
-    function calculateDynamicSupportNeeds(bogaz) {
-        const now = Date.now();
-        const DURATION_KG_MS = 3.0 * 60 * 60 * 1000;
-        const DURATION_GK_MS = 3.5 * 60 * 60 * 1000;
-        const ROAD_TRANSIT_MS = 1.5 * 60 * 60 * 1000;
-        const PREDICTION_WINDOW_MS = 3.5 * 60 * 60 * 1000;
-
-        let n2_kg_active = 0;
-        let n3_gk_active = 0;
-        let nextKG_ship = null;
-        let nextGK_ship = null;
-
-        allShips.forEach(ship => {
-            if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return;
-            if (isShipTooOldForLive(ship)) return;
-            if (getShipAssignment(ship) === PILOTLESS_VALUE) return;
-
-            const isBog = isBogazdaShip(ship);
-            const shipTime = getShipTimestamp(ship);
-            const isKG = isNorthSouth(ship.yon);
-            const isGK = isSouthNorth(ship.yon);
-
-            if (isBog && shipTime > 0) {
-                const elapsed = now - shipTime;
-                if (isKG && elapsed < DURATION_KG_MS) n2_kg_active++;
-                if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
-            } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
-                if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextKG_ship))) nextGK_ship = ship;
-            }
-        });
-
-        const totalActivePilots = getActiveCapacity();
-        const totalInTransit = n2_kg_active + n3_gk_active;
-        const isCapacityExhausted = totalInTransit >= totalActivePilots;
-
-        let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
-        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsKG = 0;
-
-        if (nextKG_ship && isCapacityExhausted) {
-            const shipTime = getShipTimestamp(nextKG_ship);
-            depTimeKG = new Date(shipTime - ROAD_TRANSIT_MS);
-            remMinsKG = Math.round((depTimeKG.getTime() - now) / 60000);
-            warningKG = true;
-            if (remMinsKG <= 0) criticalKG = true;
-        }
-
-        if (nextGK_ship && isCapacityExhausted) {
-            const shipTime = getShipTimestamp(nextGK_ship);
-            depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
-            remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
-            warningGK = true;
-            if (remMinsKG <= 0) criticalKG = true;
-        }
-
-        return {
-            totalActivePilots,
-            n2_kg_active,
-            n3_gk_active,
-            totalInTransit,
-            warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
-            warningGK, criticalGK, depTimeGK, remMinsKG, nextGK_ship,
-            hasWarning: warningKG || warningGK
-        };
-    }
-
-    function formatClock(d) {
-        if (!d) return "--:--";
-        return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-    }
-
-    function renderModalSupportAnalysis() {
-        const bEl = document.getElementById("selBogaz");
-        const bogaz = bEl ? bEl.value : "ÇANAKKALE";
-        const calc = calculateDynamicSupportNeeds(bogaz);
-        const container = document.getElementById("modalSupportAnalysisContainer");
-        if (!container) return;
-
-        const isCritical = calc.criticalKG || calc.criticalGK;
-        let panelClass = "support-panel";
-        if (isCritical) panelClass += " warning";
-        else if (calc.hasWarning) panelClass += " caution";
-
-        let html = `
-            <div class="${panelClass}">
-                <div class="support-header-row">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span style="font-size:0.85rem; font-weight:800; color:#fbbf24;">🚐 1.5 SAAT İNTİKALLİ ERKEN UYARI SİSTEMİ</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:4px;">
-                        <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
-                            <span>${calc.totalActivePilots}</span> ✏️️
-                        </button>
-                        <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
-                    </div>
-                </div>
-        `;
-
-        if (calc.hasWarning) {
-            html += `
-                <div style="color:${isCritical ? '#fca5a5' : '#fbbf24'}; font-size:0.82rem; font-weight:800; margin-bottom:4px;">
-                    ${isCritical ? '🚨 ACİL: TAKVİYE ARACI HEMEN ÇIKMALI!' : '⏳ DİKKAT: 2-3 SAAT İÇİNDE TAKVİYE GEREKECEK'}
-                </div>
-                <div class="support-info-line">
-            `;
-            if (calc.warningKG && calc.nextKG_ship) {
-                html += `<strong>Hedef Gemi (K-G):</strong> ${calc.nextKG_ship.name} (${formatDisplayTime(calc.nextKG_ship.time, calc.nextKG_ship.planlama)})<br>
-                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeKG)} 
-                         ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
-            }
-            if (calc.warningGK && calc.nextGK_ship) {
-                html += `<strong>Hedef Gemi (G-K):</strong> ${calc.nextGK_ship.name} (${formatDisplayTime(calc.nextGK_ship.time, calc.nextGK_ship.planlama)})<br>
-                         🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeGK)} 
-                         ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
-            }
-            html += `Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong></div>`;
-        } else {
-            html += `
-                <div style="color:#86efac; font-size:0.82rem; font-weight:700; margin-bottom:4px;">
-                    ✅ Önümüzdeki 3.5 Saatte Takviye İhtiyacı Görünmüyor
-                </div>
-                <div class="support-info-line">
-                    İstasyonlarda serbest kılavuz mevcut.<br>
-                    Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong>
-                </div>
-            `;
-        }
-
-        const fiveDaysMs = 5 * 24 * 60 * 60 * 1000;
-        let recentRecords = supportRecords.filter(r => (Date.now() - (r.timestamp || 0)) <= fiveDaysMs);
-
-        if (!isSuperAdminUser()) {
-            recentRecords = recentRecords.filter(r => Number(r.vardiya) === (authenticatedCaptain ? authenticatedCaptain.shift : 2));
-        }
-
-        if (recentRecords.length > 0) {
-            html += `<div style="border-top:1px solid #334155; padding-top:6px; margin-top:4px;">
-                        <span style="font-size:0.75rem; color:#fbbf24; font-weight:700;">Son Takviye Kayıtları:</span>`;
-            recentRecords.slice(0, 5).forEach(rec => {
-                const pilotText = Array.isArray(rec.pilots) ? rec.pilots.join(", ") : "";
-                const canEdit = canUserEditVardiya(rec.vardiya);
-                html += `
-                    <div class="active-support-item">
-                        <div class="active-support-top">
-                            <span style="color:#38bdf8;">${rec.direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY"} (${rec.pilots.length} Kişi) [V-${rec.vardiya || '-'}]</span>
-                            <div style="display:flex; align-items:center; gap:6px;">
-                                <span style="color:#fbbf24;">${rec.date || ""} ${rec.time || ""}</span>
-                                ${canEdit ? `<button class="btn-record-action btn-edit-record" onclick="openEditSupportPilotsModal('${rec.id}')" title="Düzenle">✏️ Düzenle</button>` : ''}
-                                ${canEdit ? `<button class="btn-record-action btn-delete-record" onclick="deleteSupportRecord('${rec.id}')" title="Sil">🗑️ Sil</button>` : ''}
-                            </div>
-                        </div>
-                        <div style="color:#cbd5e1; font-size:0.73rem; margin-top:3px;">👨‍✈️ ${pilotText}</div>
-                    </div>
-                `;
-            });
-            html += `</div>`;
-        }
-
-        html += `</div>`;
-        container.innerHTML = html;
-    }
-
-    function openSupportModal() {
-        if (!authenticatedCaptain) {
-            alert("Takviye modülünü kullanmak için lütfen önce giriş yapınız.");
-            openAuthModal();
-            return;
-        }
-
-        const m = document.getElementById("supportModal");
-        if (m) m.style.display = "flex";
-
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, "0");
-        const mm = String(now.getMinutes()).padStart(2, "0");
-        document.getElementById("supportTime").value = `${hh}:${mm}`;
-
-        const suppTabs = document.getElementById("supportModalVardiyaTabs");
-        if (isSuperAdminUser()) {
-            suppTabs.style.display = "flex";
-            supportActiveVardiya = 2;
-        } else {
-            suppTabs.style.display = "none";
-            supportActiveVardiya = authenticatedCaptain.shift || 2;
-        }
-
-        switchSupportVardiya(supportActiveVardiya);
-        renderModalSupportAnalysis();
-    }
-
-    function closeSupportModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-header-back")) return;
-        document.getElementById("supportModal").style.display = "none";
-    }
-
-    function switchSupportVardiya(vNum) {
-        if (!canUserAccessVardiya(vNum)) return;
-        supportActiveVardiya = vNum;
-        document.getElementById("supportTabV1").classList.toggle("active", vNum === 1);
-        document.getElementById("supportTabV2").classList.toggle("active", vNum === 2);
-        document.getElementById("supportTabV3").classList.toggle("active", vNum === 3);
-        renderSupportPilotList();
-    }
-
-    function renderSupportPilotList() {
-        const container = document.getElementById("supportPilotList");
-        const list = VARDIYALAR[supportActiveVardiya] || [];
-        let html = "";
-        list.forEach((pilot, index) => {
-            const id = `supp_${supportActiveVardiya}_${index}`;
-            html += `
-                <label class="support-pilot-check">
-                    <input type="checkbox" value="${pilot.replace(/"/g, "&quot;")}" onchange="updateSupportSelectedCount()" id="${id}">
-                    <span>${pilot}</span>
-                </label>
-            `;
-        });
-        container.innerHTML = html;
-        updateSupportSelectedCount();
-    }
-
-    function updateSupportSelectedCount() {
-        const checks = document.querySelectorAll("#supportPilotList input[type='checkbox']:checked");
-        document.getElementById("supportSelectedCount").innerText = `${checks.length} kılavuz seçildi.`;
-    }
-
-    async function saveSupportRecord() {
-        const dir = document.getElementById("supportDirection").value;
-        const time = document.getElementById("supportTime").value;
-        const checks = document.querySelectorAll("#supportPilotList input[type='checkbox']:checked");
-        const pilots = Array.from(checks).map(c => c.value);
-
-        if (!time) { alert("Lütfen takviye saatini seçin."); return; }
-        if (pilots.length === 0) { alert("Lütfen en az bir giden kılavuz seçin."); return; }
-
-        if (!canUserEditVardiya(supportActiveVardiya)) {
-            alert("Yetkisiz işlem: Başka vardiyaya ait takviye kaydedemezsiniz.");
-            return;
-        }
-
-        const now = new Date();
-        const dateStr = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
-
-        const newRec = {
-            date: dateStr,
-            time: time,
-            direction: dir,
-            pilots: pilots,
-            vardiya: supportActiveVardiya,
-            author: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
-            timestamp: Date.now()
-        };
-
-        try {
-            await db.collection("support_records").add(newRec);
-            alert("Takviye kaydı başarıyla eklendi.");
-            checks.forEach(c => c.checked = false);
-            updateSupportSelectedCount();
-        } catch (err) {
-            alert("Takviye kayıt hatası: " + err.message);
-        }
-    }
-
-    async function deleteSupportRecord(recId) {
-        const targetRec = supportRecords.find(r => r.id === recId);
-        if (!targetRec) return;
-
-        if (!canUserEditVardiya(targetRec.vardiya)) {
-            alert("Yetkisiz işlem: Bu takviyeyi silme yetkiniz yok.");
-            return;
-        }
-
-        if (!confirm("Bu takviye kaydını silmek istediğinize emin misiniz?")) return;
-        try {
-            await db.collection("support_records").doc(recId).delete();
-        } catch (err) {
-            alert("Silme hatası: " + err.message);
-        }
-    }
-
-    let tempEditingPilots = new Set();
-
-    function openEditSupportPilotsModal(recId) {
-        const targetRec = supportRecords.find(r => r.id === recId);
-        if (!targetRec) return;
-
-        if (!canUserEditVardiya(targetRec.vardiya)) {
-            alert("Yetkisiz işlem: Bu vardiyanın takviye kaydını düzenleyemezsiniz.");
-            return;
-        }
-
-        currentEditingSupportId = recId;
-        tempEditingPilots = new Set(targetRec.pilots || []);
-
-        document.getElementById("editSupportModalTitle").innerText = `✏️ Takviye Düzenle (${targetRec.direction === "K-G" ? "KUZEY → GÜNEY" : "GÜNEY → KUZEY"} - ${targetRec.time})`;
-        
-        const editTabs = document.getElementById("editSupportModalVardiyaTabs");
-        if (isSuperAdminUser()) {
-            editTabs.style.display = "flex";
-            editSupportActiveVardiya = targetRec.vardiya || 2;
-        } else {
-            editTabs.style.display = "none";
-            editSupportActiveVardiya = authenticatedCaptain.shift || 2;
-        }
-
-        switchEditSupportVardiya(editSupportActiveVardiya);
-        const m = document.getElementById("editSupportPilotsModal");
-        if (m) m.style.display = "flex";
-    }
-
-    function closeEditSupportPilotsModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-header-back")) return;
-        document.getElementById("editSupportPilotsModal").style.display = "none";
-        currentEditingSupportId = null;
-    }
-
-    function switchEditSupportVardiya(vNum) {
-        if (!canUserAccessVardiya(vNum)) return;
-        editSupportActiveVardiya = vNum;
-        document.getElementById("editSuppTabV1").classList.toggle("active", vNum === 1);
-        document.getElementById("editSuppTabV2").classList.toggle("active", vNum === 2);
-        document.getElementById("editSuppTabV3").classList.toggle("active", vNum === 3);
-        renderEditSupportPilotList();
-    }
-
-    function renderEditSupportPilotList() {
-        const container = document.getElementById("editSupportPilotListBox");
-        const list = VARDIYALAR[editSupportActiveVardiya] || [];
-        let html = "";
-
-        list.forEach((pilot, index) => {
-            const isChecked = tempEditingPilots.has(pilot);
-            const id = `editsupp_${editSupportActiveVardiya}_${index}`;
-            html += `
-                <label class="support-pilot-check">
-                    <input type="checkbox" value="${pilot.replace(/"/g, "&quot;")}" ${isChecked ? 'checked' : ''} onchange="toggleEditPilotChoice(this)" id="${id}">
-                    <span>${pilot}</span>
-                </label>
-            `;
-        });
-
-        container.innerHTML = html;
-        updateEditSupportSelectedCountDisplay();
-    }
-
-    function toggleEditPilotChoice(checkbox) {
-        const pilotName = checkbox.value;
-        if (checkbox.checked) tempEditingPilots.add(pilotName);
-        else tempEditingPilots.delete(pilotName);
-        updateEditSupportSelectedCountDisplay();
-    }
-
-    function updateEditSupportSelectedCountDisplay() {
-        document.getElementById("editSupportSelectedCount").innerText = `${tempEditingPilots.size} kılavuz seçili.`;
-    }
-
-    async function saveEditedSupportPilots() {
-        if (!currentEditingSupportId) return;
-        const targetRec = supportRecords.find(r => r.id === currentEditingSupportId);
-        if (!targetRec) return;
-
-        if (!canUserEditVardiya(targetRec.vardiya)) {
-            alert("Yetkisiz işlem: Bu kaydı düzenleyemezsiniz.");
-            return;
-        }
-
-        if (tempEditingPilots.size === 0) {
-            if (!confirm("Takviyedeki tüm kılavuzları çıkardınız. Takviye kaydını tamamen silmek istiyor musunuz?")) return;
-            await deleteSupportRecord(currentEditingSupportId);
-            document.getElementById("editSupportPilotsModal").style.display = "none";
-            return;
-        }
-
-        try {
-            await db.collection("support_records").doc(currentEditingSupportId).update({
-                pilots: Array.from(tempEditingPilots),
-                updatedBy: `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})`,
-                lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            alert("Takviye kılavuz listesi başarıyla güncellendi.");
-            document.getElementById("editSupportPilotsModal").style.display = "none";
-        } catch (err) {
-            alert("Güncelleme hatası: " + err.message);
-        }
-    }
-
-    function openCapacityManageModal() {
-        const capTabs = document.getElementById("capacityModalVardiyaTabs");
-        if (isSuperAdminUser()) {
-            capTabs.style.display = "flex";
-            capacityActiveVardiya = 2;
-        } else {
-            capTabs.style.display = "none";
-            capacityActiveVardiya = authenticatedCaptain.shift || 2;
-        }
-
-        switchCapacityVardiya(capacityActiveVardiya);
-        const m = document.getElementById("capacityManageModal");
-        if (m) m.style.display = "flex";
-    }
-
-    function closeCapacityManageModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close") && !e.target.classList.contains("btn-header-back")) return;
-        document.getElementById("capacityManageModal").style.display = "none";
-        renderModalSupportAnalysis();
-    }
-
-    function switchCapacityVardiya(vNum) {
-        if (!canUserAccessVardiya(vNum)) return;
-        capacityActiveVardiya = vNum;
-        document.getElementById("capTabV1").classList.toggle("active", vNum === 1);
-        document.getElementById("capTabV2").classList.toggle("active", vNum === 2);
-        document.getElementById("capTabV3").classList.toggle("active", vNum === 3);
-        renderCapacityPilotList();
-    }
-
-    function renderCapacityPilotList() {
-        const container = document.getElementById("capacityPilotListContainer");
-        const list = VARDIYALAR[capacityActiveVardiya] || [];
-        let html = "";
-
-        list.forEach(pilot => {
-            const isOff = inactivePilotsSet.has(pilot);
-            html += `
-                <div class="capacity-pilot-item ${isOff ? 'off' : 'active'}" onclick="togglePilotCapacityStatus('${pilot.replace(/'/g, "\\'")}')">
-                    <span>${pilot}</span>
-                    <span class="capacity-badge-state" style="background:${isOff ? '#7f1d1d' : '#065f46'}; color:${isOff ? '#fecaca' : '#a7f3d0'};">
-                        ${isOff ? '🚫 İZİNLİ / YOK' : '🟢 GÖREVDE'}
-                    </span>
-                </div>
-            `;
-        });
-
-        container.innerHTML = html;
-        document.getElementById("capacityManageCurrentCount").innerText = getActiveCapacity();
-    }
-
-    function togglePilotCapacityStatus(pilotName) {
-        if (!canUserEditVardiya(capacityActiveVardiya)) {
-            alert("Yetkisiz işlem: Bu vardiyanın mevcudunu değiştiremezsiniz.");
-            return;
-        }
-
-        if (inactivePilotsSet.has(pilotName)) inactivePilotsSet.delete(pilotName);
-        else inactivePilotsSet.add(pilotName);
-        localStorage.setItem("kegm_inactive_pilots", JSON.stringify(Array.from(inactivePilotsSet)));
-        
-        const vPilots = VARDIYALAR[capacityActiveVardiya] || [];
-        const activeCount = vPilots.filter(p => !inactivePilotsSet.has(p)).length;
-        localStorage.setItem("kegm_manual_capacity", activeCount);
-
-        renderCapacityPilotList();
-    }
-
-    function adjustCapacityDelta(delta) {
-        if (!canUserEditVardiya(capacityActiveVardiya)) {
-            alert("Yetkisiz işlem.");
-            return;
-        }
-        let cur = getActiveCapacity() + delta;
-        if (cur < 1) cur = 1;
-        localStorage.setItem("kegm_manual_capacity", cur);
-        document.getElementById("capacityManageCurrentCount").innerText = cur;
-    }
-
-    function triggerSecretDiagnosis() {
-        clickCount++;
-        clearTimeout(clickTimer);
-        clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
-        if (clickCount >= 3) {
-            clickCount = 0;
-            if (isSuperAdminUser()) {
-                document.getElementById("txtSecretPin").value = "";
-                document.getElementById("fakeErrorModal").style.display = "flex";
-            } else {
-                openStatsModal();
-            }
-        }
-    }
-
-    function closeFakeErrorModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        document.getElementById("fakeErrorModal").style.display = "none";
-    }
-
-    function verifySecretPin() {
-        const pin = document.getElementById("txtSecretPin").value.trim();
-        if (pin === SECRET_PIN && isSuperAdminUser()) {
-            document.getElementById("fakeErrorModal").style.display = "none";
-            openStatsModal();
-        } else {
-            alert("HATA: GEÇERSİZ SYSADMIN KEY VEYA YETKİSİZ SİCİL.");
-        }
-    }
-
-    function openStatsModal() {
-        if (isMuhabereUser()) return;
-        setStatPeriod("shift");
-        if (isSuperAdminUser()) {
-            document.getElementById("manPilotBox").style.display = "block";
-        } else {
-            document.getElementById("manPilotBox").style.display = "none";
-        }
-        const m = document.getElementById("secretStatsModal");
-        if (m) m.style.display = "flex";
-    }
-
-    function closeStatsModal(e) {
-        if (e && e.target !== e.currentTarget && !e.target.classList.contains("btn-close")) return;
-        document.getElementById("secretStatsModal").style.display = "none";
-    }
-
-    function setStatPeriod(period) {
-        selectedStatPeriod = period;
-        document.getElementById("btnStatPeriodShift").classList.toggle("active", period === "shift");
-        document.getElementById("btnStatPeriodMonth").classList.toggle("active", period === "month");
-        document.getElementById("btnStatPeriodYear").classList.toggle("active", period === "year");
-        document.getElementById("btnStatPeriodAll").classList.toggle("active", period === "all");
-        calcAdvancedStats();
-    }
-
-    function isShipInStatPeriod(shipTime, yon) {
-        if (!shipTime) return false;
-        const d = new Date(shipTime);
-
-        if (selectedStatPeriod === "all") return true;
-        if (selectedStatPeriod === "year") return d.getFullYear() === 2026;
-        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9;
-
-        if (selectedStatPeriod === "shift" || logHours === "shift_all") {
-            const isKG = isNorthSouth(yon);
-            const v2_kg_start = new Date(2026, 9, 2, 12, 0, 0).getTime();
-            const v2_gk_start = new Date(2026, 9, 2, 14, 0, 0).getTime();
-            const v2_end = new Date(2026, 9, 6, 23, 59, 59).getTime();
-
-            if (isKG && shipTime >= v2_kg_start && shipTime <= v2_end) return true;
-            if (!isKG && shipTime >= v2_gk_start && shipTime <= v2_end) return true;
-            return false;
-        }
-
-        return true;
-    }
-
-    function calcAdvancedStats() {
-        const tbody = document.getElementById("statsTableBody");
-        const userShift = authenticatedCaptain ? (authenticatedCaptain.shift || 2) : 2;
-
-        let totalTraffic = 0;
-        let pilotedTraffic = 0;
-        let pilotlessTraffic = 0;
-        let kgCount = 0;
-        let gkCount = 0;
-
-        const vardiyaTrafficMap = { 1: 0, 2: 0, 3: 0 };
-        const shipTypeCounts = {};
-        const pilotStats = {};
-
-        const combinedShipList = [...historyShips, ...allShips];
-        const evaluatedShipKeys = new Set();
-
-        combinedShipList.forEach(ship => {
-            const key = getShipKey(ship);
-            if (evaluatedShipKeys.has(key)) return;
-            evaluatedShipKeys.add(key);
-
-            const t = getShipTimestamp(ship);
-            if (!t) return;
-            if (!isShipInStatPeriod(t, ship.yon)) return;
-
-            totalTraffic++;
-
-            const pilot = getShipAssignment(ship);
-            const isPilotless = pilot === PILOTLESS_VALUE;
-            const hasPilot = !!pilot && !isPilotless;
-
-            const isKG = isNorthSouth(ship.yon);
-            if (isKG) kgCount++; else gkCount++;
-
-            const rawType = (ship.type || "DİĞER").trim().toUpperCase();
-            shipTypeCounts[rawType] = (shipTypeCounts[rawType] || 0) + 1;
-
-            if (isPilotless) {
-                pilotlessTraffic++;
-            } else if (hasPilot) {
-                pilotedTraffic++;
-
-                const pVardiya = getPilotVardiya(pilot);
-                if (pVardiya > 0) {
-                    vardiyaTrafficMap[pVardiya] = (vardiyaTrafficMap[pVardiya] || 0) + 1;
-                }
-
-                if (!pilotStats[pilot]) {
-                    pilotStats[pilot] = {
-                        total: 0,
-                        kg: 0,
-                        gk: 0,
-                        lengths: [],
-                        types: {},
-                        vardiya: pVardiya
-                    };
-                }
-
-                pilotStats[pilot].total++;
-                if (isKG) pilotStats[pilot].kg++; else pilotStats[pilot].gk++;
-
-                const lenVal = parseFloat(String(ship.len || "0").replace(",", "."));
-                if (!isNaN(lenVal) && lenVal > 0) pilotStats[pilot].lengths.push(lenVal);
-
-                pilotStats[pilot].types[rawType] = (pilotStats[pilot].types[rawType] || 0) + 1;
-            }
-        });
-
-        document.getElementById("statTotalTraffic").innerText = totalTraffic;
-        document.getElementById("statPilotedTraffic").innerText = pilotedTraffic;
-        document.getElementById("statPilotlessTraffic").innerText = pilotlessTraffic;
-        const rate = totalTraffic > 0 ? Math.round((pilotedTraffic / totalTraffic) * 100) : 0;
-        document.getElementById("statPilotRate").innerText = `%${rate}`;
-
-        const kgPct = totalTraffic > 0 ? Math.round((kgCount / totalTraffic) * 100) : 50;
-        const gkPct = totalTraffic > 0 ? (100 - kgPct) : 50;
-        document.getElementById("statFlowRatio").innerText = `%${kgPct} KG / %${gkPct} GK (${kgCount} / ${gkCount})`;
-
-        let vBalanceHtml = "";
-        if (isSuperAdminUser()) {
-            vBalanceHtml = `
-                <div style="display:flex; justify-content:space-between; margin-top:2px;">
-                    <span>Vardiya 1: <strong style="color:#38bdf8;">${vardiyaTrafficMap[1]}</strong> gemi</span>
-                    <span>Vardiya 2: <strong style="color:#4ade80;">${vardiyaTrafficMap[2]}</strong> gemi</span>
-                    <span>Vardiya 3: <strong style="color:#fbbf24;">${vardiyaTrafficMap[3]}</strong> gemi</span>
-                </div>
-            `;
-        } else {
-            vBalanceHtml = `
-                <div>Kayıtlı Vardiyanız (V-${userShift}): <strong style="color:#4ade80;">${vardiyaTrafficMap[userShift] || 0}</strong> kılavuzlu geçiş sağlandı. (Diğer vardiyalar izole)</div>
-            `;
-        }
-        document.getElementById("statVardiyaBalanceBox").innerHTML = vBalanceHtml;
-
-        const sortedTypes = Object.entries(shipTypeCounts).sort((a, b) => b[1] - a[1]);
-        document.getElementById("statTopType").innerText = sortedTypes.length > 0 ? `${sortedTypes[0][0]} (${sortedTypes[0][1]})` : "-";
-        
-        let typeBadges = "";
-        sortedTypes.slice(0, 7).forEach(([tName, tCount]) => {
-            typeBadges += `<span class="stat-type-tag">${tName}: <strong style="color:#38bdf8;">${tCount}</strong></span>`;
-        });
-        document.getElementById("statTypeContainer").innerHTML = typeBadges || '<span style="color:#64748b; font-size:0.7rem;">Kayıt yok</span>';
-
-        let totalSuppRuns = 0;
-        let totalSuppPilots = 0;
-        let suppKG = 0;
-        let suppGK = 0;
-
-        supportRecords.forEach(rec => {
-            if (!isSuperAdminUser() && Number(rec.vardiya) !== userShift) return;
-            totalSuppRuns++;
-            const pCount = Array.isArray(rec.pilots) ? rec.pilots.length : 0;
-            totalSuppPilots += pCount;
-            if (rec.direction === "K-G") suppKG += pCount; else suppGK += pCount;
-        });
-
-        document.getElementById("statSupportCount").innerText = `${totalSuppRuns} Sefer / ${totalSuppPilots} Kılavuz`;
-        document.getElementById("statSupportFlowBox").innerText = `Kuzey ➔ Güney: ${suppKG} kişi taşındı | Güney ➔ Kuzey: ${suppGK} kişi taşındı.`;
-
-        let pilotsToDisplay = Object.keys(pilotStats);
-        if (!isSuperAdminUser()) {
-            pilotsToDisplay = pilotsToDisplay.filter(pName => 
-                normalizeStr(pName).includes(normalizeStr(authenticatedCaptain.name)) ||
-                normalizeStr(authenticatedCaptain.name).includes(normalizeStr(pName))
-            );
-            document.getElementById("statTableCaption").innerText = "👨‍✈️ Şahsınıza Özel Kılavuzluk Performansı (Gizli):";
-        } else {
-            pilotsToDisplay.sort((a, b) => pilotStats[b].total - pilotStats[a].total);
-            document.getElementById("statTableCaption").innerText = "👨‍‍✈️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
-        }
-
-        let tableHtml = "";
-        pilotsToDisplay.forEach(pName => {
-            const data = pilotStats[pName];
-            
-            let avgLen = "-";
-            if (data.lengths.length > 0) {
-                const sum = data.lengths.reduce((acc, curr) => acc + curr, 0);
-                avgLen = (sum / data.lengths.length).toFixed(1) + " m";
-            }
-
-            let dominantType = "-";
-            let maxTypeCount = 0;
-            for (const [typ, cnt] of Object.entries(data.types)) {
-                if (cnt > maxTypeCount) {
-                    maxTypeCount = cnt;
-                    dominantType = typ;
-                }
-            }
-
-            tableHtml += `
-                <tr>
-                    <td style="font-weight:700; color:#e2e8f0;">${pName}</td>
-                    <td style="color:#38bdf8; font-weight:800; text-align:center;">${data.total}</td>
-                    <td style="text-align:center; font-size:0.7rem;">${data.kg} / ${data.gk}</td>
-                    <td style="color:#fbbf24; text-align:center;">${avgLen}</td>
-                    <td style="color:#94a3b8; font-size:0.68rem;">${dominantType}</td>
-                </tr>
-            `;
-        });
-
-        if (!tableHtml) {
-            tableHtml = `<tr><td colspan="5" style="text-align:center; color:#64748b; padding:12px;">Seçilen dönemde adınıza kayıtlı veri bulunamadı.</td></tr>`;
-        }
-        tbody.innerHTML = tableHtml;
-    }
-
-    async function manuelKaptanKaydet() {
-        if (!isSuperAdminUser()) return;
-        const sicil = document.getElementById("manSicil").value.trim();
-        const name = document.getElementById("manName").value.trim();
-        const shift = Number(document.getElementById("manVardiya").value);
-        const pass = document.getElementById("manPass").value.trim() || "1915";
-
-        if (!sicil || !name) {
-            alert("Lütfen Sicil No ve İsim alanlarını eksiksiz doldurun.");
-            return;
-        }
-
-        try {
-            await db.collection("authorized_users").doc(sicil).set({
-                name: name,
-                sicil: sicil,
-                shift: shift,
-                pass: pass,
-                deviceId: (sicil === MY_SPECIAL_SICIL) ? getDeviceUUID() : "",
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-
-            alert(`✅ ${name} (#${sicil}) başarıyla kaydedildi!`);
-            document.getElementById("manSicil").value = "";
-            document.getElementById("manName").value = "";
-        } catch (err) {
-            alert("Kayıt hatası: " + err.message);
-        }
-    }
-
-    async function topluKaptanYukle() {
-        if (!isSuperAdminUser()) return;
-        const onay = confirm("Tüm vardiyalar (1, 2, 3) resmî liste ve gerçek sicil numaralarıyla Firestore'a aktarılacak. Onaylıyor musunuz?");
-        if (!onay) return;
-
-        const batch = db.batch();
-        let toplamSayac = 0;
-
-        for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
-            kaptanListesi.forEach((kaptanAdi, index) => {
-                let sicilNo = null;
-                const cleanName = normalizeStr(kaptanAdi);
-
-                for (const [key, val] of Object.entries(GERCEK_SICIL_HARITASI)) {
-                    if (cleanName.includes(key)) {
-                        sicilNo = val;
-                        break;
-                    }
-                }
-
-                if (!sicilNo) {
-                    sicilNo = String(Number(vardiyaNo) * 10000 + (index + 1));
-                }
-
-                const docRef = db.collection("authorized_users").doc(sicilNo);
-
-                batch.set(docRef, {
-                    name: kaptanAdi,
-                    sicil: sicilNo,
-                    shift: Number(vardiyaNo),
-                    pass: "1915",
-                    deviceId: (sicilNo === MY_SPECIAL_SICIL) ? getDeviceUUID() : "", 
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-
-                toplamSayac++;
-            });
-        }
-
-        try {
-            await batch.commit();
-            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptanın tamamı resmî kurum sicilleriyle Firestore'a aktarıldı.`);
-        } catch (err) {
-            alert("Firestore yükleme hatası: " + err.message);
-        }
-    }
-
-    /* GİRİŞ & CİHAZ DOĞRULAMA */
-    async function submitDeviceAuth() {
-        const sicil = document.getElementById("txtSicil").value.trim();
-        const pass = document.getElementById("txtPassword").value.trim();
-        const errEl = document.getElementById("authError");
+    /* GİRİŞ DOĞRULAMA (DOĞRUDAN KİLİT EKRANINDAN) */
+    async function submitLockScreenAuth() {
+        const sicilInput = document.getElementById("lockSicil");
+        const passInput = document.getElementById("lockPass");
+        const errEl = document.getElementById("lockError");
+
+        const sicil = sicilInput ? sicilInput.value.trim() : "";
+        const pass = passInput ? passInput.value.trim() : "";
         const deviceId = getDeviceUUID();
 
         if (!sicil || !pass) {
@@ -3115,6 +1445,7 @@
 
         if (errEl) errEl.innerText = "Cihaz ve yetki kontrol ediliyor...";
 
+        // 1. ÖZEL MUHABERE GİRİŞİ (99001 / 99002)
         if (sicil === "99001" || sicil === "99002") {
             if (pass !== "1915") {
                 if (errEl) errEl.innerText = "Hatalı şifre girdiniz.";
@@ -3128,12 +1459,12 @@
                 loginTime: Date.now()
             };
             localStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
-            closeAuthModal();
             applyAuthenticatedState();
             loadAllData();
             return;
         }
 
+        // 2. KILAVUZ KAPTAN GİRİŞİ (FIRESTORE)
         try {
             const userDoc = await db.collection("authorized_users").doc(sicil).get();
 
@@ -3168,13 +1499,24 @@
             };
 
             localStorage.setItem("kegm_active_pilot", JSON.stringify(authenticatedCaptain));
-            closeAuthModal();
             applyAuthenticatedState();
             loadAllData();
 
         } catch (error) {
             if (errEl) errEl.innerText = "Bağlantı hatası: " + error.message;
         }
+    }
+
+    // Modal içinden giriş için de aynı işlevi bağla
+    async function submitDeviceAuth() {
+        const s = document.getElementById("txtSicil");
+        const p = document.getElementById("txtPassword");
+        const ls = document.getElementById("lockSicil");
+        const lp = document.getElementById("lockPass");
+        if (s && ls) ls.value = s.value;
+        if (p && lp) lp.value = p.value;
+        await submitLockScreenAuth();
+        closeAuthModal();
     }
 
     function applyAuthenticatedState() {
