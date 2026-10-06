@@ -1736,7 +1736,7 @@
     let selectedShipKey = "";
     let clickCount = 0;
     let clickTimer = null;
-    let selectedStatPeriod = "shift"; // shift, month, year, all
+    let selectedStatPeriod = "shift";
 
     function getShipKey(ship) {
         return `${ship.name}_${ship.time}`;
@@ -2018,7 +2018,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2295,7 +2295,7 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:4px;">
                         <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
-                            <span>${calc.totalActivePilots}</span> ✏️
+                            <span>${calc.totalActivePilots}</span> ✏️️
                         </button>
                         <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
                     </div>
@@ -2893,7 +2893,7 @@
             document.getElementById("statTableCaption").innerText = "👨‍✈️ Şahsınıza Özel Kılavuzluk Performansı (Gizli):";
         } else {
             pilotsToDisplay.sort((a, b) => pilotStats[b].total - pilotStats[a].total);
-            document.getElementById("statTableCaption").innerText = "👨‍✈️️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
+            document.getElementById("statTableCaption").innerText = "👨‍✈ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
         }
 
         let tableHtml = "";
@@ -2964,14 +2964,17 @@
 
     async function topluKaptanYukle() {
         if (!isSuperAdminUser()) return;
-        const onay = confirm("Tüm vardiyalar (1, 2, 3) resmî liste ve gerçek sicil numaralarıyla Firestore'a aktarılacak. Onaylıyor musunuz?");
+        const onay = confirm("Tüm vardiyalar güncellenecek:\n- 1. Vardiya: 1101, 1102... (Sicil kıdemine göre)\n- 2. Vardiya: 1915\n- 3. Vardiya: 3301, 3302... (Sicil kıdemine göre)\n\nFirestore'a aktarımı onaylıyor musunuz?");
         if (!onay) return;
 
         const batch = db.batch();
         let toplamSayac = 0;
 
         for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
-            kaptanListesi.forEach((kaptanAdi, index) => {
+            const vNo = Number(vardiyaNo);
+
+            // Önce vardiyadaki kaptanların sicillerini tespit edip nesne havuzuna alıyoruz
+            let vardiyaKaptanlari = kaptanListesi.map((kaptanAdi, index) => {
                 let sicilNo = null;
                 const cleanName = normalizeStr(kaptanAdi);
 
@@ -2983,17 +2986,39 @@
                 }
 
                 if (!sicilNo) {
-                    sicilNo = String(Number(vardiyaNo) * 10000 + (index + 1));
+                    sicilNo = String(vNo * 10000 + (index + 1));
                 }
 
-                const docRef = db.collection("authorized_users").doc(sicilNo);
+                return {
+                    name: kaptanAdi,
+                    sicil: sicilNo
+                };
+            });
+
+            // En eski demek sicil numarası en ufak olan demektir; küçükten büyüğe sıralıyoruz
+            vardiyaKaptanlari.sort((a, b) => Number(a.sicil) - Number(b.sicil));
+
+            // Şifreleri vardiya kurallarına göre tahsis ediyoruz
+            vardiyaKaptanlari.forEach((kaptan, rankIndex) => {
+                let pass = "1915";
+                const siraNo = String(rankIndex + 1).padStart(2, "0"); // 01, 02, 03...
+
+                if (vNo === 1) {
+                    pass = `11${siraNo}`;
+                } else if (vNo === 3) {
+                    pass = `33${siraNo}`;
+                } else if (vNo === 2) {
+                    pass = "1915";
+                }
+
+                const docRef = db.collection("authorized_users").doc(kaptan.sicil);
 
                 batch.set(docRef, {
-                    name: kaptanAdi,
-                    sicil: sicilNo,
-                    shift: Number(vardiyaNo),
-                    pass: "1915",
-                    deviceId: (sicilNo === MY_SPECIAL_SICIL) ? getDeviceUUID() : "", 
+                    name: kaptan.name,
+                    sicil: kaptan.sicil,
+                    shift: vNo,
+                    pass: pass,
+                    deviceId: (kaptan.sicil === MY_SPECIAL_SICIL) ? getDeviceUUID() : "", 
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
 
@@ -3003,7 +3028,7 @@
 
         try {
             await batch.commit();
-            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptanın tamamı resmî kurum sicilleriyle Firestore'a aktarıldı.`);
+            alert(`🎉 İŞLEM BAŞARILI!\n\nToplam ${toplamSayac} kılavuz kaptanın tamamı kıdem sıralı yeni şifreleriyle Firestore'a aktarıldı.`);
         } catch (err) {
             alert("Firestore yükleme hatası: " + err.message);
         }
