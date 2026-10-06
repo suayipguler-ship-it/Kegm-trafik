@@ -1111,7 +1111,7 @@
             <button class="btn-range active" id="btnRange6" onclick="setLogHours(6)">Son 6 Saat</button>
             <button class="btn-range" id="btnRange12" onclick="setLogHours(12)">Son 12 Saat</button>
             <button class="btn-range" id="btnRange24" onclick="setLogHours(24)">Son 24 Saat</button>
-            <button class="btn-range btn-range-admin" id="btnRangeShiftAll" onclick="setLogHours('shift_all')" style="display: none;">👑 1 Vardiya (Tüm Gemiler)</button>
+            <button class="btn-range btn-range-admin" id="btnRangeShiftAll" onclick="setLogHours('shift_all')" style="display: none;">👑 Vardiya</button>
         </div>
 
         <button class="btn-search" onclick="loadAllData()">Listeyi Yenile</button>
@@ -1704,16 +1704,8 @@
         return timeStr;
     }
 
+    // Parantez içi renkli notlar kaldırıldı
     function formatRemainingBadge(ship) {
-        const t = getShipTimestamp(ship);
-        if (!t) return "";
-        const diffMins = Math.round((t - Date.now()) / 60000);
-        if (diffMins > 0) {
-            const color = diffMins <= 35 ? "#ef4444" : (diffMins <= 60 ? "#fbbf24" : "#38bdf8");
-            return `<span style="color:${color}; font-weight:800; font-size:0.75rem; margin-left:6px;">(~${diffMins} dk var)</span>`;
-        } else if (diffMins > -180) {
-            return `<span style="color:#22c55e; font-weight:800; font-size:0.75rem; margin-left:6px;">(Boğazda)</span>`;
-        }
         return "";
     }
 
@@ -1920,13 +1912,25 @@
         const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
         const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
 
-        let rawList = historyShips.filter(ship => {
+        // Canlıda kılavuz atanmış ENIF ve benzeri tüm gemileri history havuzuna dahil ediyoruz
+        const combinedHistorySource = [...historyShips];
+        allShips.forEach(liveShip => {
+            const assign = getShipAssignment(liveShip);
+            if (assign && assign !== PILOTLESS_VALUE) {
+                const liveKey = getShipKey(liveShip);
+                if (!combinedHistorySource.some(hs => getShipKey(hs) === liveKey)) {
+                    combinedHistorySource.push(liveShip);
+                }
+            }
+        });
+
+        let rawList = combinedHistorySource.filter(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
             
             const timeVal = getShipTimestamp(ship);
             const assignment = getShipAssignment(ship);
 
-            // 👑 1 Vardiya (Tüm Gemiler) Modu - Sadece 52181 / 1915 Özel
+            // 👑 Vardiya Modu - Sadece 52181 / 1915 Özel
             if (isShiftAllMode) {
                 if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
                 if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
@@ -1959,8 +1963,7 @@
         // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // AKILLI DUBLİKASYON ENGELLEME:
-        // Saatler 5-10 dk kaymış olsa bile (6 saatlik pencere içinde aynı gemi) tekilleştirir
+        // AKILLI DUBLİKASYON ENGELLEME
         const uniqueMap = new Map();
         rawList.forEach(ship => {
             const cleanName = normalizeStr(ship.name);
@@ -2029,7 +2032,6 @@
         const isPilotless = (assignedPilot === PILOTLESS_VALUE);
         const isAssigned = (!!assignedPilot && !isPilotless);
         const displayTime = formatDisplayTime(ship.time, ship.planlama);
-        const remainingBadge = formatRemainingBadge(ship);
 
         let tagText = "+ Ata / Düzelt";
         let tagClass = "log-pilot-tag";
@@ -2048,7 +2050,7 @@
         return `
             <div class="${rowClass}">
                 <div class="log-ship-info">
-                    <span class="log-ship-name-plain">${ship.name} ${remainingBadge}</span>
+                    <span class="log-ship-name-plain">${ship.name}</span>
                     <span class="log-ship-time">🕒 ${displayTime}</span>
                 </div>
                 <div class="${tagClass}"
@@ -2164,10 +2166,8 @@
         }
     }
 
-    // TELEGRAM VE DIŞ BİLDİRİM FONKSİYONU ALTYAPISI
     function sendTelegramNotification(pilotName, shipKey) {
         console.log(`[BİLDİRİM] ${pilotName} kaptana ${shipKey} gemisi için görev bildirimi tetiklendi.`);
-        // Telegram Bot Token ve Kaptan Chat ID entegrasyonu buraya bağlanacaktır.
     }
 
     async function assignPilot(pilotName) {
@@ -2234,7 +2234,7 @@
                 if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship;
+                if (isGK && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
             }
         });
 
@@ -2256,7 +2256,7 @@
         if (nextGK_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextGK_ship);
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
-            remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
+            remMinsGK = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
             if (remMinsKG <= 0) criticalKG = true;
         }
@@ -2716,7 +2716,7 @@
     }
 
     function openStatsModal() {
-        if (isMuhabereUser()) return; // Muhabereciler istatistik açamaz
+        if (isMuhabereUser()) return;
         setStatPeriod("shift");
         if (isSuperAdminUser()) {
             document.getElementById("manPilotBox").style.display = "block";
@@ -2732,9 +2732,7 @@
         document.getElementById("secretStatsModal").style.display = "none";
     }
 
-    /* =========================================================
-       DİNAMİK İSTATİSTİK FİLTRELEME & HESAPLAMA MOTORU
-       ========================================================= */
+    /* DİNAMİK İSTATİSTİK FİLTRELEME & HESAPLAMA MOTORU */
     function setStatPeriod(period) {
         selectedStatPeriod = period;
         document.getElementById("btnStatPeriodShift").classList.toggle("active", period === "shift");
@@ -2895,7 +2893,7 @@
             document.getElementById("statTableCaption").innerText = "👨‍✈️ Şahsınıza Özel Kılavuzluk Performansı (Gizli):";
         } else {
             pilotsToDisplay.sort((a, b) => pilotStats[b].total - pilotStats[a].total);
-            document.getElementById("statTableCaption").innerText = "👨‍✈️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
+            document.getElementById("statTableCaption").innerText = "👨‍✈️️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
         }
 
         let tableHtml = "";
@@ -3104,12 +3102,10 @@
                 document.getElementById("mainAppTitle").innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
                 document.getElementById("authBadgeText").innerText = `📻 ${isKuzey ? "KUZEY" : "GÜNEY"} (#${authenticatedCaptain.sicil})`;
                 
-                // Yön kutusunu kilitle
                 const selYon = document.getElementById("selYon");
                 selYon.value = isKuzey ? "KUZEY-GÜNEY" : "GÜNEY-KUZEY";
                 selYon.disabled = true;
 
-                // Takviye butonunu muhabereye gizle
                 document.getElementById("btnHeaderSupportBox").style.display = "none";
             } else {
                 document.getElementById("mainAppTitle").innerHTML = `<span>BOĞAZ GEÇİŞ</span><span>PLANLAMA</span>`;
