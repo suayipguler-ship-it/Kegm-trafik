@@ -1478,7 +1478,7 @@
     const SESSION_EXPIRY_MS = 4 * 24 * 60 * 60 * 1000;
 
     // 4 GÜNLÜK VARDİYA REFERANSI VE DÖNGÜSÜ
-    const REF_START_TIME = new Date(2026, 9, 2, 0, 0, 0).getTime(); // 02 Ekim 2026
+    const REF_START_TIME = new Date(2026, 9, 2, 0, 0, 0).getTime();
     const SHIFT_CYCLE_MS = 4 * 24 * 60 * 60 * 1000;
 
     const BAS_KILAVUZ_SICILLER = {
@@ -1704,7 +1704,6 @@
         return timeStr;
     }
 
-    // Parantez içi renkli notlar kaldırıldı
     function formatRemainingBadge(ship) {
         return "";
     }
@@ -1747,6 +1746,14 @@
         const key = getShipKey(ship);
         if (Object.prototype.hasOwnProperty.call(globalAssignments, key)) return globalAssignments[key];
         if (Object.prototype.hasOwnProperty.call(globalAssignments, ship.name)) return globalAssignments[ship.name];
+        
+        // Eğer saat ufak kaymışsa aynı isimli geminin atamasını yakala
+        const cleanName = normalizeStr(ship.name);
+        for (const [k, p] of Object.entries(globalAssignments)) {
+            if (normalizeStr(k).startsWith(cleanName + "_") || normalizeStr(k) === cleanName) {
+                return p;
+            }
+        }
         return "";
     }
 
@@ -1875,7 +1882,7 @@
             if (isPilotless) cardClass += " pilotless";
             else if (isAssigned) cardClass += " assigned";
 
-            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈ " + visibleAssignment : "+ Kılavuz Kaptan Ata";
+            let assignmentButtonText = isPilotless ? "🚫 PİLOTSUZ" : isAssigned ? "👨‍✈️ " + visibleAssignment : "+ Kılavuz Kaptan Ata";
 
             html += `
                 <div class="${cardClass}">
@@ -1912,14 +1919,41 @@
         const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
         const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
 
-        // Canlıda kılavuz atanmış ENIF ve benzeri tüm gemileri history havuzuna dahil ediyoruz
-        const combinedHistorySource = [...historyShips];
-        allShips.forEach(liveShip => {
-            const assign = getShipAssignment(liveShip);
+        // KESİN DÜZELTME: Dublikasyon olmaksızın History ve Canlı Kılavuzlu gemileri birleştirme
+        const combinedHistorySource = [];
+        const seenShipLookup = new Map();
+
+        // 1. Önce History kayıtlarını ekle
+        (historyShips || []).forEach(hs => {
+            const nameNorm = normalizeStr(hs.name);
+            const t = getShipTimestamp(hs) || 0;
+            const dir = isNorthSouth(hs.yon) ? "KG" : "GK";
+            const compositeKey = `${nameNorm}_${dir}`;
+            
+            combinedHistorySource.push(hs);
+            seenShipLookup.set(compositeKey, { index: combinedHistorySource.length - 1, time: t });
+        });
+
+        // 2. Canlı listede atanmış (ENIF vb.) gemileri kontrol et; varsa güncelle, yoksa tek olarak ekle
+        (allShips || []).forEach(ls => {
+            const assign = getShipAssignment(ls);
             if (assign && assign !== PILOTLESS_VALUE) {
-                const liveKey = getShipKey(liveShip);
-                if (!combinedHistorySource.some(hs => getShipKey(hs) === liveKey)) {
-                    combinedHistorySource.push(liveShip);
+                const nameNorm = normalizeStr(ls.name);
+                const t = getShipTimestamp(ls) || 0;
+                const dir = isNorthSouth(ls.yon) ? "KG" : "GK";
+                const compositeKey = `${nameNorm}_${dir}`;
+
+                if (seenShipLookup.has(compositeKey)) {
+                    // Aynı yön ve isimde varsa (8 saat penceresinde) canlıdaki güncel veriyi üzerine yaz
+                    const existing = seenShipLookup.get(compositeKey);
+                    if (Math.abs(t - existing.time) < 8 * 60 * 60 * 1000) {
+                        combinedHistorySource[existing.index] = { ...combinedHistorySource[existing.index], ...ls };
+                    } else {
+                        combinedHistorySource.push(ls);
+                    }
+                } else {
+                    combinedHistorySource.push(ls);
+                    seenShipLookup.set(compositeKey, { index: combinedHistorySource.length - 1, time: t });
                 }
             }
         });
@@ -1930,7 +1964,7 @@
             const timeVal = getShipTimestamp(ship);
             const assignment = getShipAssignment(ship);
 
-            // 👑 Vardiya Modu - Sadece 52181 / 1915 Özel
+            // 👑 Vardiya Modu
             if (isShiftAllMode) {
                 if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
                 if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
@@ -1963,40 +1997,36 @@
         // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // AKILLI DUBLİKASYON ENGELLEME
-        const uniqueMap = new Map();
+        // SON AŞAMA TEKİLLEŞTİRME: Aynı isim ve yöndeki gemileri tek satır yap
+        const finalUniqueMap = new Map();
         rawList.forEach(ship => {
             const cleanName = normalizeStr(ship.name);
+            const dir = isNorthSouth(ship.yon) ? "KG" : "GK";
             const shipTime = getShipTimestamp(ship) || 0;
-            const currentAssignment = getShipAssignment(ship);
-            const currentHasPilot = (!!currentAssignment && currentAssignment !== PILOTLESS_VALUE);
+            const dedupKey = `${cleanName}_${dir}`;
 
-            let existingKey = null;
-            for (let [key, existingShip] of uniqueMap.entries()) {
-                if (key.startsWith(cleanName + "_")) {
-                    const exTime = getShipTimestamp(existingShip) || 0;
-                    if (Math.abs(shipTime - exTime) < (6 * 60 * 60 * 1000)) {
-                        existingKey = key;
-                        break;
-                    }
-                }
-            }
-
-            if (!existingKey) {
-                uniqueMap.set(`${cleanName}_${shipTime}`, ship);
+            if (!finalUniqueMap.has(dedupKey)) {
+                finalUniqueMap.set(dedupKey, ship);
             } else {
-                const existingShip = uniqueMap.get(existingKey);
-                const existingAssignment = getShipAssignment(existingShip);
-                const existingHasPilot = (!!existingAssignment && existingAssignment !== PILOTLESS_VALUE);
-
-                if (!existingHasPilot && currentHasPilot) {
-                    uniqueMap.delete(existingKey);
-                    uniqueMap.set(`${cleanName}_${shipTime}`, ship);
+                const existing = finalUniqueMap.get(dedupKey);
+                const exTime = getShipTimestamp(existing) || 0;
+                // Eğer 8 saatten fazla bir fark varsa farklı bir geçiş seferidir
+                if (Math.abs(shipTime - exTime) > 8 * 60 * 60 * 1000) {
+                    finalUniqueMap.set(`${dedupKey}_${shipTime}`, ship);
+                } else {
+                    // Yakın saatli ise ataması olan veya en güncel olanı tut
+                    const exAssign = getShipAssignment(existing);
+                    const curAssign = getShipAssignment(ship);
+                    if (!exAssign && curAssign) {
+                        finalUniqueMap.set(dedupKey, ship);
+                    }
                 }
             }
         });
 
-        const baseList = Array.from(uniqueMap.values());
+        const baseList = Array.from(finalUniqueMap.values());
+        baseList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
+
         let html = "";
         if (baseList.length === 0) {
             const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde geçerli gemi kaydı yok.`;
@@ -2018,7 +2048,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2109,7 +2139,7 @@
         pushModalHistory("pilotModal");
         document.getElementById("pilotModal").style.display = "flex";
 
-        const currentAssignment = globalAssignments[uniqueKey] || "";
+        const currentAssignment = getShipAssignment({ name: shipName, time: "" }) || globalAssignments[uniqueKey] || "";
         const pilotlessButton = document.getElementById("btnPilotless");
         if (currentAssignment === PILOTLESS_VALUE) {
             pilotlessButton.classList.add("active");
@@ -2295,7 +2325,7 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:4px;">
                         <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
-                            <span>${calc.totalActivePilots}</span> ✏️️
+                            <span>${calc.totalActivePilots}</span> ✏️
                         </button>
                         <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
                     </div>
@@ -2748,7 +2778,7 @@
 
         if (selectedStatPeriod === "all") return true;
         if (selectedStatPeriod === "year") return d.getFullYear() === 2026;
-        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9; // Ekim
+        if (selectedStatPeriod === "month") return d.getFullYear() === 2026 && d.getMonth() === 9;
 
         if (selectedStatPeriod === "shift" || logHours === "shift_all") {
             const isKG = isNorthSouth(yon);
@@ -2893,7 +2923,7 @@
             document.getElementById("statTableCaption").innerText = "👨‍✈️ Şahsınıza Özel Kılavuzluk Performansı (Gizli):";
         } else {
             pilotsToDisplay.sort((a, b) => pilotStats[b].total - pilotStats[a].total);
-            document.getElementById("statTableCaption").innerText = "👨‍✈ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
+            document.getElementById("statTableCaption").innerText = "👨‍✈️ Tüm Kılavuzların Yük & Yorulma Endeksi (Yönetici Görünümü):";
         }
 
         let tableHtml = "";
@@ -2973,7 +3003,6 @@
         for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
             const vNo = Number(vardiyaNo);
 
-            // Önce vardiyadaki kaptanların sicillerini tespit edip nesne havuzuna alıyoruz
             let vardiyaKaptanlari = kaptanListesi.map((kaptanAdi, index) => {
                 let sicilNo = null;
                 const cleanName = normalizeStr(kaptanAdi);
@@ -2995,13 +3024,11 @@
                 };
             });
 
-            // En eski demek sicil numarası en ufak olan demektir; küçükten büyüğe sıralıyoruz
             vardiyaKaptanlari.sort((a, b) => Number(a.sicil) - Number(b.sicil));
 
-            // Şifreleri vardiya kurallarına göre tahsis ediyoruz
             vardiyaKaptanlari.forEach((kaptan, rankIndex) => {
                 let pass = "1915";
-                const siraNo = String(rankIndex + 1).padStart(2, "0"); // 01, 02, 03...
+                const siraNo = String(rankIndex + 1).padStart(2, "0");
 
                 if (vNo === 1) {
                     pass = `11${siraNo}`;
@@ -3048,7 +3075,6 @@
 
         errEl.innerText = "Cihaz ve yetki kontrol ediliyor...";
 
-        // 1. ÖZEL MUHABERE GİRİŞİ (99001: Kuzey / 99002: Güney)
         if (sicil === "99001" || sicil === "99002") {
             if (pass !== "1915") {
                 errEl.innerText = "Hatalı şifre girdiniz.";
@@ -3068,7 +3094,6 @@
             return;
         }
 
-        // 2. KILAVUZ KAPTAN GİRİŞİ (FIRESTORE)
         try {
             const userDoc = await db.collection("authorized_users").doc(sicil).get();
 
@@ -3121,7 +3146,6 @@
             badge.classList.add("active");
             document.getElementById("authBadgeIcon").innerText = "🟢";
 
-            // Muhabereci ise yönü kilitle ve başlıkları uyarla
             if (isMuhabereUser()) {
                 const isKuzey = (authenticatedCaptain.sicil === "99001");
                 document.getElementById("mainAppTitle").innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
