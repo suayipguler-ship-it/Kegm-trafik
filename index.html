@@ -1477,10 +1477,6 @@
     // 4 GÜNLÜK KALICI OTURUM SÜRESİ (96 SAAT)
     const SESSION_EXPIRY_MS = 4 * 24 * 60 * 60 * 1000;
 
-    // 4 GÜNLÜK VARDİYA REFERANSI VE DÖNGÜSÜ
-    const REF_START_TIME = new Date(2026, 9, 2, 0, 0, 0).getTime();
-    const SHIFT_CYCLE_MS = 4 * 24 * 60 * 60 * 1000;
-
     const BAS_KILAVUZ_SICILLER = {
         "52216": 1,
         "51788": 2,
@@ -1723,6 +1719,7 @@
     let allShips = [];
     let historyShips = [];
     let globalAssignments = {};
+    let assignmentFastMap = new Map(); // O(1) Anında erişim haritası (kilitlenmeyi önler)
     let supportRecords = [];
     let inactivePilotsSet = new Set();
     let currentMode = "live";
@@ -1737,23 +1734,31 @@
     let clickTimer = null;
     let selectedStatPeriod = "shift";
 
+    function refreshFastAssignmentIndex() {
+        assignmentFastMap.clear();
+        for (const [k, p] of Object.entries(globalAssignments)) {
+            assignmentFastMap.set(k, p);
+            const cleanKey = normalizeStr(k);
+            assignmentFastMap.set(cleanKey, p);
+            const parts = cleanKey.split("_");
+            if (parts.length > 0 && !assignmentFastMap.has(parts[0])) {
+                assignmentFastMap.set(parts[0], p);
+            }
+        }
+    }
+
     function getShipKey(ship) {
         return `${ship.name}_${ship.time}`;
     }
 
     function getShipAssignment(ship) {
         if (!ship) return "";
-        const key = getShipKey(ship);
-        if (Object.prototype.hasOwnProperty.call(globalAssignments, key)) return globalAssignments[key];
-        if (Object.prototype.hasOwnProperty.call(globalAssignments, ship.name)) return globalAssignments[ship.name];
-        
-        // Eğer saat ufak kaymışsa aynı isimli geminin atamasını yakala
+        const exactKey = getShipKey(ship);
+        if (assignmentFastMap.has(exactKey)) return assignmentFastMap.get(exactKey);
+
         const cleanName = normalizeStr(ship.name);
-        for (const [k, p] of Object.entries(globalAssignments)) {
-            if (normalizeStr(k).startsWith(cleanName + "_") || normalizeStr(k) === cleanName) {
-                return p;
-            }
-        }
+        if (assignmentFastMap.has(cleanName)) return assignmentFastMap.get(cleanName);
+
         return "";
     }
 
@@ -1773,6 +1778,7 @@
                     globalAssignments[key] = data.pilot;
                 }
             });
+            refreshFastAssignmentIndex();
             localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
             document.getElementById("cloudStatus").style.color = "#22c55e";
             renderCurrentView();
@@ -1804,10 +1810,12 @@
         try {
             try {
                 globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
+                refreshFastAssignmentIndex();
                 supportRecords = JSON.parse(localStorage.getItem("kegm_support_store") || "[]");
                 inactivePilotsSet = new Set(JSON.parse(localStorage.getItem("kegm_inactive_pilots") || "[]"));
             } catch (e) {
                 globalAssignments = {};
+                assignmentFastMap.clear();
                 supportRecords = [];
                 inactivePilotsSet = new Set();
             }
@@ -1919,52 +1927,57 @@
         const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
         const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
 
-        // KESİN DÜZELTME: Dublikasyon olmaksızın History ve Canlı Kılavuzlu gemileri birleştirme
-        const combinedHistorySource = [];
+        // 1. CANLI VE GEÇMİŞ LİSTEYİ BİRLEŞTİR (90 DAKİKA AKILLI PENCERE)
+        const combinedList = [];
         const seenShipLookup = new Map();
 
-        // 1. Önce History kayıtlarını ekle
-        (historyShips || []).forEach(hs => {
-            const nameNorm = normalizeStr(hs.name);
-            const t = getShipTimestamp(hs) || 0;
-            const dir = isNorthSouth(hs.yon) ? "KG" : "GK";
-            const compositeKey = `${nameNorm}_${dir}`;
-            
-            combinedHistorySource.push(hs);
-            seenShipLookup.set(compositeKey, { index: combinedHistorySource.length - 1, time: t });
-        });
+        const addCandidateShip = (ship) => {
+            const cleanName = normalizeStr(ship.name);
+            const dir = isNorthSouth(ship.yon) ? "KG" : "GK";
+            const t = getShipTimestamp(ship) || 0;
+            const compositeKey = `${cleanName}_${dir}`;
 
-        // 2. Canlı listede atanmış (ENIF vb.) gemileri kontrol et; varsa güncelle, yoksa tek olarak ekle
+            if (!seenShipLookup.has(compositeKey)) {
+                seenShipLookup.set(compositeKey, [{ ship, time: t }]);
+                combinedList.push(ship);
+            } else {
+                const existingGroup = seenShipLookup.get(compositeKey);
+                // 90 dakikadan (1.5 saat) az fark varsa AYNI GEMİNİN saat kaymasıdır (dublikasyondur)
+                const closeMatch = existingGroup.find(item => Math.abs(item.time - t) < (90 * 60 * 1000));
+                
+                if (closeMatch) {
+                    // Yakın sefer; ataması olanı veya canlıdaki yeni bilgiyi muhafaza et
+                    const curAssign = getShipAssignment(ship);
+                    if (curAssign && curAssign !== PILOTLESS_VALUE) {
+                        Object.assign(closeMatch.ship, ship);
+                        closeMatch.time = t;
+                    }
+                } else {
+                    // 90 dakikadan fazla fark varsa; aynı günün 2. geçişidir / liman kalkışıdır, KORU!
+                    existingGroup.push({ ship, time: t });
+                    combinedList.push(ship);
+                }
+            }
+        };
+
+        (historyShips || []).forEach(addCandidateShip);
+
+        // Canlıda kılavuz atanmış (ENIF vb.) gemileri ekle
         (allShips || []).forEach(ls => {
             const assign = getShipAssignment(ls);
             if (assign && assign !== PILOTLESS_VALUE) {
-                const nameNorm = normalizeStr(ls.name);
-                const t = getShipTimestamp(ls) || 0;
-                const dir = isNorthSouth(ls.yon) ? "KG" : "GK";
-                const compositeKey = `${nameNorm}_${dir}`;
-
-                if (seenShipLookup.has(compositeKey)) {
-                    // Aynı yön ve isimde varsa (8 saat penceresinde) canlıdaki güncel veriyi üzerine yaz
-                    const existing = seenShipLookup.get(compositeKey);
-                    if (Math.abs(t - existing.time) < 8 * 60 * 60 * 1000) {
-                        combinedHistorySource[existing.index] = { ...combinedHistorySource[existing.index], ...ls };
-                    } else {
-                        combinedHistorySource.push(ls);
-                    }
-                } else {
-                    combinedHistorySource.push(ls);
-                    seenShipLookup.set(compositeKey, { index: combinedHistorySource.length - 1, time: t });
-                }
+                addCandidateShip(ls);
             }
         });
 
-        let rawList = combinedHistorySource.filter(ship => {
+        // 2. FİLTRELEME
+        let rawList = combinedList.filter(ship => {
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
             
             const timeVal = getShipTimestamp(ship);
             const assignment = getShipAssignment(ship);
 
-            // 👑 Vardiya Modu
+            // 👑 Vardiya Modu (Sadece 52181 / 1915 Admin)
             if (isShiftAllMode) {
                 if (!isShipInStatPeriod(timeVal, ship.yon)) return false;
                 if (searchQuery.length > 0) return (ship.name || "").toLowerCase().includes(searchQuery);
@@ -1984,6 +1997,7 @@
             const isBogazda = isBogazdaShip(ship);
             if (!hasAssignedPilot && !isBogazda) return false;
 
+            // 52181 süper admin olduğu için tüm vardiyaları görür
             if (hasAssignedPilot && !isSuperAdminUser() && !isMuhabereUser()) {
                 const pVardiya = getPilotVardiya(assignment);
                 if (pVardiya !== 0 && pVardiya !== authenticatedCaptain.shift) return false;
@@ -1997,43 +2011,13 @@
         // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // SON AŞAMA TEKİLLEŞTİRME: Aynı isim ve yöndeki gemileri tek satır yap
-        const finalUniqueMap = new Map();
-        rawList.forEach(ship => {
-            const cleanName = normalizeStr(ship.name);
-            const dir = isNorthSouth(ship.yon) ? "KG" : "GK";
-            const shipTime = getShipTimestamp(ship) || 0;
-            const dedupKey = `${cleanName}_${dir}`;
-
-            if (!finalUniqueMap.has(dedupKey)) {
-                finalUniqueMap.set(dedupKey, ship);
-            } else {
-                const existing = finalUniqueMap.get(dedupKey);
-                const exTime = getShipTimestamp(existing) || 0;
-                // Eğer 8 saatten fazla bir fark varsa farklı bir geçiş seferidir
-                if (Math.abs(shipTime - exTime) > 8 * 60 * 60 * 1000) {
-                    finalUniqueMap.set(`${dedupKey}_${shipTime}`, ship);
-                } else {
-                    // Yakın saatli ise ataması olan veya en güncel olanı tut
-                    const exAssign = getShipAssignment(existing);
-                    const curAssign = getShipAssignment(ship);
-                    if (!exAssign && curAssign) {
-                        finalUniqueMap.set(dedupKey, ship);
-                    }
-                }
-            }
-        });
-
-        const baseList = Array.from(finalUniqueMap.values());
-        baseList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
-
         let html = "";
-        if (baseList.length === 0) {
+        if (rawList.length === 0) {
             const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde geçerli gemi kaydı yok.`;
             html += `<div class="status-msg">${msg}</div>`;
         } else {
-            const nsList = baseList.filter(s => isNorthSouth(s.yon));
-            const snList = baseList.filter(s => !isNorthSouth(s.yon) && isSouthNorth(s.yon));
+            const nsList = rawList.filter(s => isNorthSouth(s.yon));
+            const snList = rawList.filter(s => !isNorthSouth(s.yon) && isSouthNorth(s.yon));
 
             const nsTitle = isShiftAllMode ? "🧭 KUZEY - GÜNEY (Tüm Geçişler & Düzeltme)" : "🧭 KUZEY - GÜNEY (Kılavuzlu Geçişler)";
             const snTitle = isShiftAllMode ? "🧭 GÜNEY - KUZEY (Tüm Geçişler & Düzeltme)" : "🧭 GÜNEY - KUZEY (Kılavuzlu Geçişler)";
@@ -2273,7 +2257,7 @@
         const isCapacityExhausted = totalInTransit >= totalActivePilots;
 
         let warningKG = false, criticalKG = false, depTimeKG = null, remMinsKG = 0;
-        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsGK = 0;
+        let warningGK = false, criticalGK = false, depTimeGK = null, remMinsKG = 0;
 
         if (nextKG_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextKG_ship);
@@ -2286,9 +2270,9 @@
         if (nextGK_ship && isCapacityExhausted) {
             const shipTime = getShipTimestamp(nextGK_ship);
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
-            remMinsGK = Math.round((depTimeGK.getTime() - now) / 60000);
+            remMinsKG = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
-            if (remMinsKG <= 0) criticalKG = true;
+            if (remMinsKG <= 0) criticalGK = true;
         }
 
         return {
@@ -2297,7 +2281,7 @@
             n3_gk_active,
             totalInTransit,
             warningKG, criticalKG, depTimeKG, remMinsKG, nextKG_ship,
-            warningGK, criticalGK, depTimeGK, remMinsGK, nextGK_ship,
+            warningGK, criticalGK, depTimeGK, remMinsKG, nextGK_ship,
             hasWarning: warningKG || warningGK
         };
     }
