@@ -1515,7 +1515,7 @@
             "MEHMET ÖZGÜR ŞAHİN", "MUSTAFA AKMAN", "OKAN ÖZKEÇECİ", "OLCAY SÖZEN",
             "ONUR KAYA", "ÖZER ORAL", "ÖZKAN BERK", "RIZA ÇETİN",
             "SECA MATLAR", "SERCAN KUTLUER", "TANSEL AKPINAR", "TANSEL OREL",
-            "T. ENDER YALÇIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
+            "T. ENDER YALCIN", "TAYLAN OLPAK", "TUNA ÜN", "TOLGA DEMİRCİ", "ULAŞ EMİROĞLU",
             "GÜLTEKİN ÖZDEMİR"
         ]
     };
@@ -1704,7 +1704,6 @@
         return timeStr;
     }
 
-    // Parantez içi renkli notlar kaldırıldı
     function formatRemainingBadge(ship) {
         return "";
     }
@@ -1742,9 +1741,6 @@
         return `${ship.name}_${ship.time}`;
     }
 
-    // Geçmiş kayıtlarında gerçek olay kimliği: aynı geminin farklı saatlerdeki
-    // hareketleri kesinlikle ayrı kayıt olarak tutulur. Yalnızca aynı gemi +
-    // aynı yön + aynı zaman damgası aynı olay kabul edilir.
     function getHistoryEventKey(ship) {
         const name = normalizeStr(ship && ship.name);
         const direction = normalizeStr(ship && ship.yon);
@@ -1923,12 +1919,19 @@
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
         const isShiftAllMode = (logHours === "shift_all" && isSuperAdminUser());
         const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
+        const now = Date.now();
 
-        // Canlıda kılavuz atanmış ENIF ve benzeri tüm gemileri history havuzuna dahil ediyoruz
+        // 1. HAVUZ BİRLEŞTİRME:
+        // Canlıdaki gemilerden; kılavuz atanmış olanlar VEYA saati gelmiş/geçmiş olup kılavuz talep edenler log havuzuna eklenir
         const combinedHistorySource = [...historyShips];
         allShips.forEach(liveShip => {
             const assign = getShipAssignment(liveShip);
-            if (assign && assign !== PILOTLESS_VALUE) {
+            const timeVal = getShipTimestamp(liveShip);
+            const reqPilot = normalizeStr(liveShip.pilotReq || "").includes("EVET");
+            const hasPilot = (assign && assign !== PILOTLESS_VALUE);
+            const isDue = (timeVal > 0 && timeVal <= now);
+
+            if (hasPilot || (reqPilot && isDue)) {
                 const liveKey = getShipKey(liveShip);
                 if (!combinedHistorySource.some(hs => getShipKey(hs) === liveKey)) {
                     combinedHistorySource.push(liveShip);
@@ -1956,12 +1959,20 @@
                 if (authenticatedCaptain.sicil === "99002" && isKG) return false;
             }
 
-            // Standart Saat Filtreli Mod
             if (assignment === PILOTLESS_VALUE) return false;
+
             const hasAssignedPilot = !!assignment;
             const isBogazda = isBogazdaShip(ship);
-            if (!hasAssignedPilot && !isBogazda) return false;
+            const reqPilot = normalizeStr(ship.pilotReq || "").includes("EVET");
+            const isDue = (timeVal > 0 && timeVal <= now);
 
+            // 2. LOGA KABUL ŞARTI:
+            // - Kılavuz atanmışsa VEYA
+            // - Gemi boğazdaysa VEYA
+            // - Kılavuz talep ediyor ve plan saati gelmiş/geçmişse loga geçer
+            if (!hasAssignedPilot && !isBogazda && !(reqPilot && isDue)) return false;
+
+            // Kılavuz atanmışsa vardiya izolasyonu
             if (hasAssignedPilot && !isSuperAdminUser() && !isMuhabereUser()) {
                 const pVardiya = getPilotVardiya(assignment);
                 if (pVardiya !== 0 && pVardiya !== authenticatedCaptain.shift) return false;
@@ -1976,10 +1987,6 @@
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
         // GERÇEK DUBLİKASYON ENGELLEME
-        // Aynı geminin 6 saat içindeki iki ayrı hareketini artık birleştirmiyoruz.
-        // Çünkü aynı gemi aynı gün içinde tekrar limana yanaşabilir, demirleyebilir
-        // veya yeniden kalkış yapabilir ve her hareket ayrı bir pilotaj olayıdır.
-        // Sadece aynı gemi + aynı yön + aynı zaman damgası aynı olay kabul edilir.
         const uniqueMap = new Map();
         rawList.forEach(ship => {
             const eventKey = getHistoryEventKey(ship);
@@ -1990,7 +1997,6 @@
                 return;
             }
 
-            // Aynı olay iki kaynaktan geldiyse, pilot atanmış olan kaydı koru.
             const existingAssignment = getShipAssignment(existingShip);
             const currentAssignment = getShipAssignment(ship);
             const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
@@ -2239,7 +2245,7 @@
                 if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship; // DÜZELTİLDİ: nextGK_ship ataması
+                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship; // nextGK_ship düzeltildi
             }
         });
 
@@ -2750,6 +2756,7 @@
     function isShipInStatPeriod(shipTime, yon) {
         if (!shipTime) return false;
         const d = new Date(shipTime);
+        const now = Date.now();
 
         if (selectedStatPeriod === "all") return true;
         if (selectedStatPeriod === "year") return d.getFullYear() === 2026;
@@ -2757,12 +2764,17 @@
 
         if (selectedStatPeriod === "shift" || logHours === "shift_all") {
             const isKG = isNorthSouth(yon);
-            const v2_kg_start = new Date(2026, 9, 2, 12, 0, 0).getTime();
-            const v2_gk_start = new Date(2026, 9, 2, 14, 0, 0).getTime();
-            const v2_end = new Date(2026, 9, 6, 23, 59, 59).getTime();
 
-            if (isKG && shipTime >= v2_kg_start && shipTime <= v2_end) return true;
-            if (!isKG && shipTime >= v2_gk_start && shipTime <= v2_end) return true;
+            // Dinamik 4 Günlük Vardiya Döngüsü
+            const elapsedCycles = Math.floor((now - REF_START_TIME) / SHIFT_CYCLE_MS);
+            const currentShiftStart = REF_START_TIME + (elapsedCycles * SHIFT_CYCLE_MS);
+            const currentShiftEnd = currentShiftStart + SHIFT_CYCLE_MS;
+
+            const shiftStartKG = currentShiftStart + (12 * 60 * 60 * 1000);
+            const shiftStartGK = currentShiftStart + (14 * 60 * 60 * 1000);
+
+            if (isKG && shipTime >= shiftStartKG && shipTime <= currentShiftEnd) return true;
+            if (!isKG && shipTime >= shiftStartGK && shipTime <= currentShiftEnd) return true;
             return false;
         }
 
@@ -2978,7 +2990,6 @@
         for (const [vardiyaNo, kaptanListesi] of Object.entries(VARDIYALAR)) {
             const vNo = Number(vardiyaNo);
 
-            // Önce vardiyadaki kaptanların sicillerini tespit edip nesne havuzuna alıyoruz
             let vardiyaKaptanlari = kaptanListesi.map((kaptanAdi, index) => {
                 let sicilNo = null;
                 const cleanName = normalizeStr(kaptanAdi);
@@ -3000,13 +3011,11 @@
                 };
             });
 
-            // En eski demek sicil numarası en ufak olan demektir; küçükten büyüğe sıralıyoruz
             vardiyaKaptanlari.sort((a, b) => Number(a.sicil) - Number(b.sicil));
 
-            // Şifreleri vardiya kurallarına göre tahsis ediyoruz
             vardiyaKaptanlari.forEach((kaptan, rankIndex) => {
                 let pass = "1915";
-                const siraNo = String(rankIndex + 1).padStart(2, "0"); // 01, 02, 03...
+                const siraNo = String(rankIndex + 1).padStart(2, "0");
 
                 if (vNo === 1) {
                     pass = `11${siraNo}`;
@@ -3126,7 +3135,6 @@
             badge.classList.add("active");
             document.getElementById("authBadgeIcon").innerText = "🟢";
 
-            // Muhabereci ise yönü kilitle ve başlıkları uyarla
             if (isMuhabereUser()) {
                 const isKuzey = (authenticatedCaptain.sicil === "99001");
                 document.getElementById("mainAppTitle").innerHTML = `<span>📻 MUHABERE MASASI</span><span>(${isKuzey ? "KUZEY - GÜNEY" : "GÜNEY - KUZEY"})</span>`;
