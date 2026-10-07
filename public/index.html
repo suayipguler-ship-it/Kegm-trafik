@@ -1742,6 +1742,18 @@
         return `${ship.name}_${ship.time}`;
     }
 
+    // Geçmiş kayıtlarında gerçek olay kimliği: aynı geminin farklı saatlerdeki
+    // hareketleri kesinlikle ayrı kayıt olarak tutulur. Yalnızca aynı gemi +
+    // aynı yön + aynı zaman damgası aynı olay kabul edilir.
+    function getHistoryEventKey(ship) {
+        const name = normalizeStr(ship && ship.name);
+        const direction = normalizeStr(ship && ship.yon);
+        const timestamp = getShipTimestamp(ship);
+        const rawTime = normalizeStr(ship && (ship.time || ship.planlama));
+        const timeKey = timestamp > 0 ? String(timestamp) : rawTime;
+        return `${name}|${direction}|${timeKey}`;
+    }
+
     function getShipAssignment(ship) {
         if (!ship) return "";
         const key = getShipKey(ship);
@@ -1963,36 +1975,29 @@
         // En yeniden en eskiye sırala
         rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // AKILLI DUBLİKASYON ENGELLEME
+        // GERÇEK DUBLİKASYON ENGELLEME
+        // Aynı geminin 6 saat içindeki iki ayrı hareketini artık birleştirmiyoruz.
+        // Çünkü aynı gemi aynı gün içinde tekrar limana yanaşabilir, demirleyebilir
+        // veya yeniden kalkış yapabilir ve her hareket ayrı bir pilotaj olayıdır.
+        // Sadece aynı gemi + aynı yön + aynı zaman damgası aynı olay kabul edilir.
         const uniqueMap = new Map();
         rawList.forEach(ship => {
-            const cleanName = normalizeStr(ship.name);
-            const shipTime = getShipTimestamp(ship) || 0;
-            const currentAssignment = getShipAssignment(ship);
-            const currentHasPilot = (!!currentAssignment && currentAssignment !== PILOTLESS_VALUE);
+            const eventKey = getHistoryEventKey(ship);
+            const existingShip = uniqueMap.get(eventKey);
 
-            let existingKey = null;
-            for (let [key, existingShip] of uniqueMap.entries()) {
-                if (key.startsWith(cleanName + "_")) {
-                    const exTime = getShipTimestamp(existingShip) || 0;
-                    if (Math.abs(shipTime - exTime) < (6 * 60 * 60 * 1000)) {
-                        existingKey = key;
-                        break;
-                    }
-                }
+            if (!existingShip) {
+                uniqueMap.set(eventKey, ship);
+                return;
             }
 
-            if (!existingKey) {
-                uniqueMap.set(`${cleanName}_${shipTime}`, ship);
-            } else {
-                const existingShip = uniqueMap.get(existingKey);
-                const existingAssignment = getShipAssignment(existingShip);
-                const existingHasPilot = (!!existingAssignment && existingAssignment !== PILOTLESS_VALUE);
+            // Aynı olay iki kaynaktan geldiyse, pilot atanmış olan kaydı koru.
+            const existingAssignment = getShipAssignment(existingShip);
+            const currentAssignment = getShipAssignment(ship);
+            const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
+            const currentHasPilot = !!currentAssignment && currentAssignment !== PILOTLESS_VALUE;
 
-                if (!existingHasPilot && currentHasPilot) {
-                    uniqueMap.delete(existingKey);
-                    uniqueMap.set(`${cleanName}_${shipTime}`, ship);
-                }
+            if (!existingHasPilot && currentHasPilot) {
+                uniqueMap.set(eventKey, ship);
             }
         });
 
@@ -2018,7 +2023,7 @@
             if (!isMuhabereUser() || authenticatedCaptain.sicil === "99002") {
                 html += `<div class="direction-section"><div class="direction-title"><span>${snTitle}</span><span style="color:#94a3b8; font-size:0.8rem;">${snList.length} Gemi</span></div>`;
                 if (snList.length === 0) html += `<div style="color:#64748b; font-size:0.8rem; padding:4px 8px;">Kayıt yok.</div>`;
-                else nsList.forEach(ship => { html += buildCompactLogRow(ship); });
+                else snList.forEach(ship => { html += buildCompactLogRow(ship); });
                 html += `</div>`;
             }
         }
@@ -2234,7 +2239,7 @@
                 if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
+                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship; // DÜZELTİLDİ: nextGK_ship ataması
             }
         });
 
@@ -2258,7 +2263,7 @@
             depTimeGK = new Date(shipTime - ROAD_TRANSIT_MS);
             remMinsGK = Math.round((depTimeGK.getTime() - now) / 60000);
             warningGK = true;
-            if (remMinsKG <= 0) criticalKG = true;
+            if (remMinsGK <= 0) criticalGK = true;
         }
 
         return {
@@ -2295,7 +2300,7 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:4px;">
                         <button class="support-count-badge-btn" onclick="openCapacityManageModal()" title="Mevcut ve İzinlileri Yönet">
-                            <span>${calc.totalActivePilots}</span> ✏️️
+                            <span>${calc.totalActivePilots}</span> ✏
                         </button>
                         <span style="font-size:0.75rem; color:#94a3b8; font-weight:700;">Mevcut</span>
                     </div>
@@ -2317,7 +2322,7 @@
             if (calc.warningGK && calc.nextGK_ship) {
                 html += `<strong>Hedef Gemi (G-K):</strong> ${calc.nextGK_ship.name} (${formatDisplayTime(calc.nextGK_ship.time, calc.nextGK_ship.planlama)})<br>
                          🚐 <strong>En Geç Yola Çıkış:</strong> ${formatClock(calc.depTimeGK)} 
-                         ${calc.remMinsKG > 0 ? `(Kalan: <strong>${calc.remMinsKG} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
+                         ${calc.remMinsGK > 0 ? `(Kalan: <strong>${calc.remMinsGK} dk</strong>)` : `<strong style="color:#ef4444;">(SÜRE DOLDU!)</strong>`}<br>`;
             }
             html += `Havuz: [KG: <strong>${calc.n2_kg_active}</strong> | GK: <strong>${calc.n3_gk_active}</strong>] | Toplam: <strong>${calc.totalInTransit} / ${calc.totalActivePilots}</strong></div>`;
         } else {
