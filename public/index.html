@@ -664,6 +664,37 @@
             background: #0284c7;
         }
 
+        .pilot-actions-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 0 0 12px;
+        }
+
+        .pilot-actions-split .btn-pilot-item {
+            min-width: 0;
+            min-height: 48px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.25;
+            padding: 10px 7px;
+        }
+
+        .btn-duplicate-exclude {
+            background: #422006;
+            border: 1px solid #f59e0b;
+            color: #fde68a;
+            font-weight: 800;
+        }
+
+        .btn-duplicate-exclude.active {
+            background: #78350f;
+            border-color: #fbbf24;
+            color: #fff7ed;
+        }
+
         .btn-pilotless {
             background: #450a0a;
             border: 1px solid #ef4444;
@@ -1287,9 +1318,14 @@
             <button class="btn-close" onclick="closeModal()">✕</button>
         </div>
 
-        <button id="btnPilotless" class="btn-pilot-item btn-pilotless" onclick="markShipAsPilotless()">
-            🚫 BU GEMİ PİLOTSUZ
-        </button>
+        <div class="pilot-actions-split">
+            <button id="btnPilotless" class="btn-pilot-item btn-pilotless" onclick="markShipAsPilotless()">
+                🚫 Gemi Pilotsuz
+            </button>
+            <button id="btnDuplicateExclude" class="btn-pilot-item btn-duplicate-exclude" onclick="markShipAsDuplicate()">
+                ⛔ Dublikasyonu Önle
+            </button>
+        </div>
 
         <div class="vardiya-tabs" id="pilotModalVardiyaTabs">
             <button id="tabV1" class="btn-v-tab" onclick="switchVardiya(1)">Çanakkale-1</button>
@@ -1480,6 +1516,10 @@
     // 4 GÜNLÜK VARDİYA REFERANSI VE DÖNGÜSÜ
     const REF_START_TIME = new Date(2026, 9, 2, 0, 0, 0).getTime(); // 02 Ekim 2026
     const SHIFT_CYCLE_MS = 4 * 24 * 60 * 60 * 1000;
+
+    // DUBLİKASYON ZAMAN PENCERESİ (2 SAAT) - KAYAN PENCERE
+    // Aynı gemi adı + aynı yön için birbirine 2 saatten yakın tüm kayıtlar tek gemi sayılır.
+    const DUPLICATE_WINDOW_MS = 2 * 60 * 60 * 1000;
 
     const BAS_KILAVUZ_SICILLER = {
         "52216": 1,
@@ -1723,6 +1763,7 @@
     let allShips = [];
     let historyShips = [];
     let globalAssignments = {};
+    let duplicateExcludedKeys = new Set();
     let supportRecords = [];
     let inactivePilotsSet = new Set();
     let currentMode = "live";
@@ -1741,13 +1782,85 @@
         return `${ship.name}_${ship.time}`;
     }
 
-    function getHistoryEventKey(ship) {
-        const name = normalizeStr(ship && ship.name);
-        const direction = normalizeStr(ship && ship.yon);
-        const timestamp = getShipTimestamp(ship);
-        const rawTime = normalizeStr(ship && (ship.time || ship.planlama));
-        const timeKey = timestamp > 0 ? String(timestamp) : rawTime;
-        return `${name}|${direction}|${timeKey}`;
+    function isDuplicateExcluded(ship) {
+        if (!ship) return false;
+        return duplicateExcludedKeys.has(getShipKey(ship));
+    }
+
+    // ============================================================
+    // KAYAN PENCERELİ DUBLİKASYON ENGELLEME (2 SAAT)
+    // Aynı gemi adı + aynı yön için birbirine 2 saatten yakın olan
+    // TÜM kayıtlar tek gemi sayılır. Zaman bloklara bölünmez.
+    // ============================================================
+
+    function deduplicateShipList(shipList) {
+        // Önce en yeniden en eskiye sırala (daha yeni kayıtlar öncelikli)
+        const sorted = [...shipList].sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
+
+        const result = [];
+        const consumedIndices = new Set();
+
+        for (let i = 0; i < sorted.length; i++) {
+            if (consumedIndices.has(i)) continue;
+
+            const baseShip = sorted[i];
+            const baseName = normalizeStr(baseShip.name);
+            const baseTimestamp = getShipTimestamp(baseShip);
+            const baseIsKG = isNorthSouth(baseShip.yon);
+            const baseIsGK = isSouthNorth(baseShip.yon);
+
+            // Aynı grup içindeki en iyi kaydı seç (kılavuz atanmış olanı tercih et)
+            let bestShip = baseShip;
+            let bestAssignment = getShipAssignment(baseShip);
+            let bestHasPilot = !!bestAssignment && bestAssignment !== PILOTLESS_VALUE;
+
+            for (let j = i + 1; j < sorted.length; j++) {
+                if (consumedIndices.has(j)) continue;
+
+                const otherShip = sorted[j];
+                const otherName = normalizeStr(otherShip.name);
+                const otherTimestamp = getShipTimestamp(otherShip);
+                const otherIsKG = isNorthSouth(otherShip.yon);
+                const otherIsGK = isSouthNorth(otherShip.yon);
+
+                // İsim ve yön uyuşmalı
+                if (otherName !== baseName) continue;
+                if (baseIsKG !== otherIsKG) continue;
+                if (baseIsGK !== otherIsGK) continue;
+
+                // Zaman farkı 2 saatten az olmalı (kayan pencere)
+                if (baseTimestamp > 0 && otherTimestamp > 0) {
+                    const diff = Math.abs(baseTimestamp - otherTimestamp);
+                    if (diff >= DUPLICATE_WINDOW_MS) continue;
+                } else {
+                    continue;
+                }
+
+                // Bu kayıt gruba ait
+                consumedIndices.add(j);
+
+                const otherAssignment = getShipAssignment(otherShip);
+                const otherHasPilot = !!otherAssignment && otherAssignment !== PILOTLESS_VALUE;
+
+                // Kılavuz atanmış olan varsa onu tercih et; yoksa daha yenisini tut
+                if (!bestHasPilot && otherHasPilot) {
+                    bestShip = otherShip;
+                    bestAssignment = otherAssignment;
+                    bestHasPilot = true;
+                } else if (bestHasPilot === otherHasPilot) {
+                    // İkisi de aynı durumda, daha yeni olanı seç
+                    const bestTs = getShipTimestamp(bestShip);
+                    if (otherTimestamp > bestTs) {
+                        bestShip = otherShip;
+                    }
+                }
+            }
+
+            consumedIndices.add(i);
+            result.push(bestShip);
+        }
+
+        return result;
     }
 
     function getShipAssignment(ship) {
@@ -1769,12 +1882,16 @@
                 const key = decodeURIComponent(change.doc.id);
                 if (change.type === "removed") {
                     delete globalAssignments[key];
+                    duplicateExcludedKeys.delete(key);
                 } else {
-                    const data = change.doc.data();
-                    globalAssignments[key] = data.pilot;
+                    const data = change.doc.data() || {};
+                    if (Object.prototype.hasOwnProperty.call(data, "pilot")) globalAssignments[key] = data.pilot;
+                    if (data.duplicateExcluded === true) duplicateExcludedKeys.add(data.shipKey || key);
+                    else duplicateExcludedKeys.delete(data.shipKey || key);
                 }
             });
             localStorage.setItem("kegm_pilot_store", JSON.stringify(globalAssignments));
+            localStorage.setItem("kegm_duplicate_excluded_keys", JSON.stringify(Array.from(duplicateExcludedKeys)));
             document.getElementById("cloudStatus").style.color = "#22c55e";
             renderCurrentView();
         }, err => {
@@ -1805,10 +1922,12 @@
         try {
             try {
                 globalAssignments = JSON.parse(localStorage.getItem("kegm_pilot_store") || "{}");
+                duplicateExcludedKeys = new Set(JSON.parse(localStorage.getItem("kegm_duplicate_excluded_keys") || "[]"));
                 supportRecords = JSON.parse(localStorage.getItem("kegm_support_store") || "[]");
                 inactivePilotsSet = new Set(JSON.parse(localStorage.getItem("kegm_inactive_pilots") || "[]"));
             } catch (e) {
                 globalAssignments = {};
+                duplicateExcludedKeys = new Set();
                 supportRecords = [];
                 inactivePilotsSet = new Set();
             }
@@ -1842,6 +1961,7 @@
         const searchQuery = document.getElementById("txtShipSearch").value.trim().toLowerCase();
 
         let filtered = allShips.filter(ship => {
+            if (isDuplicateExcluded(ship)) return false;
             if (isShipTooOldForLive(ship)) return false;
             const matchBogaz = normalizeStr(ship.bogaz) === normalizeStr(bogaz);
             const matchYon = normalizeStr(ship.yon) === normalizeStr(yon);
@@ -1856,6 +1976,9 @@
             container.innerHTML = '<div class="status-msg">Bu kritere uygun aktif gemi bulunamadı.</div>';
             return;
         }
+
+        // Canlı listede de kayan pencereli dublikasyon temizliği uygula
+        filtered = deduplicateShipList(filtered);
 
         filtered.sort((a, b) => (getShipTimestamp(a) || 0) - (getShipTimestamp(b) || 0));
 
@@ -1921,10 +2044,10 @@
         const cutoffTime = !isShiftAllMode ? (Date.now() - (Number(logHours) * 60 * 60 * 1000)) : 0;
         const now = Date.now();
 
-        // 1. HAVUZ BİRLEŞTİRME:
-        // Canlıdaki gemilerden; kılavuz atanmış olanlar VEYA saati gelmiş/geçmiş olup kılavuz talep edenler log havuzuna eklenir
+        // 1. HAVUZ BİRLEŞTİRME
         const combinedHistorySource = [...historyShips];
         allShips.forEach(liveShip => {
+            if (isDuplicateExcluded(liveShip)) return;
             const assign = getShipAssignment(liveShip);
             const timeVal = getShipTimestamp(liveShip);
             const reqPilot = normalizeStr(liveShip.pilotReq || "").includes("EVET");
@@ -1940,6 +2063,7 @@
         });
 
         let rawList = combinedHistorySource.filter(ship => {
+            if (isDuplicateExcluded(ship)) return false;
             if (normalizeStr(ship.bogaz) !== normalizeStr(bogaz)) return false;
             
             const timeVal = getShipTimestamp(ship);
@@ -1966,10 +2090,7 @@
             const reqPilot = normalizeStr(ship.pilotReq || "").includes("EVET");
             const isDue = (timeVal > 0 && timeVal <= now);
 
-            // 2. LOGA KABUL ŞARTI:
-            // - Kılavuz atanmışsa VEYA
-            // - Gemi boğazdaysa VEYA
-            // - Kılavuz talep ediyor ve plan saati gelmiş/geçmişse loga geçer
+            // 2. LOGA KABUL ŞARTI
             if (!hasAssignedPilot && !isBogazda && !(reqPilot && isDue)) return false;
 
             // Kılavuz atanmışsa vardiya izolasyonu
@@ -1983,31 +2104,12 @@
             return true;
         });
 
+        // 3. KAYAN PENCERELİ DUBLİKASYON ENGELLEME (2 SAAT)
+        const baseList = deduplicateShipList(rawList);
+
         // En yeniden en eskiye sırala
-        rawList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
+        baseList.sort((a, b) => (getShipTimestamp(b) || 0) - (getShipTimestamp(a) || 0));
 
-        // GERÇEK DUBLİKASYON ENGELLEME
-        const uniqueMap = new Map();
-        rawList.forEach(ship => {
-            const eventKey = getHistoryEventKey(ship);
-            const existingShip = uniqueMap.get(eventKey);
-
-            if (!existingShip) {
-                uniqueMap.set(eventKey, ship);
-                return;
-            }
-
-            const existingAssignment = getShipAssignment(existingShip);
-            const currentAssignment = getShipAssignment(ship);
-            const existingHasPilot = !!existingAssignment && existingAssignment !== PILOTLESS_VALUE;
-            const currentHasPilot = !!currentAssignment && currentAssignment !== PILOTLESS_VALUE;
-
-            if (!existingHasPilot && currentHasPilot) {
-                uniqueMap.set(eventKey, ship);
-            }
-        });
-
-        const baseList = Array.from(uniqueMap.values());
         let html = "";
         if (baseList.length === 0) {
             const msg = isShiftAllMode ? "Bu vardiya döngüsünde kayıtlı gemi bulunamadı." : `Son ${logHours} saat içinde geçerli gemi kaydı yok.`;
@@ -2121,6 +2223,10 @@
         document.getElementById("pilotModal").style.display = "flex";
 
         const currentAssignment = globalAssignments[uniqueKey] || "";
+        const duplicateButton = document.getElementById("btnDuplicateExclude");
+        const isExcluded = duplicateExcludedKeys.has(uniqueKey);
+        duplicateButton.classList.toggle("active", isExcluded);
+        duplicateButton.innerText = isExcluded ? "✓ DUBLIKASYON FİLTRESİ AKTİF" : "⛔ Dublikasyonu Önle";
         const pilotlessButton = document.getElementById("btnPilotless");
         if (currentAssignment === PILOTLESS_VALUE) {
             pilotlessButton.classList.add("active");
@@ -2174,6 +2280,33 @@
             document.getElementById("pilotModal").style.display = "none";
         } catch (err) {
             alert("Kayıt hatası: " + err.message);
+        }
+    }
+
+    async function markShipAsDuplicate() {
+        if (!selectedShipKey) return;
+        const alreadyExcluded = duplicateExcludedKeys.has(selectedShipKey);
+        const promptText = alreadyExcluded
+            ? "Bu gemi için dublikasyon filtresi kaldırılacak ve kayıt tekrar listelere alınabilecek. Devam edilsin mi?"
+            : "Bu kayıt dublikasyon olarak işaretlenecek ve canlı listeden, geçiş loglarından ve istatistiklerden çıkarılacak. Emin misiniz?";
+        if (!confirm(promptText)) return;
+
+        const docId = encodeURIComponent(selectedShipKey);
+        try {
+            await db.collection("live_assignments").doc(docId).set({
+                shipKey: selectedShipKey,
+                duplicateExcluded: !alreadyExcluded,
+                updatedBy: authenticatedCaptain ? `${authenticatedCaptain.name} (#${authenticatedCaptain.sicil})` : "",
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+            if (alreadyExcluded) duplicateExcludedKeys.delete(selectedShipKey);
+            else duplicateExcludedKeys.add(selectedShipKey);
+            localStorage.setItem("kegm_duplicate_excluded_keys", JSON.stringify(Array.from(duplicateExcludedKeys)));
+            document.getElementById("pilotModal").style.display = "none";
+            renderCurrentView();
+            if (typeof calcAdvancedStats === "function") calcAdvancedStats();
+        } catch (err) {
+            alert("Dublikasyon filtresi kaydedilemedi: " + err.message);
         }
     }
 
@@ -2245,7 +2378,7 @@
                 if (isGK && elapsed < DURATION_GK_MS) n3_gk_active++;
             } else if (!isBog && shipTime >= now && (shipTime - now) <= PREDICTION_WINDOW_MS) {
                 if (isKG && (!nextKG_ship || shipTime < getShipTimestamp(nextKG_ship))) nextKG_ship = ship;
-                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship; // nextGK_ship düzeltildi
+                if (isGK && (!nextGK_ship || shipTime < getShipTimestamp(nextGK_ship))) nextGK_ship = ship;
             }
         });
 
@@ -2799,6 +2932,7 @@
         const evaluatedShipKeys = new Set();
 
         combinedShipList.forEach(ship => {
+            if (isDuplicateExcluded(ship)) return;
             const key = getShipKey(ship);
             if (evaluatedShipKeys.has(key)) return;
             evaluatedShipKeys.add(key);
@@ -3234,4 +3368,4 @@
 </script>
 
 </body>
-</html>
+            </html>
